@@ -1,0 +1,149 @@
+﻿
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Persons" asp-action="Index">Contacts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">New Contact Group / Tag</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<partial name="Partials/_ErrorCardPartial"></partial>
+<div class="row">
+    <div class="col-md-7 pb-3">
+        <form action="/ContactGroups/create" method="post" class="column needs-validation" novalidate>
+            @*GroupName*@
+            <div class="row mb-3">
+                <label for="GroupName" class="form-label">GroupName</label>
+                <input type="text" name="GroupName" id="GroupName" " class="form-control" required />
+                <span validation-for="GroupName" class="text-danger"></span>
+            </div>
+            @*GroupDescription*@
+            <div class="row flex">
+                <label for="Description" class="form-label pt"> Description</label>
+                <textarea name="Description" id="Description" class="form-control"></textarea>
+            </div>
+            @*Persons*@
+            <div class="row flex">
+                <label class="form-label pt">Persons</label>
+                @if (ViewBag.Persons != null)
+                {
+                    foreach (PersonResponse person in ViewBag.Persons)
+                    {
+                        <label>
+                            <input type="checkbox" name="@nameof(ContactGroupResponse.Persons)" value="@person.PersonId" />
+                            @person.PersonName
+                        </label>
+                    }
+                }
+            </div>
+            <div class="mt-5 text-center">
+                <button class="btn btn-primary profile-button" type="submit">Add Group</button>
+            </div>
+        </form>
+        @* Deletion*@
+        @if(ViewBag.ContactGroups != null){
+        <div>
+            <table>
+                <tbody>
+
+                    @foreach(ContactGroupResponse group in ViewBag.ContactGroups){
+                    <tr class="contactGroupRow">
+                            <td>@group.GroupName</td>
+                            <td>
+                            <button type="button" class="btn btn-danger deleteGroupBtn" value="@group.GroupId">Delete</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+    <div class="col-md-5 pb-3">
+
+        <form action="/Tags/create" method="post" class="column needs-validation" novalidate>
+
+            @*TagName*@
+            <div class="row mb-3">
+                <label for="TagName" class="form-label">Tag Name</label>
+                <input type="text" name="TagName" class="form-control" id="TagName" required />
+                <span validation-for="TagName" class="text-danger"></span>
+            </div>
+            @*Tag Color*@
+            <div class="row flex">
+                <label for="TagColor" class="form-label pt">Theme Color</label>
+                <input type="color" name="TagColor" id="TagColor" class="form-control"/>
+                <span validation-for="TagColor" class="text-danger"></span>
+            </div>
+            <div class="mt-5 text-center">
+                <button class="btn btn-primary profile-button" type="submit">Add Tag</button>
+            </div>
+        </form>
+        @if (ViewBag.ContactTags != null)
+        {
+            <div>
+                <table>
+                    <tbody>
+
+                        @foreach(ContactTagDTO tag in ViewBag.ContactTags)
+                        {
+                        <tr class="contactTagRow">
+                            <td>
+                                <span class="badge rounded-pill" style="background-color:@tag.TagColor;">@tag.TagName</span>
+                            </td>
+                            <td>
+                                    <button type="button" class="btn btn-danger deleteTagBtn" value="@tag.TagId">Delete</button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+    $(document).ready(function () {
+        $('.deleteTagBtn').click(function () {
+            var contactTagRow = $(this).closest('.contactTagRow'); 
+            var tagId = $(this).val();            
+            $.ajax({
+                type: 'POST',
+                url: `/Tags/Delete?tagId=${tagId}`,
+                success: function (data) {
+                        if (data.success) {
+                            contactTagRow.remove();
+                        }
+                },
+                error: function (xhr, status, error) {
+                    PresentErrorCardPopUp("Error deleting contact tag");
+                }
+            });
+        });
+
+        $('.deleteGroupBtn').click(function () {
+            var contactGroupRow = $(this).closest('.contactGroupRow');
+            var groupId = $(this).val();            
+            $.ajax({
+                type: 'POST',
+                    url: `/ContactGroups/Delete?contactGroupId=${groupId}`,
+                success: function (data) {
+                        if (data.success) {
+                            contactGroupRow.remove();
+                        }
+                },
+                error: function (xhr, status, error) {
+                    PresentErrorCardPopUp("Error deleting contact group");
+                }
+            });
+        });
+
+    });
+</script>
+<script src="~/js/ErrorCardPopUp.js"></script>
+}

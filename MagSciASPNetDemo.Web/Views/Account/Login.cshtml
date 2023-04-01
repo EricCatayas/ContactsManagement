@@ -1,0 +1,47 @@
+﻿@model LoginDTO;
+
+<div class="login-body mx-auto">
+
+	<div class="login-container" id="container">
+		<div class="row justify-content-center align-items-center h-100">
+			<div class="form-container sign-in-container">
+					<form asp-controller="Account" asp-action="Login">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<h1>Log in</h1>
+					<input type="hidden" name="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]" />
+					<input asp-for="Email" type="email" placeholder="Email" />
+					<span asp-validation-for="Email" class="text-danger" />
+					<input asp-for="Password" type="password" placeholder="Password" />
+					<span asp-validation-for="Password" class="text-danger" />
+					<input class="form-check-input" name="RememberMe" type="checkbox" />
+					<label class="form-check-label">Remember Me</label>
+					<br />
+					<a asp-controller="Account" asp-action="Register">Create New Account</a>
+					<button type="submit" class="login-button">Log In</button>
+				</form>
+			</div>
+			<div class="overlay-container">
+				<div class="overlay">
+					<div class="overlay-panel overlay-left">
+						<h1>Welcome Back!</h1>
+						<p>To keep connected with us please login with your personal info</p>
+						<button class="ghost" id="signIn">Sign In</button>
+					</div>
+					<div class="overlay-panel overlay-right">
+						<h1>Hello, friend!</h1>
+						<p>For demo purposes, use: 
+							loverboy@example.com.
+							password: _MagSci456
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	
+
+
+@section StyleSheets{
+    <link href="~/css/login-page.css" rel="stylesheet"/>
+}

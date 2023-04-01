@@ -1,0 +1,59 @@
+﻿@model RegisterDTO;
+@{
+    ViewBag.Title = "Register Account";
+    ViewBag.CurrentUrl = "~/Account/Register";
+}
+
+<partial name="Partials/_ErrorCardPartial"></partial>
+
+<div class="login-body mx-auto">
+
+	<div class="login-container" id="container">
+		<div class="row h-100">
+			<div class="form-container sign-in-container">
+				<form asp-controller="Account" asp-action="Register">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<h1>Register</h1>
+                    @* Name *@
+                        <input asp-for="PersonName" id="personName" class="form-control" placeholder="Username" />
+                        <span asp-validation-for="PersonName" class="text-danger"></span>
+                    @* Email *@
+                        <input asp-for="Email" id="email" class="form-control" placeholder="Email Address" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    @* Password *@
+                        <input asp-for="Password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    @* Confirm Password*@
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-type your password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    @* Phone *@
+                        <input asp-for="Phone" class="form-control" placeholder="Phone Number" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+					    <button type="submit" class="login-button">Register</button>
+				</form>
+			</div>
+			<div class="overlay-container">
+				<div class="overlay">
+					<div class="overlay-panel overlay-right">
+						<h1>Hello, friend!</h1>
+						<p>For demo purposes, use: 
+							loverboy@example.com.
+							password: _MagSci456
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section StyleSheets{
+    <link href="~/css/login-page.css" rel="stylesheet"/>
+}
+@section Scripts{
+    @{
+
+        await Html.RenderPartialAsync("Partials/_AutoScriptsPartial");
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,38 @@
+﻿<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">Contacts Management By EricJay</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">                
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Person" asp-action="Index">Contacts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Companies" asp-action="Index">Companies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active">(Tasks)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">(Calendar)</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">(Logs)</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Download Data
+                    </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="nav-link" asp-controller="Person" asp-action="PersonsPDF">Download as PDF</a></li>
+                            <li><a class="nav-link" asp-controller="Person" asp-action="PersonsCSV">Download as CSV</a></li>
+                            <li><a class="nav-link" asp-controller="Person" asp-action="PersonsExcel">Download as Excel Spreadsheet</a></li>
+                      </ul>
+                </li>
+               <partial name="_AuthenticationPartial"></partial>                
+            </ul>
+        </div>
+    </div>
+</nav>

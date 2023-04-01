@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+   @* <link href="~/Stylesheet.css" rel="stylesheet" />*@   
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    @*<link href="~/bootstrap5.1.3/css/bootstrap.min.css" rel="stylesheet"/>*@
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+        @*<partial name="Partials/_NavbarPartial"></partial>*@
+        <div class="container">
+            @RenderBody()
+        </div>
+    </div>
+    <footer>
+    </footer>
+    @* -- javascript -- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    @*<script src="~/bootstrap5.1.3/js/bootstrap.bundle.min.js"></script>   *@
+    @RenderSection("Scripts", required: false);
+</body>
+</html>

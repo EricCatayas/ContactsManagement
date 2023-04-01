@@ -1,0 +1,301 @@
+﻿@using ContactsManagement.Web.ViewComponents;
+ @model PersonUpdateRequest;
+@{
+    // This view utilizes asp-validation for validation feedback
+    ViewBag.Title = "Edit Person";
+    ViewBag.PersonId = Model.PersonId;
+}
+
+<a href="~/persons/index" class="link-hover">Back to Contacts</a>
+
+<partial name="_DeleteModalPartial"></partial>
+
+    <div class="row">
+        <div class="col-md-7 d-inline-block">
+            <form asp-controller="Persons" asp-action="Edit" method="post" class="column">
+                <div class="row">
+                    <div class="col-md-3 border-right">
+                        <div class="d-flex flex-column py-5">
+                            @* PersonId *@
+                            <input asp-for="PersonId" type="hidden"/>
+                            <div class="align-items-center text-center">
+                                <div class="row">
+                                    <div class="col">
+                                        <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        @* Azure Pic *@
+                                        <label asp-for="ProfilePicture">Choose Image</label>
+                                    </div>
+                                </div>
+                            </div>
+                                @* Contact Tags *@
+                            @if(Model.TagId != null && Model.Tag != null)
+                            {
+                                <div id="contactTag">
+                                    <input asp-for="TagId" type="hidden" class="form-check-input" name="@nameof(PersonResponse.TagId)" value="@Model.TagId" />
+                                    <span class="badge rounded-pill" style="background-color:@Model.Tag?.TagColor;">@Model.Tag.TagName</span>
+                                    <i id="removeTagIcon" class="fa-solid fa-eraser" style="color: #e5344e;"><input type="hidden" value="@Model.PersonId" /></i>
+                                </div>  
+                            } 
+                            else
+                            {
+                                @if (ViewBag.ContactTags != null)
+                                {
+                                    <label class="labels">Select Tag</label>
+                                    foreach (ContactTagDTO tag in ViewBag.ContactTags)
+                                    {
+                                        <label>
+                                            <input asp-for="TagId" type="radio" class="form-check-input" name="@nameof(PersonResponse.TagId)" value="@tag.TagId" />
+                                            <span class="badge rounded-pill" style="background-color:@tag.TagColor;">@tag.TagName</span>
+                                        </label>
+                                    }
+                                }
+                            }
+                            @* Contact Groups *@
+                            <label asp-for="ContactGroups" class="labels">Groups</label>
+                            @{
+                                List<int> currentContactGroups = Model.ContactGroups ?? new List<int>() { };
+                            }
+                            @if (ViewBag.ContactGroups != null)
+                            {
+                                foreach (ContactGroupResponse group in ViewBag.ContactGroups)
+                                {
+                                    <label>
+                                        <input type="checkbox" name="@nameof(PersonAddRequest.ContactGroups)" value="@group.GroupId" @(currentContactGroups.Any(t => t == group.GroupId) ? "checked" : "") />
+                                        @group.GroupName
+                                    </label>
+                                }
+                            }
+                            <a asp-controller="ContactGroups" asp-action="Index">Add Group or Tag</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9 border-right">
+                        <div class="p-3 py-5">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-right">Contact Info</h4>
+                            </div>
+                            @* Person Name *@
+                            <div class="row mt-2">
+                                <div class="col-md-12">
+                                    <label asp-for="PersonName" class="labels">Name</label>
+                                    <input asp-for="PersonName" type="text" class="form-control">
+                                    <span asp-validation-for="PersonName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                @* Email *@
+                                <div class="col-md-12">
+                                    <label asp-for="Email" class="labels">Email</label>
+                                    <input asp-for="Email" type="email" class="form-control" >
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                                @*Job Title*@
+                                <div class="col-md-12">
+                                    <label asp-for="JobTitle" class="labels">JobTitle</label>
+                                    <input asp-for="JobTitle" class="form-control" />
+                                </div>
+                                @* Address *@
+                                <div class="col-md-12">
+                                    <label asp-for="Address" class="labels">Address</label>
+                                    <input asp-for="Address" type="text" class="form-control">
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+                                @* Contact Number 1 *@
+                                <div class="col-md-12">
+                                    <label asp-for="ContactNumber1" class="labels">Phone 1</label>
+                                    <input asp-for="ContactNumber1" type="text" class="form-control">
+                                    <span asp-validation-for="ContactNumber1" class="text-danger"></span>
+                                </div>
+                                @* Contact Number 2 *@
+                                <div class="col-md-12">
+                                    <label asp-for="ContactNumber2" class="labels">Phone 2</label>
+                                    <input asp-for="ContactNumber2" type="text" class="form-control">
+                                    <span asp-validation-for="ContactNumber2" class="text-danger"></span>
+                                </div>
+                                @*Gender*@
+                                <div class="row mb-3">
+                                    <label asp-for="Gender" class="labels">Gender</label>
+                                    <div class="flex-1">
+                                        @{
+                                            string[] genders = (string[])Enum.GetNames(typeof(GenderOptions));
+                                        }
+                                        @foreach (string gender in genders)
+                                        {
+                                            <input type="radio" asp-for="Gender" value="@gender" />
+                                            <label for="@gender">@gender</label>
+                                        }
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                @* DateOfBirth *@
+                                <div class="col-md-12">
+                                    <label asp-for="DateOfBirth" class="labels">Birthday</label>
+                                    <input asp-for="DateOfBirth" type="date" class="form-control">
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+                                @* Company *@
+                                <div class="col-md-12 flex">
+                                    <label asp-for="CompanyId" class="labels">Company</label>
+                                        @if (ViewBag.Companies != null)
+                                        {
+                                        <select asp-for="CompanyId" name="CompanyId" asp-items="@ViewBag.Companies" id="CompanyId" class="form-select">
+                                            <option value="@null">Select Company</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <p>No companies found</p>
+                                        }
+                                        <a asp-controller="Companies" asp-action="Create">Add New Company</a>
+                                </div>
+                            </div>
+                            @* Country *@
+                            <div class="row mt-3">
+                                <div class="col-md-10">
+                                        <label class="labels" for="CountryId">Country</label>
+                                    <select asp-for="CountryId" asp-items="@ViewBag.Countries" id="CountryId" class="form-select" required>
+                                            <option>Please Select</option>
+                                        </select>
+                                        <span asp-validation-for="CountryId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mt-5 text-center justify-content-evenly">
+                                <div class="col-md-4">
+                                    <button class="btn btn-success profile-button" type="submit">Save Changes</button>
+                                </div>
+                                <div class="col-md-4">
+                                    <a asp-controller="Person" asp-action="Edit" asp-route-personId="@Model.PersonId" class="btn btn-secondary">Undo Changes</a>
+                                </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-danger delete-btn" type="button" value="@Model.PersonId">Delete</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-5 d-inline-block">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="p-3 py-5">                
+                        @* Contact Logs *@
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="text-right">Logs</h4>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <form asp-controller="ContactLogs" asp-action="Create" method="post">
+                                    <input type="hidden" name="PersonId"  value="@Model.PersonId"/>
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h5 class="card-title text-left">New Log</h5>
+                                            </div>
+                                            <div class="col-auto">
+                                                <p class="card-text"><small class="text-muted">@DateTime.Now.ToString("MM/dd/yyyy")</small></p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-12 mb-1">
+                                                <div class="form-floating">
+                                                    <input name="LogTitle" id="LogTitle" type="text" class="form-control">
+                                                    <label for="LogTitle">Title</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-floating">
+                                                        <textarea name="Note" class="form-control" id="Note" style="height: 140px"></textarea>
+                                                    <label for="Note">Notes</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-6">
+                                                        <label for="Type" class="labels">Communication</label>
+                                                        <select for="Type" name="Type" id="Note" class="form-select" required>
+                                                            <option value="Phone">Phone</option>
+                                                            <option value="Email">Email</option>
+                                                            <option value="In-Person">In-Person</option>
+                                                            <option value="Instant Messaging">Instant Messaging</option>
+                                                            <option value="Video Conferencing">Video Conferencing</option>
+                                                            <option value="Social Media">Social Media</option>
+                                                            <option value="Postal Mail">Postal Mail</option>
+                                                            <option value="Fax">Fax</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            @await Component.InvokeAsync(typeof(ContactLogsCardViewComponent), new { personId = Model.PersonId })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section StyleSheets{
+    <link href="~/css/modal-popup.css" rel="stylesheet" />
+}
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+        <script src="~/js/contactTags.js"></script>
+    }
+    <script>
+        $(document).ready(function () {
+            var modal = $("#deleteModal");
+
+            function openModal() {
+                modal.show()
+            }
+
+            function closeModal() {
+                modal.hide();
+            }
+
+            function confirmDelete() {
+                const personId = $(".delete-btn").val();
+
+                $.ajax({
+                    url: `/persons/delete?personId=${personId}`,
+                    type: "DELETE",
+                    success: function () {
+                        window.location.href = "/persons/index";
+                    },
+                    error: function (xhr, status, error) {
+                        // There was an error, show an error message
+                        closeModal();
+                        alert(`Error deleting data: ${error}`);
+                    }
+                });
+            }
+
+            $(".delete-btn").click(function () {
+                openModal();
+            });
+
+            $("#deleteModal .delete-cancel").click(function () {
+                closeModal();
+            });
+
+            $("#deleteModal .delete-confirm").click(function () {
+                confirmDelete();
+            });
+        });
+
+    </script>
+}

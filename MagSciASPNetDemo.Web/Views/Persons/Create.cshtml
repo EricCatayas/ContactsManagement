@@ -1,0 +1,161 @@
+﻿@model PersonAddRequest;
+@{
+    // This view utilizes Bootstrap for validation feedback
+    ViewBag.Title = "Add New Contact";
+    ViewBag.CurrentUrl = "~/persons/create";
+}
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Persons" asp-action="Index">Contacts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">New Contact</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div>
+    <partial name="Partials/_ErrorCardPartial"></partial>
+    <partial name="Partials/_SuccessCardPartial"></partial>
+
+    <form asp-controller="Persons" asp-action="Create" method="post" class="column">
+        <div class="row">
+            <div class="col-md-4 border-right">
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                    @* Azure Pic *@
+                    <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
+                    <span class="font-weight-bold">Profile</span>
+                    @* Contact Tags *@
+                    <label asp-for="TagId" class="labels">Tag</label>
+                    @if (ViewBag.ContactTags != null)
+                    {
+                        foreach (ContactTagDTO tag in ViewBag.ContactTags)
+                        {
+                            <label>
+                                <input asp-for="TagId" type="radio" class="form-check-input" name="@nameof(PersonResponse.TagId)" value="@tag.TagId" />
+                                <span class="badge rounded-pill" style="background-color:@tag.TagColor;">@tag.TagName</span>
+                            </label>
+                        }
+                    }
+                    <a asp-controller="Companies" asp-action="Create">Add New Tag (TODO)</a>
+
+                    @* Contact Groups *@
+                    <label asp-for="ContactGroups" class="labels">Groups</label>
+                    @if (ViewBag.ContactGroups != null)
+                    {
+                        foreach (ContactGroupResponse group in ViewBag.ContactGroups)
+                        {
+                            <label>
+                                <input type="checkbox" name="@nameof(PersonAddRequest.ContactGroups)" value="@group.GroupId" />
+                                @group.GroupName
+                            </label>
+                        }
+                    }
+                    <a asp-controller="ContactGroups" asp-action="Create">Add Group or Tag</a>
+                </div>
+            </div>
+            <div class="col-md-8 border-right">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">New Contact</h4>
+                    </div>
+                    @* Person Name *@
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <label asp-for="PersonName" class="labels">Name</label>
+                            <input asp-for="PersonName" type="text" class="form-control">
+                            <span asp-validation-for="PersonName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        @* Email *@
+                        <div class="col-md-12">
+                            <label asp-for="Email" class="labels">Email</label>
+                            <input asp-for="Email" type="email" class="form-control">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        @*Job Title*@
+                        <div class="col-md-12">
+                            <label asp-for="JobTitle" class="labels">JobTitle</label>
+                            <input asp-for="JobTitle" class="form-control" />
+                        </div>
+                        @* Address *@
+                        <div class="col-md-12">
+                            <label asp-for="Address" class="labels">Address</label>
+                            <input asp-for="Address" type="text" class="form-control">
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        @* Contact Number 1 *@
+                        <div class="col-md-12">
+                            <label asp-for="ContactNumber1" class="labels">Phone 1</label>
+                            <input asp-for="ContactNumber1" type="text" class="form-control">
+                            <span asp-validation-for="ContactNumber1" class="text-danger"></span>
+                        </div>
+                        @* Contact Number 2 *@
+                        <div class="col-md-12">
+                            <label asp-for="ContactNumber2" class="labels">Phone 2</label>
+                            <input asp-for="ContactNumber2" type="text" class="form-control">
+                            <span asp-validation-for="ContactNumber2" class="text-danger"></span>
+                        </div>
+                        @*Gender*@
+                        <div class="row mb-3">
+                            <label class="labels">Gender</label>
+                            <div class="flex-1">
+                                @{
+                                    string[] genders = (string[])Enum.GetNames(typeof(GenderOptions));
+                                }
+                                @foreach (string gender in genders)
+                                {
+                                    <input type="radio" asp-for="Gender" value="@gender" />
+                                    <label for="@gender">@gender</label>
+                                }
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                        </div>
+                        @* DateOfBirth *@
+                        <div class="col-md-12">
+                            <label asp-for="DateOfBirth" class="labels">Birthday</label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control">
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                        @* Company *@
+                        <div class="col-md-12 flex">
+                            <label asp-for="CompanyId" class="labels">Company</label>
+                            @if (ViewBag.Companies != null)
+                            {
+                                <select asp-for="CompanyId" name="CompanyId" asp-items="@ViewBag.Companies" id="CompanyId" class="form-select">
+                                    <option value="@null">Select Company</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <p>No companies found</p>
+                            }
+                            <a asp-controller="Companies" asp-action="Create">Add New Company</a>
+                        </div>
+                    </div>
+                    @* Country *@
+                    <div class="row mt-3">
+                        <div class="col-md-10">
+                            <label class="labels" for="CountryId">Country</label>
+                            <select asp-for="CountryId" asp-items="@ViewBag.Countries" id="CountryId" class="form-select" required>
+                                <option>Please Select</option>
+                            </select>
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3 text-center">
+                        <button class="btn btn-primary profile-button" type="submit">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,21 @@
+﻿<h2>This Home View index</h2>
+
+@{
+    ViewBag.Title = "Contacts Management";
+}
+@* TODO: Accessible to other views *@
+<div class="modal fade" id="UserLoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    @* <partial name="_UserLoginPartial" model="new LoginDTO
+    {
+    Email = string.Empty,
+    Password = string.Empty
+    }
+    "></partial> <!-- we can update the contents of this div element using jquery code-->*@
+</div>
+@*@section Scripts{
+    @{
+        await Html.RenderPartialAsync("Partials/_AutoScriptsPartial");
+        // Including the jQuery Validation files == Webpage validation UI
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+    }
+}*@

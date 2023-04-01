@@ -1,0 +1,42 @@
+﻿<div>
+    <form action="~/persons/index" method="post">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="contactGroupSelect">Contacts: </label>
+            <select class="form-select" name="groupId" id="contactGroupSelect">
+                <option value="@null">All</option>
+                @if(ViewBag.ContactGroupsFilter != null){
+                    @foreach (KeyValuePair<string, int> searchProperty in ViewBag.ContactGroupsFilter)
+                    {
+                        if (searchProperty.Value == ViewBag.groupId)
+                        {
+                            <option value="@searchProperty.Value" selected>@searchProperty.Key</option>
+                        }
+                        else
+                        {
+                            <option value="@searchProperty.Value">@searchProperty.Key</option>
+                        }
+                    }
+                }
+            </select>
+            <label class="input-group-text" for="searchPropertySelect">Property</label>
+            <select class="form-select" name="searchProperty" id="searchPropertySelect">
+                @foreach(KeyValuePair<string,string> searchProperty in ViewBag.SearchProperties)
+                {
+                    if (searchProperty.Value == ViewBag.searchProperty)
+                    {
+                        <option value="@searchProperty.Value" selected>@searchProperty.Key</option>
+                    } 
+                    else
+                    {                        
+                        <option value="@searchProperty.Value">@searchProperty.Key</option>
+                    }
+                }
+            </select>
+            <input name="searchString" placeholder="Enter value" type="text" aria-label="Search String" value="@ViewBag.searchString" class="form-control">
+            <input name="sortProperty" type="hidden" value="@ViewBag.sortProperty" class="form-control">
+            <input name="sortOrder" type="hidden" value="@ViewBag.sortOrder" class="form-control">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>  
+            <a href="~/persons/index" >Clear</a> <!-- Gimme decor-->          
+        </div>
+    </form>
+</div>

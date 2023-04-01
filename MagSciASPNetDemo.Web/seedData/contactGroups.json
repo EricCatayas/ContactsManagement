@@ -1,0 +1,32 @@
+[
+  {
+    "GroupId" : 1,
+    "GroupName": "Family",
+    "Description": "Group for family contacts"
+  },
+  {
+    "GroupId" : 2,
+    "GroupName": "Friends",
+    "Description": "Group for friend contacts"
+  },
+  {
+    "GroupId": 3,
+    "GroupName": "Work",
+    "Description": "Group for work-related contacts"
+  },
+  {
+    "GroupId" : 4,
+    "GroupName": "Services",
+    "Description": "Group for service contacts"
+  },
+  {
+    "GroupId" : 5,
+    "GroupName": "Colleagues",
+    "Description": "Group for colleague contacts"
+  },
+  {
+    "GroupId" : 6,
+    "GroupName": "Acquaintances",
+    "Description": "Group for acquaintance contacts"
+  }
+]

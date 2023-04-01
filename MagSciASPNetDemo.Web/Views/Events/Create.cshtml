@@ -1,0 +1,87 @@
+﻿@model EventAddRequest
+
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Events" asp-action="Index">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">New Event</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="Partials/_SuccessCardPartial"></partial>
+
+<div>
+
+    <div class="row justify-content-center">
+        <form asp-controller="Events" asp-action="Create" method="post">
+        <div class="col-auto col-md-6 col-sm-10 content-card">
+            @*<div class="card-big-shadow"> Looks stretched*@
+                <div class="card card-just-text" data-background="color" data-color="yellow" data-radius="none">
+                    <div class="row justify-content-evenly mt-3">
+                        <div class="col-auto">
+                            <label asp-for="ThemeColor" class="category">Select Color:</label>
+                            <select asp-for="ThemeColor">
+                            @foreach(string themecolor in ViewBag.ThemeColors)
+                            {
+                                <option value="@themecolor">@themecolor</option>
+                            }
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <label asp-for="Type" class="category">Select Type:</label>
+                            <select asp-for="Type">
+                            @foreach(string type in ViewBag.TypeOptions)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="mt-2">
+                            <input asp-for="Title" type="text" class="form-control" placeholder="Enter Title" class="category">
+                        </div>
+                        <div class="mt-2">
+                            <textarea asp-for="Description" class="form-control description" style="height: 140px" placeholder="Enter Description"></textarea>
+                        </div>
+                        <div class="row justify-content-between mt-2">
+                            <div class="col-auto">
+                                <label asp-for="StartDate" class="category">Start</label>
+                                <input asp-for="StartDate" type="date" />
+                            </div>
+                            <div class="col-auto">
+                                <label asp-for="EndDate" class="category">End Date</label>
+                                <input asp-for="EndDate" type="date" />
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-success" type="submit">Create</button>
+                        </div>
+                    </div>
+                </div> <!-- end card -->
+            @*</div>*@
+        </div>
+        </form>
+    </div>
+
+</div>
+@section Stylesheets{
+    <link href="~/css/card-note.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script>
+        const selectColorElement = document.querySelector('#ThemeColor');
+        const cardElement = document.querySelector('.card');
+
+        selectColorElement.addEventListener('change', (event) => {
+            const selectedColor = event.target.value;
+            cardElement.setAttribute('data-color', selectedColor);
+        });
+
+    </script>
+}

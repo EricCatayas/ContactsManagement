@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Contacts Management";
+}
+<h2>This Home View index</h2>
+<p>
+    :) <b>Contact Management</b> The primary feature of the app should be to allow users to manage their contacts. This can include adding, editing, and deleting contacts, as well as organizing contacts into gro
+ups or categories.</p>
+<p>
+    8/ <b>Communication Tracking</b> The app can include the ability to track communication with contacts, such as call logs, email logs, or messaging logs. This can help users keep track of their interactions with contacts and ensure that they follow up on im
+portant conversations.</p>
+<p>
+    ;C <b>Notes, Calendar, Reminders</b> Users can add notes and reminders to contacts, such as important dates or events, preferred communication methods, or o
+ther relevant information.</p>
+<p>
+    :D <b>Company Management</b> The app can also include the ability to manage company information, such as the company's name, address, phone number, website, and other
+ relevant details.</p>
+<p>
+    :O <b>Search and Filter</b> A robust search and filter feature can make it easy for users to find specific contacts or groups of contacts based on 
+various criteria.</p>
+<p>
+    ;) <b>Screen Size Compatibility</b> Phones? mmkay, Tablets? No problemo. 
+27" monitors? You got it!</p>
+<p>
+    :U <b>Excel and Pdf Utility</b> The app can download the user's contact data for.. whatever damn r
+eason they gon use it</p>
+
+@* Accessible in home.Index and Account.Register *@
+@*<div class="modal fade" id="UserLoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <partial name="_UserLoginPartial" model="new LoginDTO
+    {
+        Email = string.Empty,
+        Password = string.Empty
+    }
+    "></partial> <!-- we can update the contents of this div element using jquery code-->
+</div>*@
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial"); // Not required for Bootstrap 5.2.3
+        await Html.RenderPartialAsync("Partials/_AutoScriptsPartial");
+        // Including the jQuery Validation files == Webpage validation UI
+    }
+}

@@ -1,0 +1,45 @@
+﻿@model LoginDTO
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Log In</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <partial name="Partials/_ErrorCardPartial"></partial>
+            <div id="alert_placeholder_login">
+            </div>
+            <!-- N: the strong typing for LoginModel-->
+            <label class="labels"> loverboy@example.com _MagSci456</label>
+            <form id="UserLoginForm" asp-controller="Account" asp-action="Login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group row">
+                    <label asp-for="Email" class="col-md-4 col-form-label"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="Email" placeholder="Enter your email address" />
+                        <span asp-validation-for="Email" class="text-danger" /> <!-- denotes form-field related exception messages -->
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="Password" class="col-md-4 col-form-label"></label>
+                    <div class="col-md-8">
+                        <input class="form-control" asp-for="Password" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-8 col-form-label">
+                        <div class="form-check">
+                            <input class="form-check-input" name="rememberMe" type="checkbox"/>
+                            <label class="form-check-label">Remember Me</label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="login" name="login" class="btn btn-primary">Login</button> <!-- UserLogin.js is wired to this button-->
+        </div>
+    </div>
+</div>

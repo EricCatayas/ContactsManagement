@@ -1,0 +1,145 @@
+﻿@model CompanyUpdateRequest
+
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Companies" asp-action="Index">Companies</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Companies" asp-action="Details" asp-route-companyId="@Model.CompanyId">@Model.CompanyName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Company Information</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<section class="h-170 h-custom gradient-custom-2">
+    <div class="container py-5 h-170">
+        <div class="row d-flex justify-content-center align-items-center h-170">
+            <div class="col-12">
+                <form asp-controller="Companies" asp-action="Edit">
+                <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <h3 class="fw-normal mb-5" style="color: #4835d4;">Company Information</h3>
+                                    <input asp-for="CompanyId" type="hidden" value="@Model.CompanyId" />
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="CompanyName"></label>
+                                        <input asp-for="CompanyName" class="form-control form-control-lg" />
+                                        <span asp-validation-for="CompanyName"></span>
+                                    </div>
+
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="CompanyDescription"></label>
+                                        <textarea asp-for="CompanyDescription" class="form-control form-control-lg"></textarea>
+                                        <span asp-validation-for="CompanyDescription"></span>
+                                    </div>
+
+                                    <div class="mb-4 pb-2">
+                                        <label for="Industry">Industry</label>
+                                        <select id="Industry" name="Industry" class="form-select">
+                                            if(@Model.Industry != null)
+                                            {
+                                                <option value="@Model.Industry">@Model.Industry</option>
+                                            } else {
+                                                <option value="@null">Select tIndustry</option>
+                                            }
+                                            @foreach (string industry in ViewBag.CompanyIndustries)
+                                            {
+                                                    <option value="@industry">@industry</option>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <label asp-for="Address1"></label>
+                                            <input asp-for="Address1" class="form-control form-control-lg" />
+                                            <span asp-validation-for="Address1"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <label asp-for="Address2"></label>
+                                            <input asp-for="Address2" class="form-control form-control-lg" />
+                                            <span asp-validation-for="Address2"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="ContactEmail"></label>
+                                        <input asp-for="ContactEmail" class="form-control form-control-lg" />
+                                        <span asp-validation-for="ContactEmail"></span>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2 mb-md-0 pb-md-0">
+                                            <label asp-for="ContactNumber1"></label>
+                                            <input asp-for="ContactNumber1" class="form-control form-control-lg" />
+                                            <span asp-validation-for="ContactNumber1"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="ContactNumber2"></label>
+                                            <input asp-for="ContactNumber2" class="form-control form-control-lg" />
+                                            <span asp-validation-for="ContactNumber2"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="WebUrl"></label>
+                                        <input asp-for="WebUrl" class="form-control form-control-lg" />
+                                        <span asp-validation-for="WebUrl"></span>
+                                    </div>
+                                </div>
+                        </div>
+
+                            @* Employees *@
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <h3 class="fw-normal mb-5">Employees</h3>
+                                        @{
+                                            List<Guid> employees = ViewBag.Employees ?? new List<Guid>() { };
+                                        }
+                                        @if(ViewBag.Persons != null)
+                                        {                          
+                                            <table>
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th>Person Name</th>
+                                                        <th>Include</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach(PersonResponse person in ViewBag.Persons)
+                                                    {
+                                                        <tr>
+                                                            <td>@person.PersonName</td>
+                                                            <td><input type="checkbox" name="@nameof(CompanyUpdateRequest.Employees)" value="@person.PersonId" @(employees.Contains(person.PersonId) ? "checked" : "")/></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            
+                                        }
+
+                                    <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
+                                        Save Changes
+                                    </button>
+                                    <a asp-controller="Companies" asp-action="Edit" asp-route-companyId="@Model.CompanyId" class="btn btn-secondary" data-mdb-ripple-color="dark">
+                                        Undo
+                                    </a>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@section Scripts{  
+    @{
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+    }    
+}

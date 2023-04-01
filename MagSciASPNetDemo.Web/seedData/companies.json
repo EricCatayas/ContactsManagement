@@ -1,0 +1,36 @@
+[
+  {
+    "CompanyName": "Acme Corporation",
+    "CompanyDescription": "A global leader in widgets and gadgets",
+    "Address1": "123 Main St",
+    "Address2": "",
+    "ContactEmail": "info@acme.com",
+    "CompanyProfileBlobUrl": null,
+    "WebUrl": "https://www.acme.com",
+    "ContactNumber1": "555-1234",
+    "ContactNumber2": ""
+  },
+  {
+    "CompanyName": "Globex Corporation",
+    "CompanyDescription": "Innovative solutions for the modern world",
+    "Address1": "456 Oak Ave",
+    "Address2": "Suite 300",
+    "ContactEmail": "info@globex.com",
+    "CompanyProfileBlobUrl": null,
+    "WebUrl": "https://www.globex.com",
+    "ContactNumber1": "555-5678",
+    "ContactNumber2": "555-9012"
+  },
+  {
+    "CompanyName": "Stark Industries",
+    "CompanyDescription": "Advanced technology for a better tomorrow",
+    "Address1": "890 Fifth Ave",
+    "Address2": "",
+    "ContactEmail": "info@starkindustries.com",
+    "CompanyProfileBlobUrl": null,
+    "WebUrl": "https://www.starkindustries.com",
+    "ContactNumber1": "555-3456",
+    "ContactNumber2": ""
+  }
+]
+

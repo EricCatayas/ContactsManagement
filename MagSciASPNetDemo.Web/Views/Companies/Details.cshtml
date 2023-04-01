@@ -1,0 +1,189 @@
+﻿@model CompanyResponse;
+
+<partial name="_DeleteModalPartial"></partial>
+
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Companies" asp-action="Index">Companies</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Company Info</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <img src="~/images/default_landscape.png" alt="avatar" class="img-fluid" style="width: 128px;">
+                <h5 class="my-3">@Model.CompanyName</h5>
+                <p class="text-muted mb-1">@Model.Address1</p>
+                <div class="row justify-content-evenly">
+                    <div class="col-auto">
+                        <a href="@Model.WebUrl" class="btn btn-outline-primary">Visit Website</a>
+                    </div>
+                    <div class="col-auto">
+                        <a asp-controller="Companies" asp-action="Edit" asp-route-companyId="@Model.CompanyId" class="btn btn-primary">Edit</a>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-danger delete-btn" type="button" value="@Model.CompanyId">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>                
+    </div>
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Company Description</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.CompanyDescription</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Industry</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.Industry</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.ContactEmail</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Contact Number 1</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.ContactNumber1</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p class="mb-0">Contact Number 2</p>
+                    </div>
+                    <div class="col-sm-9">
+                        <p class="text-muted mb-0">@Model.ContactNumber2</p>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>                
+    </div>
+</div>
+
+@* Employees Table *@
+
+<div class="row">
+    <div class="col-12">
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light">
+                <tr>
+                    <th>Employee Name</th>
+                    <th>Email</th>
+                    <th>Title</th>
+                    <th>Contact Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            @if(Model.Employees != null)
+            { 
+                @foreach(PersonResponse employee in Model.Employees)
+                {                        
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px"class="rounded-circle" />
+                                <div class="ms-3">
+                                    <p class="fw-bold mb-1">@employee.PersonName</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@employee.Email</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@employee.JobTitle</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@employee.ContactNumber1</p>
+                            <p class="text-muted mb-0">@employee.ContactNumber2</p>
+                        </td>
+                        <td>
+                            <a asp-controller="Persons" asp-action="Details" asp-route-personId="@employee.PersonId" class="btn btn-link btn-sm btn-rounded">
+                                View
+                            </a>
+                        </td>
+                    </tr>                    
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section StyleSheets{
+    <link href="~/css/modal-popup.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var modal = $("#deleteModal");
+
+            function openModal() {
+                modal.show()
+            }
+
+            function closeModal() {
+                modal.hide();
+            }
+
+            function confirmDelete() {
+                const companyId = $(".delete-btn").val();
+
+                $.ajax({
+                    url: `/companies/delete?companyId=${companyId}`,
+                    type: "DELETE",
+                    success: function () {
+                        window.location.href = "/companies/index";
+                    },
+                    error: function (xhr, status, error) {
+                        // There was an error, show an error message
+                        closeModal();
+                        alert(`Error deleting data: ${error}`);
+                    }
+                });
+            }
+
+            $(".delete-btn").click(function () {
+                openModal();
+            });
+
+            $("#deleteModal .delete-cancel").click(function () {
+                closeModal();
+            });
+
+            $("#deleteModal .delete-confirm").click(function () {
+                confirmDelete();
+            });
+        });
+
+    </script>
+}

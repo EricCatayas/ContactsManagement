@@ -1,0 +1,53 @@
+﻿@using ContactsManagement.Core.DTO.ContactsManager.Contacts;
+@model IEnumerable<ContactLogResponse>;
+
+@if(Model != null && Model.Count() > 0)
+{
+@foreach(ContactLogResponse contactLog in Model)
+{
+    <div class="col-md-12 mt-2">
+            <div class="card">
+            <input type="hidden" name="PersonId" value="@contactLog.PersonId" />
+            <div class="card-body">
+                <div class="row justify-content-between">
+                    <div class="col-auto">
+                        <p class="card-text">@contactLog.Type</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="card-text"><small class="text-muted">@contactLog.DateCreated.Value.ToString("MM/dd/yyyy")</small></p>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12 mb-1">
+                        <h5 class="card-title">@contactLog.LogTitle</h5>
+                    </div>
+                    <div class="col-md-12">
+                            <label for="Note" class="labels">Notes</label>
+                            <textarea class="form-control card-note" id="Note" style="height: 140px" readonly>@contactLog.Note</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+}
+else 
+{
+    <div class="col-md-12 mt-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-right">No Log Data</h5>
+        </div>
+    </div>
+}
+@section Scripts{
+    <script>
+        const maxWords = 50; // change to desired word limit
+        const noteElements = document.querySelectorAll('.card-note');
+        noteElements.forEach((noteElement) => {
+            const words = noteElement.textContent.trim().split(/\s+/);
+            if (words.length > maxWords) {
+                noteElement.textContent = words.slice(0, maxWords).join(' ') + '...';
+            }
+        });
+    </script>
+}

@@ -1,0 +1,21 @@
+﻿@{
+    List<string>? Errors = ViewBag.Errors;
+}
+<section class="mb-3" id="error_card_section">
+@if (Errors != null && Errors.Count > 0)
+{
+    <div class="card card-body border-danger" >    
+        <ul class="text-danger">
+            @foreach (string error in ViewBag.Errors)
+            {
+                <li class="text-danger">@error</li>
+            }
+        </ul>
+    </div>
+    <input type="hidden" id="_ErrorCardFlag" name="_ErrorCardFlag" value="true"/>
+}
+else
+{
+<input type="hidden" id="_ErrorCardFlag" name="_ErrorCardFlag" value="false"/>
+}    
+</section>

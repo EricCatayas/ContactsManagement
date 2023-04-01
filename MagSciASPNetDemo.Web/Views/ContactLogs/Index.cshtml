@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ContactLogResponse>;
+
+<partial name="Partials/_ErrorCardPartial"></partial>
+<div>
+    <form asp-asp-controller="ContactLogs" asp-action="Index" method="get">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="searchTextSelect">Search:</label>
+            <input name="searchText" placeholder="Enter value" type="text" aria-label="Search String" value="@ViewBag.searchString" class="form-control">
+            <input name="sortProperty" type="hidden" value="@ViewBag.sortProperty" class="form-control">
+            <input name="sortOrder" type="hidden" value="@ViewBag.sortOrder" class="form-control">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (KeyValuePair<string, string> property in ViewBag.sortProperties)
+            {
+                if (ViewBag.sortProperty == property.Value && ViewBag.sortOrder == "DESC")
+                {
+                    <th scope="col"><a href="~/contactlogs/index?searchText=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=ASC"> @property.Key @Html.Raw("&darr;")</a></th>
+                }
+                else
+                {
+                    <th scope="col"><a href="~/contactlogs/index?searchText=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=DESC"> @property.Key @Html.Raw("&uarr;")</a></th>
+                }
+            }
+        </tr>
+    </thead>
+</table>
+
+<div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4">
+@foreach(ContactLogResponse contactLog in Model)
+{
+<div class="col">
+    <div class="card text-dark bg-light mb-3">
+        <div class="row card-header justify-content-between">
+            <div class="col-auto">
+                <p class="card-text"><small class="text-muted">@contactLog.DateCreated.Value.ToString("MM/dd/yyyy")</small></p>
+            </div>
+            <div class="col-auto">
+                <a href="~/contactlogs/details?contactLogId=@contactLog.LogId" class="card-link">View</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <h6 class="card-title">@contactLog.LogTitle</h6>
+            <p class="card-text card-note">@contactLog.Note</p>
+            <p class="card-text"><small class="text-muted">~ @contactLog.PersonLog</small></p>
+        
+        </div>
+    </div>
+</div>
+}
+</div>
+
+@section Scripts{
+    <script>
+        const maxWords = 35; // change to desired word limit
+        const noteElements = document.querySelectorAll('.card-note');
+        noteElements.forEach((noteElement) => {
+            const words = noteElement.textContent.trim().split(/\s+/);
+            if (words.length > maxWords) {
+                noteElement.textContent = words.slice(0, maxWords).join(' ') + '...';
+            }
+        });
+    </script>
+}

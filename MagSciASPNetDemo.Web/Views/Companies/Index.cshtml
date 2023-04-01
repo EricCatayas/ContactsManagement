@@ -1,0 +1,98 @@
+﻿@model IEnumerable<CompanyResponse>
+
+@{
+    ViewBag.CurrentUrl = "~/companies/index";
+
+}
+<partial name="Partials/_ErrorCardPartial"></partial>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Companies" asp-action="Create">Add Company</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link">Manage my Business</a>
+    </li>
+</ul>
+
+<partial name="_CompaniesSearchBarPartial"></partial>
+
+@if(Model != null && Model.ToList().Count > 0)
+{    
+<div class="row justify-content-start">
+    <div class="col-6">
+        <div class="list-group">
+            @foreach (CompanyResponse company in Model)
+            {
+                <div class="company-list list-group-item list-group-item-action" aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 id="company-name" class="card-title">@company.CompanyName</h5>
+                    </div>
+                    <details id="company-address1" style="display:none;">@company.Address1</details>
+                    <details id="company-industry" style="display:none;">@company.Industry</details>
+                    <details id="company-weburl" style="display:none;">@company.WebUrl</details>
+                    <details id="company-description" style="display:none;">@company.CompanyDescription</details>
+                    <details id="company-Id" style="display:none;">@company.CompanyId</details>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-6">
+        <div id="company-profile" style="display: none;">
+            <div class="card" style="width: 21rem;">
+                <div class="card-body">
+                    <h5 id="company-name" class="card-title">companyName</h5>
+                        <p id="company-address1" class="card-text">Address</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li id="company-industry" class="list-group-item">Industry</li>
+                    <li id="company-description" class="list-group-item">Description</li>
+                </ul>
+                <div class="card-body">
+                    <a id="company-ViewDetails" href="..." class="btn btn-info">View Info</a>
+                    <a id="company-weburl" href="..." class="card-link">Visit their site</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+else
+{
+    <h1>
+        No company data -- create one now!
+    </h1>
+}
+@section Scripts{
+    <script>
+        const companyList = document.querySelectorAll(".company-list");
+        const companyProfile = document.getElementById("company-profile");
+
+        companyList.forEach((company) => {
+            company.addEventListener("click", function () {
+                const companyName = company.querySelector("#company-name")?.innerText;
+                const companyAddress1 = company.querySelector("#company-address1")?.innerText;
+                const companyIndustry = company.querySelector("#company-industry")?.innerText;
+                const companyWebUrl = company.querySelector("#company-weburl")?.innerText;
+                const companyDescription = company.querySelector("#company-description")?.innerText;
+                const companyId = company.querySelector("#company-Id")?.innerText;
+
+                const companyProfileImg = companyProfile.querySelector("#company-logoUrl");
+                const companyProfileName = companyProfile.querySelector("#company-name");
+                const companyProfileAddress1 = companyProfile.querySelector("#company-address1");
+                const companyProfileLink = companyProfile.querySelector("#company-weburl");
+                const companyProfileIndustry = companyProfile.querySelector("#company-industry");
+                const companyProfileDescription = companyProfile.querySelector("#company-description");
+                const companyDetailsLink = companyProfile.querySelector("#company-ViewDetails");
+
+                companyProfileName.innerText = companyName;
+                companyProfileAddress1.innerText = companyAddress1;
+                companyProfileIndustry.innerText = companyIndustry;
+                companyProfileDescription.innerText = companyDescription;
+                companyProfileLink.setAttribute("href", companyWebUrl);
+                companyDetailsLink.setAttribute("href", `Details?companyId=${companyId}`);
+
+                companyProfile.style.display = "block";
+            });
+        });
+    </script>
+}

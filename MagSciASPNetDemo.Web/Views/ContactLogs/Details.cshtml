@@ -1,0 +1,129 @@
+﻿@model ContactLogUpdateRequest
+
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="~/">Home</a></li>
+                <li class="breadcrumb-item"><a href="~/contactlogs/index">Logs</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Log Information</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="_DeleteModalPartial"></partial>
+
+<section class="h-170 h-custom gradient-custom-2">
+    <div class="container py-5 h-170">
+        <div class="row d-flex justify-content-center align-items-center h-170">
+            <div class="col-12">
+                <form asp-controller="ContactLogs" asp-action="Edit" method="post">
+                    <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                        <div class="card-body p-0">
+                            <div class="p-5">
+                                <div class="row card-header justify-content-between">
+                                    <div class="col-auto">
+                                        <h3 class="fw-normal mb-5" style="color: #4835d4;">Log Information</h3>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p class="card-text text-muted">@Model.DateCreated.Value.ToString("MM/dd/yyyy")</p>
+                                        <input asp-for="DateCreated" type="hidden" value="@Model.DateCreated" />
+                                    </div>
+                                </div>
+                                <input asp-for="LogId" type="hidden" value="@Model.LogId" />
+                                <div class="mb-4 pb-2">
+                                    <label asp-for="LogTitle"></label>
+                                    <input asp-for="LogTitle" class="form-control form-control-md" />
+                                    <span asp-validation-for="LogTitle"></span>
+                                </div>
+                                <div class="row mb-4 pb-2">
+                                    <div class="col-md-12">
+                                        <label asp-for="Note"></label>
+                                        <textarea asp-for="Note" class="form-control form-control-md" style="height: 400px"></textarea>
+                                        <span asp-validation-for="Note"></span>
+                                    </div>
+                                </div>
+                                <div class="row card-header justify-content-evenly pb-2">
+                                    <div class="col-auto d-inline-flex">
+                                        <label for="Type">Communication:  </label>
+                                        <select for="Type" name="Type" id="Note" class="form-select" required>
+                                            @foreach(string type in ViewBag.CommunicationTypes)
+                                            {
+                                                if(Model.Type == type)
+                                                {                                            
+                                                    <option value="@type" selected>@type</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@type">@type</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button class="btn btn-success" type="submit">Save Changes</button>
+                                        <button class="btn btn-danger delete-btn" type="button" value="@Model.LogId">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section StyleSheets{
+    <link href="~/css/modal-popup.css" rel="stylesheet" />
+}
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+        var modal = $("#deleteModal");
+
+        function openModal() {
+            modal.show()
+        }
+
+        function closeModal() {
+            modal.hide();
+        }
+
+        function confirmDelete() {
+            const logId = $(".delete-btn").val();
+
+            $.ajax({
+                url: `/contactlogs/delete?contactLogId=${logId}`,
+                type: "DELETE",
+                success: function () {
+                        window.location.href = "/contactlogs/index";
+                },
+                error: function (xhr, status, error) {
+                    // There was an error, show an error message
+                    closeModal();
+                    alert(`Error deleting data: ${error}`);
+                }
+            });
+        }
+
+        $(".delete-btn").click(function () {
+            openModal();
+        });
+
+        $("#deleteModal .delete-cancel").click(function () {
+            closeModal();
+        });
+
+        $("#deleteModal .delete-confirm").click(function () {
+            confirmDelete();
+        });
+        });
+
+    </script>
+}

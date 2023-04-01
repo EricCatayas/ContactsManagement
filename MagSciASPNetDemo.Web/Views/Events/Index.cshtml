@@ -1,0 +1,163 @@
+﻿@using ContactsManagement.Web.ViewModels;
+@model IEnumerable<EventResponse>
+
+    <!-- Worry about calendar later or not? -->
+<!-- Search Bar w/ Status and Type checkboxes? -->
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Events" asp-action="Create">Create New Event</a>
+    </li>
+    <li class="nav-item">
+        @if (ViewBag.IsActiveEvents != null && ViewBag.IsActiveEvents == true)
+        {
+            <a class="nav-link" asp-controller="Events" asp-action="Index" asp-route-isActiveEvent="@false">View Completed Events</a>
+        }
+
+        else
+        {
+            <a class="nav-link" asp-controller="Events" asp-action="Index" asp-route-isActiveEvent="@true">View Active Events</a>
+        }
+    </li>
+</ul>
+@if (ViewBag.IsActiveEvents)
+{
+    <h2>Active Events</h2>
+    <input id="active-events" type="hidden" value="true"/>
+} else
+{
+    <h2>Completed Events</h2>
+    <input id="active-events" type="hidden" value="false" />
+}
+<div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2">
+    @if(Model != null && Model.Count() > 0)
+    {
+        @foreach(EventResponse _event in Model)
+        {
+            <div class="col content-card">
+                @*<div class="card-big-shadow">*@
+                    <div class="card card-just-text" data-background="color" data-color="@_event.ThemeColor" data-radius="none">
+                        <div class="row justify-content-between">
+                            <div class="col-auto hover-disappear">
+                                <h6 class="category">@_event.Status</h6>                                
+                            </div>
+                            <div class="col-auto hover-appear-btn" style="display:none;">
+                            @if (ViewBag.IsActiveEvents)
+                            {
+                                <button class="completed-btn category btn btn-success btn-sm" style="color:white" type="button" value="@_event.EventId">Completed</button>
+                            }
+                            else
+                            {
+                                <button class="delete-btn category btn btn-danger btn-sm" style="color:white" type="button" value="@_event.EventId">Delete</button>
+                            }
+                        </div>
+                        </div>
+                        <div class="content">
+                            <div class="hover-disappear">
+                                <h6 class="category">@_event.Type</h6>
+                                <h5 class="title">@_event.Title</h5>
+                                <p><small class="category">
+                                    @if (_event.StartDate.HasValue)
+                                    {
+                                       @_event.StartDate.Value.ToString("MM/dd/yy");
+                                    }
+                                      
+                                    @if(_event.EndDate.HasValue)
+                                    {
+                                        @_event.EndDate.Value.ToString(" -- MM/dd/yy");
+                                    }
+                                 </small></p>
+                            </div>
+                            <p class="hover-appear category" style="display:none;">@_event.Description</p>
+                        </div>
+                    </div> <!-- end card -->
+                @*</div>*@
+            </div>
+        }
+    }
+</div>
+
+@section Stylesheets{
+    <link href="~/css/card-note.css" rel="stylesheet" />
+}
+@section Scripts{
+    <script>
+        //Hover effect
+        const contentCards = document.querySelectorAll('.content-card');
+
+        contentCards.forEach(card => {
+
+            const eventDescription = card.querySelector('.hover-appear');
+            const eventCompletedBtn = card.querySelector('.hover-appear-btn');
+
+            const hoverDisappearElements = card.querySelectorAll('.hover-disappear *');
+
+            card.addEventListener('mouseenter', () => {
+                hoverDisappearElements.forEach(element => {
+                    element.style.display = 'none';
+                });
+
+                eventDescription.style.display = 'block';
+                eventCompletedBtn.style.display = 'block';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                hoverDisappearElements.forEach(element => {
+                    element.style.display = 'block';
+                });
+
+                eventDescription.style.display = 'none';
+                eventCompletedBtn.style.display = 'none';
+            });
+        });
+
+        // Event-Completed/Delete Click Event
+        const isActiveEvents = document.querySelector('#active-events');
+        if (isActiveEvents.value == "true") 
+        {
+            const completedBtns = document.querySelectorAll('.completed-btn');
+            completedBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const eventId = btn.value;
+                    // Send an AJAX delete request to delete the event with the given eventId
+                    fetch(`/events/eventcompleted?eventId=${eventId}`, {
+                        method: 'POST',
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // If the delete request was successful, remove the parent .content-card element
+                            btn.closest('.content-card').remove();
+                        } else {
+                            alert(`Error updating the event. Try refreshing the page`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                });
+            });
+        } else {
+            const deleteBtns = document.querySelectorAll('.delete-btn');
+            deleteBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const eventId = btn.value;
+                    // Send an AJAX delete request to delete the event with the given eventId
+                    fetch(`/events/delete?eventId=${eventId}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // If the delete request was successful, remove the parent .content-card element
+                                btn.closest('.content-card').remove();
+                            } else {
+                                alert(`Error deleting the event. Try refreshing the page`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                });
+            });
+        }
+    </script>
+}

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<PersonResponse>
+@{
+
+}
+<table class="table">
+    <thead>
+        <tr>
+            @foreach(KeyValuePair<string,string>property in ViewBag.SearchProperties)
+            {
+                if(ViewBag.sortProperty == property.Value && ViewBag.sortOrder == "DESC")
+                {
+                    <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=ASC"> @property.Key @Html.Raw("&darr;")</a></th>
+                } else
+                {
+                    <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=DESC"> @property.Key @Html.Raw("&uarr;")</a></th>
+                }
+            }
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@{
+            int tablerow = 1;
+        }*@
+        @foreach(PersonResponse person in Model){
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                        <div class="ms-3">
+                            <p class="fw-bold mb-1">@person.PersonName</p>
+                        </div>
+                    </div>  
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@person.Email</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">@person.JobTitle</p>
+                </td>
+                @if(person.Tag != null)
+                {
+                    <td>
+                        <div id="contactTag">
+                            <span class="badge rounded-pill" style="background-color:@person.Tag.TagColor;">@person.Tag.TagName</span>
+                            <i id="removeTagIcon" class="fa-solid fa-eraser" style="color: #e5344e;"><input type="hidden" value="@person.PersonId" /></i>
+                        </div>
+                    </td>
+                } else
+                {
+                    <td></td>
+                }
+                <td>
+                    <p class="fw-normal mb-1">@person.CompanyName</p>
+                </td>
+                <td>
+                    <a asp-controller="Persons" asp-action="Edit" asp-route-personId="@person.PersonId">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

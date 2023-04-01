@@ -1,0 +1,42 @@
+﻿@model IEnumerable<PersonResponse>
+@{
+    ViewBag.Title = "Index";
+}
+<partial name="Partials/_ErrorCardPartial"></partial>
+<ul class="nav nav-tabs">    
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Persons" asp-action="Create">Create New Contact</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" asp-controller="Countries" asp-action="UploadExcelFile">Upload Excel File</a>
+    </li>
+</ul>
+
+<partial name="_PersonsSearchBarPartial"></partial>
+<partial name="_PersonsTablePartial"></partial>
+
+@section Scripts
+{
+    <script>
+    $(document).ready(function () {
+        $('#removeTagIcon').click(function () {
+                var contactTagDiv = $(this).parent('#contactTag'); //'#removeTagIcon'
+            var personId = $(this).find('input[type=hidden]').val();            
+            $.ajax({
+                type: 'POST',
+                url: `/Tags/RemoveContactTagFromPerson?personId=${personId}`,
+                success: function (data) {
+                        if (data.success) {
+                            contactTagDiv.remove();
+                        }
+                },
+                error: function (xhr, status, error) {
+                    PresentErrorCardPopUp("Error removing contact tag");
+                }
+            });
+        });
+    });
+</script>
+<script src="~/js/ErrorCardPopUp.js"></script>
+}
+

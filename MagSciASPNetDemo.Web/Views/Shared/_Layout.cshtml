@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />    
+    <link href="~/fontawesome6.3.0-web/css/all.css" rel="stylesheet" />    
+    @RenderSection("StyleSheets", required: false)
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="container">
+        <partial name="Partials/_NavbarPartial"></partial>
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+    <footer>
+    </footer>
+    @* -- javascript -- *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>    
+    <script src="~/js/navbar.js"></script>
+    @*<Nigga Bootstrap scripts be making me page unloadable*@
+    @*<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>    *@
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>*@
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>*@
+    @*<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>*@
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

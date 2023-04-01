@@ -1,0 +1,47 @@
+{
+  "TradingOptions": {
+    "DefaultStockSymbol": "MSFT",
+    "DefaultOrderQuantity": 100,
+    "Top10PopularStocks": [
+      "AAPL",
+      "MSFT",
+      "AMZN",
+      "TSLA",
+      "GOOGL",
+      "GOOG",
+      "NVDA",
+      "BRK.B",
+      "META",
+      "UNH",
+      "JNJ"
+    ],
+      "Top25PopularStocks":
+      [
+        "AAPL",
+        "MSFT",
+        "AMZN",
+        "TSLA",
+        "GOOGL",
+        "GOOG",
+        "NVDA",
+        "BRK.B",
+        "META",
+        "UNH",
+        "JNJ",
+        "JPM",
+        "V",
+        "PG",
+        "XOM",
+        "HD",
+        "CVX",
+        "MA",
+        "BAC",
+        "ABBV",
+        "PFE",
+        "AVGO",
+        "COST",
+        "DIS",
+        "KO"
+      ]
+  }  
+}
