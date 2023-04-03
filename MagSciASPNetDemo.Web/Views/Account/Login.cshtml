@@ -1,5 +1,7 @@
 ﻿@model LoginDTO;
-
+@{
+	ViewBag.Title = "Contacts Management Login";
+}
 <div class="login-body mx-auto">
 
 	<div class="login-container" id="container">
@@ -13,7 +15,7 @@
 					<span asp-validation-for="Email" class="text-danger" />
 					<input asp-for="Password" type="password" placeholder="Password" />
 					<span asp-validation-for="Password" class="text-danger" />
-					<input class="form-check-input" name="RememberMe" type="checkbox" />
+					<input class="form-check-input" asp-route-rememberMe="@true" type="checkbox" />
 					<label class="form-check-label">Remember Me</label>
 					<br />
 					<a asp-controller="Account" asp-action="Register">Create New Account</a>

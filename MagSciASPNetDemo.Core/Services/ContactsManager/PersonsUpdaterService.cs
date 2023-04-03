@@ -47,15 +47,15 @@ namespace ContactsManagement.Core.Services.ContactsManager
                          ContactLog CRUD for Person is handled in ContactLogsService   :: 1-to-1 
                          ContactTag Update/Removal is handled in ContactTagsUpdaterService      */
 
-                Person updatedPerson = personUpdateRequest.ToPerson();
+                Person personToUpdate = personUpdateRequest.ToPerson();
                 if(personUpdateRequest.ContactGroups != null)
                 {
-                    updatedPerson.ContactGroups = await _contactGroupsRepository.GetContactGroups(personUpdateRequest.ContactGroups);
+                    personToUpdate.ContactGroups = await _contactGroupsRepository.GetContactGroups(personUpdateRequest.ContactGroups);
                 }
 
-                updatedPerson = await _personsUpdaterRepository.UpdatePerson(updatedPerson);
+                personToUpdate = await _personsUpdaterRepository.UpdatePerson(personToUpdate);
 
-                return updatedPerson.ToPersonResponse();
+                return personToUpdate.ToPersonResponse();
             }
             catch (Exception ex)
             {

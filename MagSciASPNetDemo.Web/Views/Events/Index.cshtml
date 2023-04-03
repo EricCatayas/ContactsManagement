@@ -20,15 +20,22 @@
         }
     </li>
 </ul>
-@if (ViewBag.IsActiveEvents)
-{
-    <h2>Active Events</h2>
-    <input id="active-events" type="hidden" value="true"/>
-} else
-{
-    <h2>Completed Events</h2>
-    <input id="active-events" type="hidden" value="false" />
-}
+<div class="row justify-content-between">
+    <div class="col-auto">
+    @if (ViewBag.IsActiveEvents)
+    {
+        <h2>Active Events</h2>
+        <input id="active-events" type="hidden" value="true"/>
+    } else
+    {
+        <h2>Completed Events</h2>
+        <input id="active-events" type="hidden" value="false" />
+    }
+    </div>
+    <div class="col-auto">
+        <p><small class="text-muted">Note: Event status is updated only after 12 hours</small></p>
+    </div>
+</div>
 <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2">
     @if(Model != null && Model.Count() > 0)
     {

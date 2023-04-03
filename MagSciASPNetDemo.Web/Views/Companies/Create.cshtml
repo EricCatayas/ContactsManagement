@@ -1,8 +1,6 @@
 ﻿@model CompanyAddRequest
-
-<a href="@ViewBag.CurrentUrl">Go Back</a>
 @{
-    ViewBag.CurrentUrl = "~companies/create";
+    ViewBag.Title = "Add Company";
 }
 <div class="row">
     <div class="col">
@@ -15,103 +13,124 @@
         </nav>
     </div>
 </div>
-<div>
-    <partial name="Partials/_ErrorCardPartial"></partial>
-    <partial name="Partials/_SuccessCardPartial"></partial>
+<partial name="Partials/_ErrorCardPartial"></partial>
 
-    <form asp-controller="Companies" asp-action="create" method="post" class="column needs-validation" novalidate>
-        @*novalidate*@
-        @*Image*@
-        <div class="row mb-3">
-            <label class="form-label">CompanyPic TODO</label>
-            @*<input asp-for="PersonName" class="form-control" required/>*@
-        </div>
+<section class="h-170 h-custom gradient-custom-2">
+    <div class="container py-5 h-170">
+        <div class="row d-flex justify-content-center align-items-center h-170">
+            <div class="col-12">
+                <form asp-controller="Companies" asp-action="create" method="post" asp-route-userId="@ViewBag.UserId" class="column needs-validation" novalidate>
+                    <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <h3 class="fw-normal mb-5" style="color: #4835d4;">Company Information</h3>
+                                    @*CompanyName*@
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="CompanyName"></label>
+                                        <input asp-for="CompanyName" class="form-control form-control-lg" />
+                                        <span asp-validation-for="CompanyName"></span>
+                                    </div>
+                                    @*Company Description*@
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="CompanyDescription"></label>
+                                        <textarea asp-for="CompanyDescription" class="form-control form-control-lg"></textarea>
+                                        <span asp-validation-for="CompanyDescription"></span>
+                                    </div>
+                                    @*CompanyIndustry*@
+                                    <div class="mb-4 pb-2">
+                                        <label for="Industry">Industry</label>
+                                        <select id="Industry" name="Industry" class="form-select">
+                                            @foreach (string industry in ViewBag.CompanyIndustries)
+                                            {
+                                                    <option value="@industry">@industry</option>
+                                            }
+                                        </select>
+                                    </div>
+                                        @*Address1 Address2*@
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <label asp-for="Address1"></label>
+                                            <input asp-for="Address1" class="form-control form-control-lg" />
+                                            <span asp-validation-for="Address1"></span>
+                                        </div>
+                                        <div class="col-md-6 mb-4 pb-2">
+                                            <label asp-for="Address2"></label>
+                                            <input asp-for="Address2" class="form-control form-control-lg" />
+                                            <span asp-validation-for="Address2"></span>
+                                        </div>
+                                    </div>
+                                    @*ContactEmail*@
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="ContactEmail"></label>
+                                        <input asp-for="ContactEmail" class="form-control form-control-lg" />
+                                        <span asp-validation-for="ContactEmail"></span>
+                                    </div>
+                                    @*ContactNumber*@
+                                    <div class="row">
+                                        <div class="col-md-6 mb-4 pb-2 mb-md-0 pb-md-0">
+                                            <label asp-for="ContactNumber1"></label>
+                                            <input asp-for="ContactNumber1" class="form-control form-control-lg" />
+                                            <span asp-validation-for="ContactNumber1"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="ContactNumber2"></label>
+                                            <input asp-for="ContactNumber2" class="form-control form-control-lg" />
+                                            <span asp-validation-for="ContactNumber2"></span>
+                                        </div>
+                                    </div>
+                                    @*WebUrl*@
+                                    <div class="mb-4 pb-2">
+                                        <label asp-for="WebUrl"></label>
+                                        <input asp-for="WebUrl" class="form-control form-control-lg" />
+                                        <span asp-validation-for="WebUrl"></span>
+                                    </div>
+                                </div>
+                        </div>
 
-        @*CompanyName*@
-        <div class="row mb-3">
-            <label asp-for="CompanyName" class="form-label">CompanyName</label>
-            <input asp-for="CompanyName" class="form-control" required/>
-            <span asp-validation-for="CompanyName" class="text-danger"></span>
-        </div>
+                            @* Employees *@
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <h3 class="fw-normal mb-5">Employees</h3>
+                                        @{
+                                            List<Guid> employees = ViewBag.Employees ?? new List<Guid>() { };
+                                        }
+                                        @if(ViewBag.Persons != null)
+                                        {
+                                            <table class="table table-sm table-striped">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th>Person Name</th>
+                                                        <th>Include</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach(PersonResponse person in ViewBag.Persons)
+                                                    {
+                                                        <tr>
+                                                            <td>@person.PersonName</td>
+                                                            <td><input type="checkbox" name="@nameof(CompanyUpdateRequest.Employees)" value="@person.PersonId"/></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            
+                                        }
 
-        @*CompanyDescription*@
-        <div class="row flex">
-            <label asp-for="CompanyDescription" class="form-label pt">Company Description</label>
-            <textarea asp-for="CompanyDescription" class="form-control"></textarea>
-            <span asp-validation-for="CompanyDescription" class="text-danger"></span>
+                                    <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
+                                        Create
+                                    </button>                         
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
         </div>
-
-        @*Industry*@
-        <div class="row flex">
-            <label for="Industry" class="form-label pt">Industry</label>
-            <select asp-for="Industry" name="Industry" id="Industry" class="form-select">
-                <option value="@null">Select Industry</option>
-            @foreach(string industry in ViewBag.CompanyIndustries){
-
-                <option value="@industry">@industry</option>
-            }
-            </select>                
-        </div>
-
-        @*ContactEmail*@
-        <div class="row mb-3">
-            <label asp-for="ContactEmail" class="form-label pt">Email</label>
-            <input asp-for="ContactEmail" class="form-control" />
-            <span asp-validation-for="ContactEmail" class="text-danger"></span>
-        </div>
-
-        @*Address1*@
-        <div class="row flex">
-            <label asp-for="Address1" class="form-label pt">Address1</label>
-            <textarea asp-for="Address1" class="form-control"></textarea>
-            <span asp-validation-for="Address1" class="text-danger"></span>
-        </div>
-        @*Address2*@
-        <div class="row flex">
-            <label asp-for="Address2" class="form-label pt">Address2</label>
-            <textarea asp-for="Address2" class="form-control"></textarea>
-            <span asp-validation-for="Address2" class="text-danger"></span>
-        </div>
-
-        @*ContactNumber1*@
-        <div class="row flex">
-            <label asp-for="ContactNumber1" class="form-label pt">Contact Number 1</label>
-            <input asp-for="ContactNumber1" class="form-control" />
-            <span asp-validation-for="ContactNumber1" class="text-danger"></span>
-        </div>
-        @*ContactNumber2*@
-        <div class="row flex">
-            <label asp-for="ContactNumber2" class="form-label pt">Contact Number 2</label>
-            <input asp-for="ContactNumber2" class="form-control"/>
-            <span asp-validation-for="ContactNumber2" class="text-danger"></span>
-        </div>
-
-        @*WebUrl*@
-        <div class="row flex">
-            <label asp-for="WebUrl" class="form-label pt">Web URL</label>
-            <input asp-for="WebUrl" class="form-control" />
-        </div>
-
-        @*Employees*@
-        <div class="row flex">
-            @if (ViewBag.Persons != null)
-            {
-                foreach(PersonResponse person in ViewBag.Persons)
-                {
-                    <label>
-                        <input type="checkbox" name="@nameof(CompanyResponse.Employees)" value="@person.PersonId" />
-                        @person.PersonName
-                    </label>
-                }
-            }
-        </div>
-
-        @*Submit*@
-        <div class="row flex">
-            <button class="button button-green-back">Create</button>
-        </div>
-    </form>
-</div>
+    </div>
+</section>
 @section Scripts{
     @{
         await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial");

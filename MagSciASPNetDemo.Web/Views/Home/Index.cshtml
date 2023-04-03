@@ -1,38 +1,52 @@
 ﻿@{
     ViewBag.Title = "Contacts Management";
 }
-<h2>This Home View index</h2>
-<p>
-    :) <b>Contact Management</b> The primary feature of the app should be to allow users to manage their contacts. This can include adding, editing, and deleting contacts, as well as organizing contacts into gro
-ups or categories.</p>
-<p>
-    8/ <b>Communication Tracking</b> The app can include the ability to track communication with contacts, such as call logs, email logs, or messaging logs. This can help users keep track of their interactions with contacts and ensure that they follow up on im
-portant conversations.</p>
-<p>
-    ;C <b>Notes, Calendar, Reminders</b> Users can add notes and reminders to contacts, such as important dates or events, preferred communication methods, or o
-ther relevant information.</p>
-<p>
-    :D <b>Company Management</b> The app can also include the ability to manage company information, such as the company's name, address, phone number, website, and other
- relevant details.</p>
-<p>
-    :O <b>Search and Filter</b> A robust search and filter feature can make it easy for users to find specific contacts or groups of contacts based on 
-various criteria.</p>
-<p>
-    ;) <b>Screen Size Compatibility</b> Phones? mmkay, Tablets? No problemo. 
-27" monitors? You got it!</p>
-<p>
-    :U <b>Excel and Pdf Utility</b> The app can download the user's contact data for.. whatever damn r
-eason they gon use it</p>
 
-@* Accessible in home.Index and Account.Register *@
-@*<div class="modal fade" id="UserLoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <partial name="_UserLoginPartial" model="new LoginDTO
-    {
-        Email = string.Empty,
-        Password = string.Empty
-    }
-    "></partial> <!-- we can update the contents of this div element using jquery code-->
-</div>*@
+<section id="hero" class="d-flex align-items-center">
+    <div class="position-relative mt-3">
+        <div class="row justify-content-center">
+            <div class="col-xl-7 col-lg-9 text-center mt-4">
+                <h1>Contacts Management</h1>
+                <h2>Developed by Eric Jay Catayas</h2>
+            </div>
+        </div>
+
+        <div class="row icon-boxes">
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div class="icon-box">
+                    <div class="icon"><i class="fa-regular fa-address-book fa-lg"></i></div>
+                    <h4 class="title">Contacts Manager</h4>
+                    <p class="description">The app also includes a robust search and filter mechanism, making it easy for users to find and organize contacts.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div class="icon-box">
+                    <div class="icon"><i class="fa-regular fa-calendar-check fa-lg"></i></div>
+                    <h4 class="title">Events and Reminders</h4>
+                    <p class="description">Stay organized and on top of your schedule by setting reminders for important deadlines or events.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div class="icon-box">
+                    <div class="icon"><i class="fa-solid fa-building fa-lg"></i></div>
+                    <h4 class="title">Business</h4>
+                    <p class="description">Users can manage information related to various companies and organizations, including employees, and other important details.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                <div class="icon-box">
+                    <div class="icon"><i class="fa-solid fa-book fa-lg"></i></div>
+                    <h4 class="title">Communication Tracking</h4>
+                    <p class="description">Keep track of your interactions like meetings, and phone calls. This feature is designed to help users stay organized and ensure that they don't miss any important communication.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
 @section Scripts{
     @{
         await Html.RenderPartialAsync("Partials/_ValidationScriptsPartial"); // Not required for Bootstrap 5.2.3

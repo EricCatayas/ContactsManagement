@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 using System.ComponentModel.DataAnnotations.Schema;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsManagement.Core.DTO.ContactsManager
 {
@@ -26,7 +28,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         public string? Email { get; set; }
         [Required(ErrorMessage = "Address is required")]
         public string? Address { get; set; }
-        [Required]
+        [DisplayName("Date of Birth")]
         [DateOfBirth(MinAge = 12, MaxAge = 100)]
         public DateTime? DateOfBirth { get; set; }
         [Required(ErrorMessage = "Gender is required")]
@@ -37,8 +39,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [StringLength(75)]
         public string? JobTitle { get; set; }
         public int? CompanyId { get; set; }
-        [ImageFile(ErrorMessage = "File must be an image")]
-        public byte[]? ProfilePicture { get; set; }
         public string? ProfileBlobUrl { get; set; }
         [DataType(DataType.PhoneNumber)]
         public string? ContactNumber1 { get; set; }
@@ -70,8 +70,8 @@ namespace ContactsManagement.Core.DTO.ContactsManager
                 TagId = TagId,
                 ContactNumber1 = ContactNumber1,
                 ContactNumber2 = ContactNumber2,
-                CompanyId = CompanyId
-
+                CompanyId = CompanyId,
+                ProfileBlobUrl = ProfileBlobUrl,
                 //ContactGroups                
             };
         }

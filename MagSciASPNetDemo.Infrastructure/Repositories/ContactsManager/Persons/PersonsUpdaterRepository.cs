@@ -36,12 +36,12 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Persons
             // matchingPerson.Country = person.Country; <-- assuming country is invalid, throws exception
             matchingPerson.Address = person.Address;
             matchingPerson.CountryId = person.CountryId;
-
             matchingPerson.JobTitle = person.JobTitle;
             matchingPerson.ContactNumber1 = person.ContactNumber1;
             matchingPerson.ContactNumber2 = person.ContactNumber2;
             matchingPerson.CompanyId = person.CompanyId;
             matchingPerson.TagId = person.TagId;
+            matchingPerson.ProfileBlobUrl = person.ProfileBlobUrl;
 
             matchingPerson.ContactGroups = person.ContactGroups;
 

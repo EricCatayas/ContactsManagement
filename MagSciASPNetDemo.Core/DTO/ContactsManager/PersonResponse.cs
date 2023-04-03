@@ -40,12 +40,12 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         public string? JobTitle { get; set; }
         public int? CompanyId { get; set; }
         public string? CompanyName { get; set; }
-        public byte[]? ProfilePicture { get; set; }
         public string? ContactNumber1 { get; set; }
         public string? ContactNumber2 { get; set; }
         public int? TagId { get; set; }
         public ContactTagDTO? Tag { get; set; }
         public List<ContactGroupResponse>? ContactGroups { get; set; }
+        public string? ProfileBlobUrl { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -53,12 +53,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
             if (obj.GetType() != typeof(PersonResponse)) return false;
 
             PersonResponse other = (PersonResponse)obj;
-            return other.PersonId == PersonId &&
-               other.PersonName == PersonName &&
-               other.Email == Email &&
-               other.Address == Address &&
-               other.CountryName == CountryName &&
-               other.CountryId == CountryId ? true : false;
+            return other.PersonId == PersonId ? true : false;
         }
 
         public override int GetHashCode()
@@ -90,6 +85,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
                 TagId = person.TagId,
                 Tag = person.Tag?.ToContactTagResponse(),
                 ContactGroups = person.ContactGroups?.Select(group => group.ToContactGroupResponse()).ToList(),
+                ProfileBlobUrl = person.ProfileBlobUrl,
             };
         }
         public static PersonUpdateRequest ToPersonUpdateRequest(this PersonResponse personResponse)
@@ -111,7 +107,8 @@ namespace ContactsManagement.Core.DTO.ContactsManager
 
                 TagId = personResponse?.TagId,
                 Tag = personResponse?.Tag,
-                ContactGroups = personResponse?.ContactGroups?.Select(group => group.GroupId).ToList()
+                ContactGroups = personResponse?.ContactGroups?.Select(group => group.GroupId).ToList(),
+                ProfileBlobUrl = personResponse?.ProfileBlobUrl
                 // ContactLogs handled in ContactLogsService
             };
         }

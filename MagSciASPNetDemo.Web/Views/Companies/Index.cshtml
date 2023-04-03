@@ -7,14 +7,12 @@
 <partial name="Partials/_ErrorCardPartial"></partial>
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link" asp-controller="Companies" asp-action="Create">Add Company</a>
+        <a asp-controller="Companies" asp-action="Create" class="nav-link">Add Company</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link">Manage my Business</a>
+        <a asp-controller="Companies" asp-action="ManageMyCompany" class="nav-link">Manage my Business</a>
     </li>
 </ul>
-
-<partial name="_CompaniesSearchBarPartial"></partial>
 
 @if(Model != null && Model.ToList().Count > 0)
 {    
@@ -85,9 +83,9 @@ else
                 const companyDetailsLink = companyProfile.querySelector("#company-ViewDetails");
 
                 companyProfileName.innerText = companyName;
-                companyProfileAddress1.innerText = companyAddress1;
-                companyProfileIndustry.innerText = companyIndustry;
-                companyProfileDescription.innerText = companyDescription;
+                companyProfileAddress1.innerText = `Address: ${companyAddress1}`;
+                companyProfileIndustry.innerText = `Industry: ${companyIndustry}`;
+                companyProfileDescription.innerText = `Description: ${companyDescription}`;
                 companyProfileLink.setAttribute("href", companyWebUrl);
                 companyDetailsLink.setAttribute("href", `Details?companyId=${companyId}`);
 

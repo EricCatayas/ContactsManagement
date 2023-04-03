@@ -15,7 +15,7 @@
                     <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=DESC"> @property.Key @Html.Raw("&uarr;")</a></th>
                 }
             }
-            <th scope="col">Actions</th>
+            <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -26,14 +26,21 @@
             <tr>
                 <td>
                     <div class="d-flex align-items-center">
-                        <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                        @if(person.ProfileBlobUrl != null)
+                        {                            
+                            <img src="@person.ProfileBlobUrl" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                        }
+                        else
+                        {                            
+                            <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                        }
                         <div class="ms-3">
                             <p class="fw-bold mb-1">@person.PersonName</p>
                         </div>
                     </div>  
                 </td>
                 <td>
-                    <p class="fw-normal mb-1">@person.Email</p>
+                    <p class="fw-normal mb-1">@person.Address</p>
                 </td>
                 <td>
                     <p class="fw-normal mb-1">@person.JobTitle</p>

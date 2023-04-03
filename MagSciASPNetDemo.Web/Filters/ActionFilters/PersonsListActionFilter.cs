@@ -1,6 +1,7 @@
 ﻿using ContactsManagement.Web.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ContactsManagement.Core.DTO.ContactsManager;
+using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 
 namespace ContactsManagement.Web.Filters.ActionFilters
 {
@@ -24,9 +25,9 @@ namespace ContactsManagement.Web.Filters.ActionFilters
             personController.ViewBag.SearchProperties = new Dictionary<string, string>()
             {
                 { "Name", nameof(PersonResponse.PersonName) },
-                { "Email", nameof(PersonResponse.Email) },
+                { "Address", nameof(PersonResponse.Address) },
                 { "Job Title", nameof(PersonResponse.JobTitle) },
-                { "Tag", nameof(PersonResponse.Tag.TagName) },
+                { "Tag", nameof(ContactTagDTO.TagName) },
                 { "Company Name", nameof(PersonResponse.CompanyName) },
             };            
 

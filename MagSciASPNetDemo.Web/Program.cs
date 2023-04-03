@@ -31,6 +31,8 @@ using ContactsManagement.Core.Domain.RepositoryContracts.EventsManager;
 using ContactsManagement.Infrastructure.Repositories.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
+using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
+using ContactsManagement.Core.Services.AzureStorageAccount;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,9 +83,6 @@ builder.Services.AddScoped<IEventsUpdaterRepository, EventsUpdaterRepository>();
 builder.Services.AddScoped<IEventsDeleterRepository, EventsDeleterRepository>();
 builder.Services.AddScoped<IEventsStatusUpdaterRepository, EventsStatusUpdaterRepository>();
 
-// Azure
-// Azure yep definitely
-
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 
 builder.Services.AddScoped<IPersonsAdderService, PersonsAdderService>();
@@ -118,7 +117,8 @@ builder.Services.AddScoped<IEventsGetterService, EventsGetterService>();
 builder.Services.AddScoped<IEventsUpdaterService, EventsUpdaterService>();
 builder.Services.AddScoped<IEventsDeleterService, EventsDeleterService>();
 
-// builder.Services.AddScoped<IFilesDownloader, FilesDownloader>();
+builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
+builder.Services.AddScoped<IImageDeleterService, ImageDeleterService>();
 
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IContactGroupsGetterService, ContactGroupsGetterService>();
@@ -139,9 +139,9 @@ builder.Services.AddHttpLogging(options =>
     // Displays on console
     options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestBody | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
 });
-/* ---------------- Custom Config & Options Pattern---------------- */
+/* Custom Config & Options Pattern */
 
-/* ---------------- Identity ---------------- */
+/* Identity  */
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
@@ -171,29 +171,24 @@ var app = builder.Build();
 
 /*TODO     
      *  Seq account in User Secrets
-     *  UI Renovation
      *  Section: 25 Interview Questions      
      *  Code Documentation Clean Up
-     *  
-     *      Q: How do we get the WebApplicationFactory from the Application to the UnitTests? -- Anki
      *     
      *      Minimal API for Learning ASPNEtCore
      *          C: Product class - override ToString() - only use Map() Methods
      *          Return a Json format of products i.e //Serialize the object using the built in JsonSerializer
      *          context.WriteAsync()
      *          Anki - 
-     *          
-     *      Email ()nality if I have the time : Done!
-                But how do we send email instead of recieve in EmailService?
 
-            Replace Company Img w/ Industry
 
      */
-/* Ultra-Features     
- 
-        X^] Integration with Other Apps: The app can integrate with other apps, such as calendar apps or email clients, to make it easier for users to manage their contacts and communications.
-
-        :^V Artificial Intelligence: Incorporating AI-powered features like automated follow-up reminders, sentiment analysis, or predictive analytics can make the app more intelligent and useful for users.       
+/* Remember: "Back-End"
+       
+        Azure Image Uploading & Retrieving
+        Database and ApplicationUser Relationships  -- Overhaul
+        Also: Finish Harsha's Course
+        Also: Document your code
+        
 */
 
 app.UseSerilogRequestLogging("Message Template: Maggot Scientist!"); // <-- adds log message as soon as request response is complete

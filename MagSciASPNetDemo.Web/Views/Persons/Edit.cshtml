@@ -1,18 +1,26 @@
 ﻿@using ContactsManagement.Web.ViewComponents;
  @model PersonUpdateRequest;
 @{
-    // This view utilizes asp-validation for validation feedback
     ViewBag.Title = "Edit Person";
     ViewBag.PersonId = Model.PersonId;
 }
-
-<a href="~/persons/index" class="link-hover">Back to Contacts</a>
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-controller="Persons" asp-action="Index">Contacts</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Contact Information</li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
 <partial name="_DeleteModalPartial"></partial>
 
     <div class="row">
         <div class="col-md-7 d-inline-block">
-            <form asp-controller="Persons" asp-action="Edit" method="post" class="column">
+            <form asp-controller="Persons" asp-action="Edit" method="post" class="column" enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-3 border-right">
                         <div class="d-flex flex-column py-5">
@@ -21,13 +29,22 @@
                             <div class="align-items-center text-center">
                                 <div class="row">
                                     <div class="col">
+                                    @if(Model.ProfileBlobUrl != null)
+                                    {                                        
+                                        <img class="rounded-circle mt-5" width="150px" src="@Model.ProfileBlobUrl">                                        
+                                    }
+                                    else
+                                    {
                                         <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
+                                    }
                                     </div>
                                 </div>
+                                @* Profile Image *@
+                                <input type="hidden" asp-for="ProfileBlobUrl"/>
                                 <div class="row mt-3">
                                     <div class="col">
-                                        @* Azure Pic *@
-                                        <label asp-for="ProfilePicture">Choose Image</label>
+                                        <label for="profileImage" class="form-label">Choose image</label>
+                                        <input name="profileImage" id="profileImage" class="form-control-sm" type="file">
                                     </div>
                                 </div>
                             </div>

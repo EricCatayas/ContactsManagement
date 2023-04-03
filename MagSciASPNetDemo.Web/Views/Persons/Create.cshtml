@@ -1,12 +1,10 @@
 ﻿@model PersonAddRequest;
 @{
-    // This view utilizes Bootstrap for validation feedback
     ViewBag.Title = "Add New Contact";
-    ViewBag.CurrentUrl = "~/persons/create";
 }
 <div class="row">
     <div class="col">
-        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3">
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                 <li class="breadcrumb-item"><a asp-controller="Persons" asp-action="Index">Contacts</a></li>
@@ -20,13 +18,19 @@
     <partial name="Partials/_ErrorCardPartial"></partial>
     <partial name="Partials/_SuccessCardPartial"></partial>
 
-    <form asp-controller="Persons" asp-action="Create" method="post" class="column">
+    <form asp-controller="Persons" asp-action="Create" method="post" class="column" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-4 border-right">
-                <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                    @* Azure Pic *@
-                    <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
-                    <span class="font-weight-bold">Profile</span>
+                <div class="d-flex flex-column p-3 py-5">
+                    @* Profile Picture *@
+                    <div class="align-items-end text-center">
+                        <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
+                        <span class="font-weight-bold">Profile</span>
+                        <div class="mb-3">
+                            <label for="profileImage" class="form-label">Choose image</label>
+                            <input name="profileImage" id="profileImage" class="form-control-sm" type="file">
+                        </div>
+                    </div>
                     @* Contact Tags *@
                     <label asp-for="TagId" class="labels">Tag</label>
                     @if (ViewBag.ContactTags != null)
@@ -39,7 +43,6 @@
                             </label>
                         }
                     }
-                    <a asp-controller="Companies" asp-action="Create">Add New Tag (TODO)</a>
 
                     @* Contact Groups *@
                     <label asp-for="ContactGroups" class="labels">Groups</label>

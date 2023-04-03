@@ -33,8 +33,7 @@
 <div class="row row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4 g-4">
 @foreach(ContactLogResponse contactLog in Model)
 {
-<div class="col">
-    <div class="card text-dark bg-light mb-3">
+    <div class="card text-dark bg-light my-2 mx-2">
         <div class="row card-header justify-content-between">
             <div class="col-auto">
                 <p class="card-text"><small class="text-muted">@contactLog.DateCreated.Value.ToString("MM/dd/yyyy")</small></p>
@@ -44,13 +43,12 @@
             </div>
         </div>
         <div class="card-body">
-            <h6 class="card-title">@contactLog.LogTitle</h6>
+                    <h6 class="card-title"><b>@contactLog.LogTitle</b></h6>
             <p class="card-text card-note">@contactLog.Note</p>
             <p class="card-text"><small class="text-muted">~ @contactLog.PersonLog</small></p>
         
         </div>
     </div>
-</div>
 }
 </div>
 

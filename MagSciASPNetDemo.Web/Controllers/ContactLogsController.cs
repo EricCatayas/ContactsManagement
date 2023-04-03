@@ -3,6 +3,7 @@ using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsServices;
 using ContactsManagement.Core.Services.ContactsManager.ContactLogs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsManagement.Web.Controllers
@@ -38,6 +39,7 @@ namespace ContactsManagement.Web.Controllers
         }
         [Route("[action]")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string? searchText, string sortProperty = "PersonLog", string sortOrder = "ASC", List<string>? error = null)
         {
             List<ContactLogResponse>? contactLogs = await _contactLogsGetterService.GetContactLogs();

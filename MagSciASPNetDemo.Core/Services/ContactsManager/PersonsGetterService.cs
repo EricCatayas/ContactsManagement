@@ -16,6 +16,7 @@ using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.Exceptions.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
+using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 
 namespace ContactsManagement.Core.Services.ContactsManager
 {
@@ -59,27 +60,31 @@ namespace ContactsManagement.Core.Services.ContactsManager
                     {
                         nameof(PersonResponse.PersonName) =>
                          await _personsGetterRepository.GetFilteredPersons(temp =>
-                         temp.Name.Contains(searchString)),
+                         temp.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
                         nameof(PersonResponse.Email) =>
                          await _personsGetterRepository.GetFilteredPersons(temp =>
-                         temp.Email.Contains(searchString)),
+                         temp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
                         nameof(PersonResponse.JobTitle) =>
                          await _personsGetterRepository.GetFilteredPersons(temp =>
-                         temp.JobTitle.Contains(searchString)),
+                         temp.JobTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
                         nameof(PersonResponse.CompanyName) =>
                          await _personsGetterRepository.GetFilteredPersons(temp =>
-                         temp.Company.CompanyName.Contains(searchString)),
+                         temp.Company.CompanyName.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
+
+                        nameof(PersonResponse.Address) =>
+                        await _personsGetterRepository.GetFilteredPersons(temp =>
+                        temp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
                         nameof(PersonResponse.CountryName) =>
                          await _personsGetterRepository.GetFilteredPersons(temp =>
                          temp.Country.CountryName.Contains(searchString)),
 
-                        nameof(PersonResponse.Address) =>
-                        await _personsGetterRepository.GetFilteredPersons(temp =>
-                        temp.Address.Contains(searchString)),
+                        nameof(ContactTagDTO.TagName) =>
+                       await _personsGetterRepository.GetFilteredPersons(temp =>
+                       temp.Tag.TagName.Contains(searchString, StringComparison.OrdinalIgnoreCase)),
 
                         _ => await _personsGetterRepository.GetAllPersons()
                     };

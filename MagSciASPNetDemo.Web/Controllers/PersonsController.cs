@@ -16,6 +16,7 @@ using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
+using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
 
 namespace ContactsManagement.Web.Controllers
 {
@@ -31,8 +32,10 @@ namespace ContactsManagement.Web.Controllers
         private readonly IPersonsUpdaterService _personsUpdaterService;
         private readonly ICountriesService _countriesService;
         private readonly IContactGroupsGetterService _contactGroupsGetterService;
+        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageDeleterService _imageDeleterService;
         private readonly ILogger<PersonsController> _logger;
-        public PersonsController(ILogger<PersonsController> logger, IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, ICountriesService countriesService, IContactGroupsGetterService contactGroupsGetterService)
+        public PersonsController(ILogger<PersonsController> logger, IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, ICountriesService countriesService, IContactGroupsGetterService contactGroupsGetterService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService)
         {
             _logger = logger;
             _personGetterService = personsGetterService;
@@ -42,6 +45,8 @@ namespace ContactsManagement.Web.Controllers
             _personsDeleterService = personsDeleterService;
             _countriesService = countriesService;
             _contactGroupsGetterService = contactGroupsGetterService;
+            _imageUploaderService = imageUploaderService;
+            _imageDeleterService = imageDeleterService;
         }        
         [Route("[action]")]
         [AllowAnonymous]
@@ -90,20 +95,41 @@ namespace ContactsManagement.Web.Controllers
         [HttpPost]
         [Route("create")]
         [TypeFilter(typeof(PersonCreateAndEditActionFilter))]
-        public async Task<IActionResult> Create(PersonAddRequest? personAddRequest)
+        public async Task<IActionResult> Create([FromForm] PersonAddRequest? personAddRequest,[FromForm] IFormFile? profileImage)
         {
+            if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await profileImage.CopyToAsync(memoryStream);
+                    byte[] fileData = memoryStream.ToArray();
+                    personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                }
+            }
             _ = await _personAdderService.AddPerson(personAddRequest);
             ViewBag.Success = "Person has been successfully added!";
-            return View();
+            return View(new PersonAddRequest() { });
         }
         [HttpPost]
         [Route("[action]/{personId}")]
         [TypeFilter(typeof(PersonCreateAndEditActionFilter))]       
         [ServiceFilter(typeof(RedirectToIndexExceptionFilter))] // Can't supply filters
-        public async Task<IActionResult> Edit(PersonUpdateRequest personUpdateRequest)
+        public async Task<IActionResult> Edit([FromForm] PersonUpdateRequest personUpdateRequest,[FromForm] IFormFile? profileImage)
         {
-            PersonResponse? updatedPerson = await _personsUpdaterService.UpdatePerson(personUpdateRequest);              
+            if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
+            {
+                if(personUpdateRequest.ProfileBlobUrl != null)
+                    _ = await _imageDeleterService.DeleteBlobFile(personUpdateRequest.ProfileBlobUrl);
                 
+                using (var memoryStream = new MemoryStream())
+                {
+                    await profileImage.CopyToAsync(memoryStream);
+                    byte[] fileData = memoryStream.ToArray();
+                    personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                }
+            }
+                
+            PersonResponse? updatedPerson = await _personsUpdaterService.UpdatePerson(personUpdateRequest);              
             PersonUpdateRequest personToUpdate = updatedPerson.ToPersonUpdateRequest(); //Check ToPersonUpdateRequest-- catch block not caught in Service
             ViewBag.Success = "Person has been successfully updated!";
             return View(personToUpdate);            
@@ -127,6 +153,9 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Delete(Guid personId)
         {
+            PersonResponse person = await _personGetterService.GetPersonById(personId);
+            if (person.ProfileBlobUrl != null)
+                _ = await _imageDeleterService.DeleteBlobFile(person.ProfileBlobUrl);
             bool isDeleted = await _personsDeleterService.DeletePerson(personId);
             if (isDeleted)
             {

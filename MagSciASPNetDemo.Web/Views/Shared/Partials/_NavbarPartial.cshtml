@@ -1,96 +1,51 @@
 ﻿
-<!-- Navbar-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <!-- Left elements -->
         <div class="d-flex">
             <!-- Brand -->
-            <a asp-controller="Home" asp-action="Index" class="navbar-brand">Contacts Management By EricJay</a>
-            @*<a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
-                <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
-                     height="20"
-                     alt="MDB Logo"
-                     loading="lazy"
-                     style="margin-top: 2px;" />
-            </a>*@
+            <a asp-controller="Home" asp-action="Index" class="navbar-brand" style="font-family: 'Roboto Mono', monospace;
+                  font-weight: bold;
+                  color:#124265;
+                  font-size: 24px;">Contacts Management</a>
         </div>
         <!-- Center elements -->
         <ul class="navbar-nav flex-row d-none d-md-flex">
-
             <li class="nav-item me-3 me-lg-1">
-                <a asp-controller="Persons" asp-action="Index" class="nav-link"> <!-- Contacts-->
-                    <span><i class="fa-solid fa-address-book fa-lg"></i></span>
-                </a>
-            </li>
-
-            <li class="nav-item me-3 me-lg-1">
-                <a asp-controller="Companies" asp-action="Index" class="nav-link"> <!-- Companies -->
-                    <span><i class="fa-solid fa-building fa-lg"></i></span>
-                </a>
-            </li>
-
-            <li class="nav-item me-3 me-lg-1">
-                <a class="nav-link" href="#">
-                    <span><i class="fa-solid fa-clipboard-list fa-lg"></i></span>
+                <a asp-controller="Persons" asp-action="Index" class="nav-link">
+                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contacts"><i class="fa-solid fa-address-book fa-lg"></i></span>
+                    @*<span><i class="fas fa-users fa-lg"></i></span>*@
                 </a>
             </li>
             <li class="nav-item me-3 me-lg-1">
-                <a asp-controller="Events" asp-action="Index" class="nav-link"> <!-- Events -->
-                    <span><i class="fa-solid fa-calendar-check fa-lg"></i></span>
+                <a asp-controller="Events" asp-action="Index" class="nav-link">
+                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Events"><i class="fa-solid fa-calendar-check fa-lg"></i></span>
+                    @*<span class="badge rounded-pill badge-notification bg-danger">2</span>*@
                 </a>
             </li>
             <li class="nav-item me-3 me-lg-1">
-                <a class="nav-link" href="#">
-                    <span><i class="fas fa-users fa-lg"></i></span>
-                    <span class="badge rounded-pill badge-notification bg-danger">2</span>
+                <a asp-controller="Companies" asp-action="Index" class="nav-link">
+                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Companies"><i class="fa-solid fa-building fa-lg"></i></span>
                 </a>
             </li>
             <li class="nav-item me-3 me-lg-1">
                 <a asp-controller="ContactLogs" asp-action="Index" class="nav-link">
-                    <span><i class="fa-solid fa-book fa-lg"></i></span>
+                    <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Logs"><i class="fa-solid fa-book fa-lg"></i></span>
                 </a>
             </li>            
         </ul>
         <!-- Right elements -->
         <ul class="navbar-nav flex-row">            
-            <li class="nav-item me-3 me-lg-1">
-                <a class="nav-link" href="#">
-                    <span><i class="fas fa-plus-circle fa-lg"></i></span>
-                </a>
-            </li>
             <li class="nav-item dropdown me-3 me-lg-1">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Download Data
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsPDF">Download as PDF</a></li>
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsCSV">Download as CSV</a></li>
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsExcel">Download as Excel Spreadsheet</a></li>
+                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsPDF"><i class="fa-solid fa-file-pdf"></i> PDF</a></li>
+                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsCSV"><i class="fa-solid fa-file-csv"></i> CSV</a></li>
+                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsExcel"><i class="fa-solid fa-table"></i> EXCEL</a></li>
                 </ul>
-            </li>
-            <li class="nav-item dropdown me-3 me-lg-1">
-                <a class="nav-link dropdown-toggle hidden-arrow"
-                   href="#"
-                   id="navbarDropdownMenuLink"
-                   role="button"
-                   data-mdb-toggle="dropdown"
-                   aria-expanded="false">
-                    <i class="fas fa-bell fa-lg"></i>
-                    <span class="badge rounded-pill badge-notification bg-danger">12</span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end"
-                    aria-labelledby="navbarDropdownMenuLink">
-                    <li>
-                        <a class="dropdown-item" href="#">Some news</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">Another news</a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </li>
-                </ul>
-            </li            
+            </li>           
             <partial name="_AuthenticationPartial"></partial>
         </ul>
         <!-- Right elements -->

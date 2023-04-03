@@ -8,6 +8,7 @@ using System.ComponentModel;
 using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.Helpers;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsManagement.Core.DTO.ContactsManager
 {
@@ -26,7 +27,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
         public string? Address { get; set; }
-        [Required]
         [DisplayName("Date of Birth")]
         [DateOfBirth(MinAge = 12, MaxAge = 100)]
         public DateTime? DateOfBirth { get; set; }
@@ -43,13 +43,11 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         public string? ContactNumber2 { get; set; }
         /* - Panza - */
         public int? CompanyId { get; set; }
-        [ImageFile(ErrorMessage = "File must be an image")]
-        public byte[]? ProfilePicture { get; set; }
         [DisplayName("Tag")]
         public int? TagId { get; set; }
         [DisplayName("Contact Groups")]
         public List<int>? ContactGroups { get; set; }
-
+        public string? ProfileBlobUrl { get; set; }
         /// <summary>
         /// Converts the current object of PersonAddRequest into a Person object
         /// </summary>
@@ -71,6 +69,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
                 ContactNumber2 = ContactNumber2,
                 CompanyId = CompanyId,
                 TagId = TagId,
+                ProfileBlobUrl = ProfileBlobUrl
             };
         }
     }

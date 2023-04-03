@@ -4,6 +4,7 @@ using ContactsManagement.Core.DTO.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
 using ContactsManagement.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -35,6 +36,7 @@ namespace ContactsManagement.Web.Controllers
         }
         [Route("[action]")]
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Index(List<string>? error = null, bool isActiveEvent = true)
         {
             List<EventResponse>? events = await _eventsGetterService.GetEvents();
@@ -69,7 +71,7 @@ namespace ContactsManagement.Web.Controllers
             {
                 _ = await _eventsAdderService.AddEvent(eventAddRequest);
                 ViewBag.Success = "Event has been added";
-                return View();
+                return View(null);
             }
             else
             {

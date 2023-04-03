@@ -4,6 +4,7 @@ using ContactsManagement.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContactsManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230401020516_ApplicationUser_CompanyId")]
+    partial class ApplicationUser_CompanyId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -403,8 +406,6 @@ namespace ContactsManagement.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -562,15 +563,6 @@ namespace ContactsManagement.Infrastructure.Migrations
                     b.Navigation("Country");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("ContactsManagement.Core.Domain.IdentityEntities.ApplicationUser", b =>
-                {
-                    b.HasOne("ContactsManagement.Core.Domain.Entities.ContactsManager.Company", "company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("company");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

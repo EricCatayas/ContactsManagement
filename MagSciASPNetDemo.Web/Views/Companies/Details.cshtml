@@ -1,5 +1,7 @@
 ﻿@model CompanyResponse;
-
+@{
+    ViewBag.Title = "Contacts Management";
+}
 <partial name="_DeleteModalPartial"></partial>
 
 <div class="row">
@@ -92,7 +94,8 @@
 
 <div class="row">
     <div class="col-12">
-        <table class="table align-middle mb-0 bg-white">
+        <table class="table align-middle mb-0 table-striped caption-top">
+            <caption>List of Employees</caption>
             <thead class="bg-light">
                 <tr>
                     <th>Employee Name</th>

@@ -24,7 +24,6 @@ namespace ContactsManagement.Infrastructure.Repositories.CompaniesManagement
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(CompaniesAdderRepository), nameof(AddCompany));
 
-            Company.CompanyId = _db.Companies.Count() + 1;
             _db.Companies.Add(Company);
             await _db.SaveChangesAsync();
 
