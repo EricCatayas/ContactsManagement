@@ -75,7 +75,7 @@
                                     }
                                  </small></p>
                             </div>
-                            <p class="hover-appear category" style="display:none;">@_event.Description</p>
+                            <p class="hover-appear category" style="display:none;">@_event.Description.Substring(0, Math.Min(_event.Description.Length,75))</p>
                         </div>
                     </div> <!-- end card -->
                 @*</div>*@

@@ -19,9 +19,9 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
         {
             _contactGroupsGetterRepository = contactGroupsRepository;
         }
-        public async Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId)
+        public async Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId, Guid userId)
         {
-            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId);
+            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, userId);
 
             if (contactGroup == null) return null;
             List<Person>? persons = contactGroup.Persons.ToList();
@@ -29,15 +29,15 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
             return persons != null ? persons?.Select(person => person.ToPersonResponse()).ToList() : null;
         }
 
-        public async Task<List<ContactGroupResponse>?> GetAllContactGroups()
+        public async Task<List<ContactGroupResponse>?> GetAllContactGroups(Guid userId)
         {
-            List<ContactGroup>? contactGroups = await _contactGroupsGetterRepository.GetContactGroups();
+            List<ContactGroup>? contactGroups = await _contactGroupsGetterRepository.GetContactGroups(userId);
             return contactGroups != null ? contactGroups.Select(group => group.ToContactGroupResponse()).ToList() : null;
         }
 
-        public async Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId)
+        public async Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId, Guid userId)
         {
-            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId);
+            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, userId);
             return contactGroup != null ? contactGroup.ToContactGroupResponse() : null;
         }
     }

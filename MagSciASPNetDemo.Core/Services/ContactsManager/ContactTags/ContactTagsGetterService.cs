@@ -18,9 +18,9 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactTags
         {
             _contactTagsGetterRepository = contactTagsGetterRepository;
         }
-        public async Task<List<ContactTagDTO>?> GetAllContactTags()
+        public async Task<List<ContactTagDTO>?> GetAllContactTags(Guid userId)
         {
-            List<ContactTag>? contactTags = await _contactTagsGetterRepository.GetAllContactTags();
+            List<ContactTag>? contactTags = await _contactTagsGetterRepository.GetAllContactTags(userId);
             return contactTags?.Select(tag => tag.ToContactTagResponse()).ToList();
         }
     }

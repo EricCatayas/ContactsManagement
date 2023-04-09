@@ -18,7 +18,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
         [StringLength(100, ErrorMessage = "Title length must not exceed 100 characters")]
         [DisplayName("Title")]
         public string? LogTitle { get; set; } 
-        [StringLength(500, ErrorMessage = "Title length must not exceed 500 characters")]
+        [StringLength(2000, ErrorMessage = "Title length must not exceed 2000 characters")]
         public string? Note { get; set; }
         [Required]
         public Guid PersonId { get; set; }

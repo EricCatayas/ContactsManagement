@@ -19,7 +19,7 @@
     <div class="container py-5 h-170">
         <div class="row d-flex justify-content-center align-items-center h-170">
             <div class="col-12">
-                <form asp-controller="Companies" asp-action="create" method="post" asp-route-userId="@ViewBag.UserId" class="column needs-validation" novalidate>
+                <form asp-controller="Companies" asp-action="create" method="post" asp-route-companyUserId="@ViewBag.UserId" class="column needs-validation" novalidate>
                     <div class="card card-registration card-registration-2" style="border-radius: 15px;">
                     <div class="card-body p-0">
                         <div class="row g-0">
@@ -86,6 +86,9 @@
                                         <input asp-for="WebUrl" class="form-control form-control-lg" />
                                         <span asp-validation-for="WebUrl"></span>
                                     </div>
+                                    <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
+                                        Create
+                                    </button> 
                                 </div>
                         </div>
 
@@ -116,11 +119,7 @@
                                                 </tbody>
                                             </table>
                                             
-                                        }
-
-                                    <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
-                                        Create
-                                    </button>                         
+                                        }                                                            
                                 </div>
                             </div>
                         </div>

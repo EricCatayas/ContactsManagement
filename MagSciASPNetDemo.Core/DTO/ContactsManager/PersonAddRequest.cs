@@ -31,7 +31,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [DateOfBirth(MinAge = 12, MaxAge = 100)]
         public DateTime? DateOfBirth { get; set; }
         public GenderOptions? Gender { get; set; }
-        public Guid? CountryId { get; set; }
+        public int? CountryId { get; set; }
         /* - The Hard Part - */
         [StringLength(75)]
         public string? JobTitle { get; set; }
@@ -61,7 +61,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
                 Email = Email,
                 Address = Address,
                 DateOfBirth = DateOfBirth,
-                CountryId = (Guid)CountryId,
+                CountryId = (Int16)CountryId,
                 Gender = Gender.ToString(),
                 
                 JobTitle = JobTitle,

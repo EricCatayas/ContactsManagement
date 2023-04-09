@@ -18,15 +18,15 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
         {
             _db = db;
         }
-        public async Task<Event?> GetEvent(int EventId)
+        public async Task<Event?> GetEvent(int EventId, Guid userId)
         {
-            Event? @event = await _db.Events.FirstOrDefaultAsync(e => e.EventId == EventId);
+            Event? @event = await _db.Events.FirstOrDefaultAsync(e => e.EventId == EventId && e.UserId == userId);
             return @event;
         }
 
-        public async Task<List<Event>?> GetEvents()
+        public async Task<List<Event>?> GetEvents(Guid userId)
         {
-            return await _db.Events.ToListAsync();
+            return await _db.Events.Where(temp => temp.UserId == userId).ToListAsync();
         }
     }
 }

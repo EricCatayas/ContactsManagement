@@ -14,10 +14,10 @@
     </div>
 </div>
 
-<div>
-    <partial name="Partials/_ErrorCardPartial"></partial>
-    <partial name="Partials/_SuccessCardPartial"></partial>
-
+<partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="Partials/_SuccessCardPartial"></partial>
+<div class="row">
+    <div class="col-md-7 d-inline-block">
     <form asp-controller="Persons" asp-action="Create" method="post" class="column" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-4 border-right">
@@ -25,7 +25,6 @@
                     @* Profile Picture *@
                     <div class="align-items-end text-center">
                         <img class="rounded-circle mt-5" width="150px" src="~/images/profile_avatar128.png">
-                        <span class="font-weight-bold">Profile</span>
                         <div class="mb-3">
                             <label for="profileImage" class="form-label">Choose image</label>
                             <input name="profileImage" id="profileImage" class="form-control-sm" type="file">
@@ -56,7 +55,7 @@
                             </label>
                         }
                     }
-                    <a asp-controller="ContactGroups" asp-action="Create">Add Group or Tag</a>
+                    <a asp-controller="ContactGroups" asp-action="Index">Add Group or Tag</a>
                 </div>
             </div>
             <div class="col-md-8 border-right">
@@ -156,6 +155,7 @@
             </div>
         </div>
     </form>
+    </div>
 </div>
 @section Scripts{
     @{

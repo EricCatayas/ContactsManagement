@@ -16,7 +16,7 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         [Required]
         [StringLength(100)]
         public string? Title { get; set; }
-        [StringLength(500)]
+        [StringLength(1000)]
         public string? Description { get; set; }
         [StringLength(30)]
         public string? Type { get; set; }
@@ -28,5 +28,6 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

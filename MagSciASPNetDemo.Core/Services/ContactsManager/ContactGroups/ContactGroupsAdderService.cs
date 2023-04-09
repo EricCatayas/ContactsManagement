@@ -18,10 +18,12 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
         {
             _contactGroupsAdderRepository = contactGroupsAdderRepository;
         }
-        public async Task<ContactGroupResponse> AddContactGroup(ContactGroupAddRequest contactGroup)
+        public async Task<ContactGroupResponse> AddContactGroup(ContactGroupAddRequest contactGroupAddRequest, Guid userId)
         {
-            ContactGroup contactGroupAdded = await _contactGroupsAdderRepository.AddContactGroup(contactGroup.ToContactGroup(), contactGroup.Persons);
-            return contactGroupAdded.ToContactGroupResponse();
+            ContactGroup contactGroup = contactGroupAddRequest.ToContactGroup();
+            contactGroup.UserId = userId;
+            contactGroup = await _contactGroupsAdderRepository.AddContactGroup(contactGroup, contactGroupAddRequest.Persons);
+            return contactGroup.ToContactGroupResponse();
         }
     }
 }

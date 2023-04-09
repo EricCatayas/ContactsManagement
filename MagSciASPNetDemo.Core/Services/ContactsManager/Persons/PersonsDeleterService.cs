@@ -4,7 +4,7 @@ using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
 
-namespace ContactsManagement.Core.Services.ContactsManager
+namespace ContactsManagement.Core.Services.ContactsManager.Persons
 {
     public class PersonsDeleterService : IPersonsDeleterService
     {
@@ -26,11 +26,10 @@ namespace ContactsManagement.Core.Services.ContactsManager
             if (person == null) return false;
 
             bool isDeleted = await _personsDeleterRepository.DeletePerson(person);
-            if( isDeleted && person.ContactGroups!= null)
+            if (isDeleted && person.ContactGroups != null)
             {
                 await _contactLogsDeleterRepository.DeleteContactLogsFromPerson(person);
                 return true;
-                
             }
             else
             {

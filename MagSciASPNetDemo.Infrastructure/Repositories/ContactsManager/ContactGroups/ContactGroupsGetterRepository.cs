@@ -20,16 +20,19 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<ContactGroup?> GetContactGroupById(int contactGroupId)
+        public async Task<ContactGroup?> GetContactGroupById(int contactGroupId, Guid userId)
         {
-            return await _db.ContactGroups.Include(p => p.Persons).FirstOrDefaultAsync(c => c.GroupId == contactGroupId);
+            return await _db.ContactGroups.Include(p => p.Persons).FirstOrDefaultAsync(c => c.GroupId == contactGroupId && c.UserId == userId);
         }
 
-        public async Task<List<ContactGroup>?> GetContactGroups(List<int>? contactGroupIds = null)
+        public async Task<List<ContactGroup>?> GetContactGroups(Guid userId)
         {
-            return contactGroupIds != null ?
-                await _db.ContactGroups.Include(p => p.Persons).Where(c => contactGroupIds.Contains(c.GroupId)).ToListAsync() :
-                await _db.ContactGroups.Include(p => p.Persons).ToListAsync();
+            return await _db.ContactGroups.Where(c => c.UserId == userId).Include(p => p.Persons).ToListAsync();
+        }
+
+        public async Task<List<ContactGroup>?> GetContactGroupsById(List<int>? contactGroupIds)
+        {
+            return await _db.ContactGroups.Where(c => contactGroupIds.Contains(c.GroupId)).Include(p => p.Persons).ToListAsync();
         }
     }
 }

@@ -17,6 +17,9 @@ using Rotativa.AspNetCore.Options;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
+using Microsoft.AspNetCore.Identity;
+using ContactsManagement.Core.Domain.IdentityEntities;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
 
 namespace ContactsManagement.Web.Controllers
 {
@@ -34,10 +37,11 @@ namespace ContactsManagement.Web.Controllers
         private readonly IContactGroupsGetterService _contactGroupsGetterService;
         private readonly IImageUploaderService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
-        private readonly ILogger<PersonsController> _logger;
-        public PersonsController(ILogger<PersonsController> logger, IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, ICountriesService countriesService, IContactGroupsGetterService contactGroupsGetterService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDemoUserService _demoUserService;
+
+        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, ICountriesService countriesService, IContactGroupsGetterService contactGroupsGetterService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService, UserManager<ApplicationUser> userManager, IDemoUserService demoUserService)
         {
-            _logger = logger;
             _personGetterService = personsGetterService;
             _personAdderService = personsAdderService;
             _personsSorterService = personsSorterService;
@@ -47,6 +51,8 @@ namespace ContactsManagement.Web.Controllers
             _contactGroupsGetterService = contactGroupsGetterService;
             _imageUploaderService = imageUploaderService;
             _imageDeleterService = imageDeleterService;
+            _userManager = userManager;
+            _demoUserService = demoUserService;
         }        
         [Route("[action]")]
         [AllowAnonymous]
@@ -55,15 +61,21 @@ namespace ContactsManagement.Web.Controllers
         [TokenResultFactoryFilter(true, "Auth-Key", "A-100")]
         public async Task<IActionResult> Index(string? searchProperty, string? searchString, int? groupId, string sortProperty = "Name", string sortOrder = "ASC", List<string>? error = null)
         {
-            _logger.LogDebug($"searchProperty: {searchProperty}, searchString: {searchString}, sortProperty: {sortProperty}, sortOrder: {sortOrder}");
-            // ViewData handled in PersonsListActionFilter     
+             // ViewData handled in PersonsListActionFilter     
             ViewBag.Errors = error;
-            List<PersonResponse>? personList = await _personGetterService.GetFilteredPersons(searchProperty, searchString);
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId;
+            if (userId != null)
+                UserId = Guid.Parse(userId);
+            else
+                UserId = _demoUserService.GetDemoUserId();
+
+            List<PersonResponse>? personList = await _personGetterService.GetFilteredPersons(UserId, searchProperty, searchString);
             if(groupId != null)
             {
                 personList = personList.Where(person => person.ContactGroups.Any(group => group.GroupId == groupId)).ToList();
             }
-            List<ContactGroupResponse>? contactGroups = await _contactGroupsGetterService.GetAllContactGroups();
+            List<ContactGroupResponse>? contactGroups = await _contactGroupsGetterService.GetAllContactGroups(UserId);
             if (contactGroups != null)
             {
                 Dictionary<string, int> contactGroupsFilter = new Dictionary<string, int>() { };
@@ -106,14 +118,17 @@ namespace ContactsManagement.Web.Controllers
                     personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
                 }
             }
-            _ = await _personAdderService.AddPerson(personAddRequest);
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            _ = await _personAdderService.AddPerson(personAddRequest, UserId);
             ViewBag.Success = "Person has been successfully added!";
             return View(new PersonAddRequest() { });
         }
         [HttpPost]
         [Route("[action]/{personId}")]
         [TypeFilter(typeof(PersonCreateAndEditActionFilter))]       
-        [ServiceFilter(typeof(RedirectToIndexExceptionFilter))] // Can't supply filters
+        [ServiceFilter(typeof(RedirectToIndexExceptionFilter))]
         public async Task<IActionResult> Edit([FromForm] PersonUpdateRequest personUpdateRequest,[FromForm] IFormFile? profileImage)
         {
             if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
@@ -153,7 +168,7 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Delete(Guid personId)
         {
-            PersonResponse person = await _personGetterService.GetPersonById(personId);
+            PersonResponse? person = await _personGetterService.GetPersonById(personId);
             if (person.ProfileBlobUrl != null)
                 _ = await _imageDeleterService.DeleteBlobFile(person.ProfileBlobUrl);
             bool isDeleted = await _personsDeleterService.DeletePerson(personId);
@@ -169,7 +184,10 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> PersonsPDF()
         {
-            List<PersonResponse> allPersons = await _personGetterService.GetAllPersons();
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            List<PersonResponse> allPersons = await _personGetterService.GetAllPersons(UserId);
             if (allPersons.IsNullOrEmpty())
                 return RedirectToAction("Index", new { error = "Table is empty" });
 
@@ -190,17 +208,22 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> PersonsCSV()
         {
-            MemoryStream memoryStream = await _personGetterService.GetPersonsCSV();
-            return File(memoryStream, "application/octet-stream", "Persons.csv");
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            MemoryStream memoryStream = await _personGetterService.GetPersonsCSV(UserId);
+            return File(memoryStream, "application/octet-stream", "Contacts.csv");
         }
         [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> PersonsExcel()
         {
-            MemoryStream memoryStream = await _personGetterService.GetPersonsEXCEL();
-            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Persons.xlsx");
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            MemoryStream memoryStream = await _personGetterService.GetPersonsEXCEL(UserId);
+            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Contacts.xlsx");
         }
-        /*  ------------ TODO --------------- */
         public async Task<List<SelectListItem>> LoadCountrySelectItems()
         {
             List<CountryResponse> countries = await _countriesService.GetAllCountries();

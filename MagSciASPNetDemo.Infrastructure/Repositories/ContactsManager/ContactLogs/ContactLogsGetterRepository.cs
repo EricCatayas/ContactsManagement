@@ -18,15 +18,15 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<ContactLog?> GetContactLog(int contactLogId)
+        public async Task<ContactLog?> GetContactLog(int contactLogId, Guid userId)
         {
-            ContactLog? contactLog = await _db.ContactLogs.Include(log => log.PersonLog).FirstOrDefaultAsync(log => log.LogId == contactLogId);
+            ContactLog? contactLog = await _db.ContactLogs.Include(log => log.PersonLog).FirstOrDefaultAsync(log => log.LogId == contactLogId && log.UserId == userId);
             return contactLog;
         }
 
-        public async Task<List<ContactLog>?> GetContactLogs()
+        public async Task<List<ContactLog>?> GetContactLogs(Guid userId)
         {
-            return await _db.ContactLogs.Include(log => log.PersonLog).ToListAsync();
+            return await _db.ContactLogs.Where(log => log.UserId == userId).Include(log => log.PersonLog).ToListAsync();
         }
 
         public async Task<List<ContactLog>?> GetContactLogsFromPerson(Guid personId)

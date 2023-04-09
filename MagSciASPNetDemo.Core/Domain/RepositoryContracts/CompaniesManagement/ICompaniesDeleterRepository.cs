@@ -9,6 +9,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.CompaniesManagement
 {
     public interface ICompaniesDeleterRepository
     {
-        Task<bool> DeleteCompany(int companyId);
+        Task<bool> DeleteCompany(int companyId, Guid userId);
     }
 }

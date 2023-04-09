@@ -16,9 +16,9 @@ namespace ContactsManagement.Core.Services.CompaniesManagement
         {
             _companiesDeleterRepository = companiesDeleterRepository;
         }
-        public async Task<bool> DeleteCompany(int companyID)
+        public async Task<bool> DeleteCompany(int companyID, Guid userId)
         {
-            return await _companiesDeleterRepository.DeleteCompany(companyID);
+            return await _companiesDeleterRepository.DeleteCompany(companyID, userId);
         }
     }
 }

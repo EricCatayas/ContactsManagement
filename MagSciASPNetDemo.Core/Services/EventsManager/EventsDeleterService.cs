@@ -16,9 +16,9 @@ namespace ContactsManagement.Core.Services.EventsManager
         {
             _eventsDeleterRepository = eventsDeleterRepository;
         }
-        public async Task<bool> DeleteEvent(int eventId)
+        public async Task<bool> DeleteEvent(int eventId, Guid userId)
         {
-            return await _eventsDeleterRepository.DeleteEvent(eventId);
+            return await _eventsDeleterRepository.DeleteEvent(eventId, userId);
         }
     }
 }

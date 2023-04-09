@@ -1,27 +1,50 @@
 ﻿using ContactsManagement.Core.DTO.ContactsManager;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices
 {
+    /// <summary>
+    /// Defines a service for retrieving person data from the system.
+    /// </summary>
     public interface IPersonsGetterService
     {
         /// <summary>
-        /// 
+        /// Retrieves list of person from the system.
         /// </summary>
-        /// <returns>returns all persons converted to PersonResponse object</returns>
-        Task<List<PersonResponse>> GetAllPersons();
+        /// <param name="userId">The Id of the user who owns the data.</param>
+        /// <returns>A list of person object with the corresponding UserId</returns>
+        Task<List<PersonResponse>> GetAllPersons(Guid userId);
+        /// <summary>
+        /// Retrieves person from the system.
+        /// </summary>
+        /// <param name="personId">The request Id of the person to be retrived.</param>
+        /// <returns>The person object with the corresponding Id</returns>
         Task<PersonResponse?> GetPersonById(Guid? personId);
-        Task<List<PersonResponse>?> GetPersonsById(List<Guid>? personIDs);
         /// <summary>
-        /// Returns matching List<Person> with matching given fied and search string 
+        /// Retrieves person from the system.
         /// </summary>
-        /// <param name="searchProperty">Search field to filter</param>
-        /// <param name="searchString">Search string of filter</param>
-        /// <returns>List of Persons of Matching Filter</returns>
-        Task<List<PersonResponse>> GetFilteredPersons(string? searchProperty, string? searchString);
-        Task<MemoryStream> GetPersonsCSV();
+        /// <param name="personIds">The list of Id of the person to be retrived.</param>
+        /// <returns>List of person with the corresponding Id</returns>
+        Task<List<PersonResponse>?> GetPersonsById(List<Guid>? personIds);
         /// <summary>
-        /// Nuget EPPLus then configure the excelpackage licence in appsettings
+        /// Filters a list of persons based on a search text.
         /// </summary>
-        Task<MemoryStream> GetPersonsEXCEL();
+        /// <param name="userId">The Id of the user who owns the data.</param>
+        /// <param name="searchProperty">The property of person to be filtered.</param>
+        /// <param name="searchString">The search text to filter by.</param>
+        /// <returns>A filtered list of persons.</returns>
+        Task<List<PersonResponse>> GetFilteredPersons(Guid userId, string? searchProperty, string? searchString);
+        /// <summary>
+        /// Returns a CSV file as a MemoryStream containing the PersonResponse details of all persons belonging to a given user ID.
+        /// </summary>
+        /// <param name="userId">The Id of the user who owns the data.</param>
+        /// <returns>A MemoryStream containing CSV data for all PersonResponse objects of the given user ID.</returns>
+        Task<MemoryStream> GetPersonsCSV(Guid userId);
+        /// <summary>
+        /// Returns an excel file as a MemoryStream containing the PersonResponse details of all persons belonging to a given user ID.
+        /// </summary>
+        /// <param name="userId">The Id of the user who owns the data.</param>
+        /// <returns>A MemoryStream containing excel data for all PersonResponse objects of the given user ID.</returns>
+        Task<MemoryStream> GetPersonsEXCEL(Guid userId);
     }
 }

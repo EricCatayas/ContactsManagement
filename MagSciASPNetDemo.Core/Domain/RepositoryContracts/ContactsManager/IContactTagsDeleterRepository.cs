@@ -8,6 +8,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
     public interface IContactTagsDeleterRepository
     {
-        Task<bool> DeleteContactTagById(int contactTagId);
+        Task<bool> DeleteContactTagById(int contactTagId, Guid userId);
     }
 }

@@ -9,10 +9,29 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices
 {
+    /// <summary>
+    /// Defines a service for retrieving contact group data from the system.
+    /// </summary>
     public interface IContactGroupsGetterService
-    {
-        Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId);
-        Task<List<ContactGroupResponse>?> GetAllContactGroups();
-        Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId);
+    {   
+        /// <summary>
+        /// Retrieves list of person from the contact group.
+        /// </summary>
+        /// <param name="userId">The ID of the user who owns the data.</param>
+        /// <returns>A list of persons from the corresponding contact group with the UserID</returns>
+        Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId, Guid userId);
+        /// <summary>
+        /// Retrieves list of contact group from the system.
+        /// </summary>
+        /// <param name="userId">The ID of the user who owns the data.</param>
+        /// <returns>A list of contact group object with the corresponding UserID</returns>
+        Task<List<ContactGroupResponse>?> GetAllContactGroups(Guid userId);
+        /// <summary>
+        /// Retrieves contact group from the system.
+        /// </summary>
+        /// <param name="contactGroupId">The request id of the contact group to be retrived.</param>
+        /// <param name="userId">The ID of the user who owns the data.</param>
+        /// <returns>The contact group object with the corresponding ID and UserID</returns>
+        Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId, Guid userId);
     }
 }

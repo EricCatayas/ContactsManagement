@@ -18,9 +18,9 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<bool> DeleteContactGroup(int contactGroupId)
+        public async Task<bool> DeleteContactGroup(int contactGroupId, Guid userId)
         {
-            ContactGroup? contactGroup = await _db.ContactGroups.FirstOrDefaultAsync(temp => temp.GroupId == contactGroupId);
+            ContactGroup? contactGroup = await _db.ContactGroups.FirstOrDefaultAsync(temp => temp.GroupId == contactGroupId && temp.UserId == userId);
 
             if (contactGroup == null) return false;
             _db.ContactGroups.RemoveRange(contactGroup);

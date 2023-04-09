@@ -21,9 +21,10 @@ namespace ContactsManagement.Core.Services.CompaniesManagement
             _companiesAdderRepository = companiesAdderRepository;
             _personsGetterRepository = personsGetterRepository;
         }
-        public async Task<CompanyResponse> AddCompany(CompanyAddRequest companyAddRequest)
+        public async Task<CompanyResponse> AddCompany(CompanyAddRequest companyAddRequest, Guid userId)
         {
             Company company = companyAddRequest.ToCompany();
+            company.UserId = userId;
 
             company.Employees = await _personsGetterRepository.GetPersonsById(companyAddRequest.Employees);
             company = await _companiesAdderRepository.AddCompany(company);

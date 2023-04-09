@@ -18,9 +18,9 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
         {
             _db = db;
         }
-        public async Task<bool> DeleteEvent(int eventId)
+        public async Task<bool> DeleteEvent(int eventId, Guid userId)
         {
-            Event? @event = await _db.Events.FirstOrDefaultAsync(e => e.EventId == eventId);
+            Event? @event = await _db.Events.FirstOrDefaultAsync(e => e.EventId == eventId && e.UserId == userId);
             if (@event == null) return false;
 
             _db.Events.Remove(@event);

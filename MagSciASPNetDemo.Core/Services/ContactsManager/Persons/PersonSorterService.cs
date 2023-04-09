@@ -5,7 +5,7 @@ using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
 
-namespace ContactsManagement.Core.Services.ContactsManager
+namespace ContactsManagement.Core.Services.ContactsManager.Persons
 {
     public class PersonsSorterService : IPersonsSorterService
     {
@@ -34,10 +34,10 @@ namespace ContactsManagement.Core.Services.ContactsManager
                     case nameof(Person.JobTitle):
                         sortedList = allPersons.OrderBy(person => person.JobTitle).ToList();
                         break;
-					case nameof(Person.Company.CompanyName):
-						sortedList = allPersons.OrderBy(person => person.CompanyName).ToList();
-						break;
-				};
+                    case nameof(Person.Company.CompanyName):
+                        sortedList = allPersons.OrderBy(person => person.CompanyName).ToList();
+                        break;
+                };
             }
             else
             {
@@ -58,10 +58,10 @@ namespace ContactsManagement.Core.Services.ContactsManager
                     case nameof(Person.JobTitle):
                         sortedList = allPersons.OrderByDescending(person => person.JobTitle).ToList();
                         break;
-					case nameof(Person.Company.CompanyName):
-						sortedList = allPersons.OrderByDescending(person => person.CompanyName).ToList();
-						break;
-				};
+                    case nameof(Person.Company.CompanyName):
+                        sortedList = allPersons.OrderByDescending(person => person.CompanyName).ToList();
+                        break;
+                };
             }
             return sortedList;
         }

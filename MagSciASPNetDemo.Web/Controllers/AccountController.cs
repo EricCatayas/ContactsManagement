@@ -1,5 +1,11 @@
 ﻿using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.DTO.ContactsManager;
+using ContactsManagement.Core.Enums.ContactsManager;
+using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
+using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactTagsServices;
+using ContactsManagement.Core.ServiceContracts.EventsManager;
+using ContactsManagement.Core.Services.ContactsManager.ContactGroups;
+using ContactsManagement.Core.Services.EventsManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +18,19 @@ namespace ContactsManagement.Web.Controllers
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
-        {
-            _signInManager= signInManager;
-            _userManager= userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IContactTagsSeederService _contactTagsSeederService;
+        private readonly IContactGroupsSeederService _contactGroupsSeederService;
+        private readonly IEventsSeederService _eventsSeederService;
 
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IContactTagsSeederService contactTagsSeederService, IContactGroupsSeederService contactGroupsSeederService, IEventsSeederService eventsSeederService)
+        {
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _contactTagsSeederService = contactTagsSeederService;
+            _contactGroupsSeederService = contactGroupsSeederService;
+            _eventsSeederService = eventsSeederService;
         }
         [Route("Login")]
         [HttpPost]
@@ -75,10 +89,20 @@ namespace ContactsManagement.Web.Controllers
                 PhoneNumber = registerDTO.Phone,
                 UserName = registerDTO.Email
             };
+
+
             IdentityResult result = await _userManager.CreateAsync(applicationUser, registerDTO.Password);
             if(result.Succeeded)
             {
+                await _userManager.UpdateSecurityStampAsync(applicationUser);
+
+                await _userManager.AddToRoleAsync(applicationUser, UserRoleOptions.User.ToString());
+
                 await _signInManager.SignInAsync(applicationUser, isPersistent:true);
+
+                await _contactGroupsSeederService.SeedUserContactGroups(applicationUser.Id);
+                await _contactTagsSeederService.SeedUserContactTags(applicationUser.Id);
+                await _eventsSeederService.SeedUserEvents(applicationUser.Id);
 
                 return RedirectToAction(nameof(HomeController.Index),"Home");
             }

@@ -34,7 +34,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [Required(ErrorMessage = "Gender is required")]
         public GenderOptions? Gender { get; set; }
         [Required(ErrorMessage = "CountryId is required")]
-        public Guid? CountryId { get; set; }
+        public int? CountryId { get; set; }
         /* - The Hard Part - */
         [StringLength(75)]
         public string? JobTitle { get; set; }

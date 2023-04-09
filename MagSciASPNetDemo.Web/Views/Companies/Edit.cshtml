@@ -90,7 +90,13 @@
                                         <input asp-for="WebUrl" class="form-control form-control-lg" />
                                         <span asp-validation-for="WebUrl"></span>
                                     </div>
-                                </div>
+                                        <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
+                                            Save Changes
+                                        </button>
+                                        <a asp-controller="Companies" asp-action="Edit" asp-route-companyId="@Model.CompanyId" class="btn btn-secondary" data-mdb-ripple-color="dark">
+                                            Undo
+                                        </a>
+                                    </div>
                         </div>
 
                             @* Employees *@
@@ -120,14 +126,7 @@
                                                 </tbody>
                                             </table>
                                             
-                                        }
-
-                                    <button type="submit" class="btn btn-success" data-mdb-ripple-color="dark">
-                                        Save Changes
-                                    </button>
-                                    <a asp-controller="Companies" asp-action="Edit" asp-route-companyId="@Model.CompanyId" class="btn btn-secondary" data-mdb-ripple-color="dark">
-                                        Undo
-                                    </a>                                    
+                                        }                                                                     
                                 </div>
                             </div>
                         </div>

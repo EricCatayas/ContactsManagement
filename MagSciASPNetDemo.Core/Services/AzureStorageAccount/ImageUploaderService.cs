@@ -46,7 +46,7 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
 
                             // Upload the resized image to Azure Blob Storage
                             resizedImageStream.Position = 0;
-                            await blobClient.UploadAsync(resizedImageStream, overwrite: true);
+                            await blobClient.UploadAsync(resizedImageStream, overwrite: false);
                         }
                     }
                 }

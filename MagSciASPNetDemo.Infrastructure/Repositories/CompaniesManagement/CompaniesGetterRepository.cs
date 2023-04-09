@@ -22,16 +22,15 @@ namespace ContactsManagement.Infrastructure.Repositories.CompaniesManagement
             _db = db;
             _logger = logger;
         }
-        public async Task<List<Company>?> GetAllCompanies()
+        public async Task<List<Company>?> GetAllCompanies(Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(CompaniesAdderRepository), nameof(GetAllCompanies));
-            return await _db.Companies.Include("Employees").ToListAsync();
+            return await _db.Companies.Where(temp => temp.UserId == userId).Include("Employees").ToListAsync();
         }
-
-        public async Task<Company?> GetCompanyById(int companyID)
+        public async Task<Company?> GetCompanyById(int companyID, Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(CompaniesAdderRepository), nameof(GetCompanyById));
-            return await _db.Companies.Include("Employees").FirstOrDefaultAsync(temp => temp.CompanyId == companyID);
+            return await _db.Companies.Include("Employees").FirstOrDefaultAsync(temp => temp.CompanyId == companyID && temp.UserId == userId);
         }
     }
 }

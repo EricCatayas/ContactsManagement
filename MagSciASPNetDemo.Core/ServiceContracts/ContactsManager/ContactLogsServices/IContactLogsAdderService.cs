@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsServices
 {
+    /// <summary>
+    /// Defines a service for adding a contact log to the system.
+    /// </summary>
     public interface IContactLogsAdderService
     {
-        public Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest);
+        /// <summary>
+        /// Adds a new contact log to the system.
+        /// </summary>
+        /// <param name="contactlogAddRequest">The request containing the data for the contact log to add.</param>
+        /// <param name="userId">The ID of the user who owns the data.</param>
+        ///  /// <returns>A <see cref="ContactLogResponse"/> object containing the details of the added contact log.</returns>
+        public Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest, Guid userId);
     }
 }

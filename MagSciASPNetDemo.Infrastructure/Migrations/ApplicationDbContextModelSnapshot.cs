@@ -78,6 +78,9 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("WebUrl")
                         .HasMaxLength(1028)
                         .HasColumnType("nvarchar(1028)");
@@ -104,6 +107,9 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("GroupId");
 
                     b.ToTable("ContactGroups", (string)null);
@@ -125,8 +131,8 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<Guid?>("PersonId")
                         .HasColumnType("uniqueidentifier");
@@ -135,6 +141,9 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("LogId");
 
@@ -160,6 +169,9 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("TagId");
 
                     b.ToTable("ContactTags", (string)null);
@@ -167,9 +179,11 @@ namespace ContactsManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("ContactsManagement.Core.Domain.Entities.ContactsManager.Country", b =>
                 {
-                    b.Property<Guid>("CountryId")
+                    b.Property<int>("CountryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CountryId"));
 
                     b.Property<string>("CountryName")
                         .HasMaxLength(50)
@@ -178,33 +192,6 @@ namespace ContactsManagement.Infrastructure.Migrations
                     b.HasKey("CountryId");
 
                     b.ToTable("Countries", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            CountryId = new Guid("14629847-905a-4a0e-9abe-80b61655c5cb"),
-                            CountryName = "Philippines"
-                        },
-                        new
-                        {
-                            CountryId = new Guid("56bf46a4-02b8-4693-a0f5-0a95e2218bdc"),
-                            CountryName = "Thailand"
-                        },
-                        new
-                        {
-                            CountryId = new Guid("12e15727-d369-49a9-8b13-bc22e9362179"),
-                            CountryName = "China"
-                        },
-                        new
-                        {
-                            CountryId = new Guid("8f30bedc-47dd-4286-8950-73d8a68e5d41"),
-                            CountryName = "Palestinian Territory"
-                        },
-                        new
-                        {
-                            CountryId = new Guid("501c6d33-1bbe-45f1-8fbd-2275913c6218"),
-                            CountryName = "China"
-                        });
                 });
 
             modelBuilder.Entity("ContactsManagement.Core.Domain.Entities.ContactsManager.Event", b =>
@@ -216,8 +203,8 @@ namespace ContactsManagement.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
 
                     b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
@@ -244,6 +231,9 @@ namespace ContactsManagement.Infrastructure.Migrations
                     b.Property<string>("Type")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isActive")
                         .HasColumnType("bit");
@@ -274,8 +264,8 @@ namespace ContactsManagement.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<Guid?>("CountryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -302,6 +292,9 @@ namespace ContactsManagement.Infrastructure.Migrations
 
                     b.Property<int?>("TagId")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

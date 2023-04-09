@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ContactsManagement.Core.Enums.ContactsManager;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +28,8 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [Required(ErrorMessage = "Confirm Password can't be blank")]
         [Compare("Password", ErrorMessage = "Invalid: Password does not match")]
         [DataType(DataType.Password)]
-        public string? ConfirmPassword { get; set; }    
+        public string? ConfirmPassword { get; set; }
+        public UserRoleOptions userRole { get; set; } = UserRoleOptions.User;
 
     }
 }

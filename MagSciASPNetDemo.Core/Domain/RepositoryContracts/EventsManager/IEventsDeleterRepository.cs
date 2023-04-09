@@ -8,6 +8,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.EventsManager
 {
     public interface IEventsDeleterRepository
     {
-        Task<bool> DeleteEvent(int eventId);
+        Task<bool> DeleteEvent(int eventId, Guid userId);
     }
 }

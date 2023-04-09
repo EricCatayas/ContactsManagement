@@ -8,8 +8,18 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices
 {
+
+    /// <summary>
+    /// Defines a service for deleting a contact group from the system.
+    /// </summary>
     public interface IContactGroupsDeleterService
     {
-        Task<bool> DeleteContactGroup(int contactGroupId);
+        /// <summary>
+        /// Deletes a contact group from the system.
+        /// </summary>
+        /// <param name="contactGroupId">The request id of the contact group to be deleted.</param>
+        /// <param name="userId">The ID of the user who owns the data.</param>
+        /// <returns>True if contact group with corresponding ID is deleted, otherwise false.</returns>
+        Task<bool> DeleteContactGroup(int contactGroupId, Guid userId);
     }
 }

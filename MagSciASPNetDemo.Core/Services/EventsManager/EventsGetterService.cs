@@ -21,18 +21,18 @@ namespace ContactsManagement.Core.Services.EventsManager
             _eventsGetterRepository = eventsGetterRepository;
             _eventsStatusUpdaterRepository = eventsStatusUpdaterRepository;
         }
-        public async Task<EventResponse?> GetEventById(int eventId)
+        public async Task<EventResponse?> GetEventById(int eventId, Guid userId)
         {
-            Event? @event = await _eventsGetterRepository.GetEvent(eventId);
+            Event? @event = await _eventsGetterRepository.GetEvent(eventId, userId);
             if (@event == null) { return null; }
             //Updation of Status
 
             return @event.ToEventResponse();
         }
 
-        public async Task<List<EventResponse>?> GetEvents()
+        public async Task<List<EventResponse>?> GetEvents(Guid userId)
         {
-            List<Event>? events = await _eventsGetterRepository.GetEvents();
+            List<Event>? events = await _eventsGetterRepository.GetEvents(userId);
             if (events == null) return null;
 
             events = events.OrderBy(temp => temp.StartDate).ToList();

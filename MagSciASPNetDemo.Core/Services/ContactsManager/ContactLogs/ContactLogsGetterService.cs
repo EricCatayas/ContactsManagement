@@ -19,15 +19,15 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactLogs
         {
             _contactLogsGetterRepository = contactLogsGetterRepository;
         }
-        public async Task<ContactLogResponse?> GetContactLogById(int contactLogId)
+        public async Task<ContactLogResponse?> GetContactLogById(int contactLogId, Guid userId)
         {
-            ContactLog contactLog = await _contactLogsGetterRepository.GetContactLog(contactLogId);
+            ContactLog contactLog = await _contactLogsGetterRepository.GetContactLog(contactLogId, userId);
             return contactLog == null ? null : contactLog.ToContactLogResponse();
         }
 
-        public async Task<List<ContactLogResponse>?> GetContactLogs()
+        public async Task<List<ContactLogResponse>?> GetContactLogs(Guid userId)
         {
-            List<ContactLog>? contactLogs = await _contactLogsGetterRepository.GetContactLogs();
+            List<ContactLog>? contactLogs = await _contactLogsGetterRepository.GetContactLogs(userId);
             return contactLogs.Select(log => log.ToContactLogResponse()).ToList();
         }
 

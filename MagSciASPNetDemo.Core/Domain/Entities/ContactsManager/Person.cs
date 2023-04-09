@@ -24,7 +24,7 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         public DateTime? DateOfBirth { get; set; }
         [StringLength(15)]
         public string? Gender { get; set; }
-        public Guid? CountryId { get; set; }
+        public int? CountryId { get; set; }
         [ForeignKey("CountryId")]
         public virtual Country? Country { get; set; }
 
@@ -46,5 +46,6 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         public virtual ContactTag? Tag { get; set; }
         public virtual ICollection<ContactGroup>? ContactGroups { get; set; }
         public virtual ICollection<ContactLog>? ContactLogs { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

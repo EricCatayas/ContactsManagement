@@ -10,8 +10,8 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
     public interface IContactLogsGetterRepository
     {
-        Task<ContactLog?> GetContactLog(int contactLogId);
-        Task<List<ContactLog>?> GetContactLogs();
+        Task<ContactLog?> GetContactLog(int contactLogId, Guid userId);
+        Task<List<ContactLog>?> GetContactLogs(Guid userId);
         Task<List<ContactLog>?> GetContactLogsFromPerson(Guid personId);
         
         // Task<List<ContactLog>> GetFilteredContactLogs(List<ContactLog> contactLogs ,Expression<Func<ContactLog, bool>> predicate);

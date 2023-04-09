@@ -18,9 +18,11 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactLogs
         {
             _contactLogsAdderRepository = contactLogsAdderRepository;
         }
-        public async Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest)
+        public async Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest, Guid userId)
         {
-            ContactLog contactLog = await _contactLogsAdderRepository.AddContactLog(contactLogAddRequest.ToContactLog());
+            ContactLog contactLog = contactLogAddRequest.ToContactLog();
+            contactLog.UserId = userId;
+            contactLog = await _contactLogsAdderRepository.AddContactLog(contactLog);
             return contactLog.ToContactLogResponse();
         }
     }

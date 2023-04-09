@@ -18,22 +18,16 @@ namespace ContactsManagement.Core.Services.CompaniesManagement
         {
             _companiesGetterRepository = companiesGetterRepository;
         }
-        public async Task<List<CompanyResponse>?> GetAllCompanies()
+        public async Task<List<CompanyResponse>?> GetAllCompanies(Guid userId)
         {
-            List<Company>? companies = await _companiesGetterRepository.GetAllCompanies();
+            List<Company>? companies = await _companiesGetterRepository.GetAllCompanies(userId);
             return companies?.Select(company => company.ToCompanyResponse()).ToList().OrderBy(company => company.CompanyName).ToList();
         }
 
-        public async Task<CompanyResponse?> GetCompanyById(int companyID)
+        public async Task<CompanyResponse?> GetCompanyById(int companyID, Guid userId)
         {
-            Company? company = await _companiesGetterRepository.GetCompanyById(companyID);
+            Company? company = await _companiesGetterRepository.GetCompanyById(companyID, userId);
             return company?.ToCompanyResponse();
-        }
-
-        public async Task<List<PersonResponse>?> GetCompanyEmployees(int companyID)
-        {
-            Company? company = await _companiesGetterRepository.GetCompanyById(companyID);
-            return company?.Employees?.Select(employee => employee.ToPersonResponse()).ToList();
         }
     }
 }

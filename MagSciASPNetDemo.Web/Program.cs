@@ -33,6 +33,9 @@ using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
 using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
 using ContactsManagement.Core.Services.AzureStorageAccount;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
+using ContactsManagement.Core.Services.AccountManager;
+using ContactsManagement.Core.Services.ContactsManager.Persons;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,11 +103,13 @@ builder.Services.AddScoped<IContactTagsAdderService, ContactTagsAdderService>();
 builder.Services.AddScoped<IContactTagsGetterService, ContactTagsGetterService>();
 builder.Services.AddScoped<IContactTagsUpdaterService, ContactTagsUpdaterService>();
 builder.Services.AddScoped<IContactTagsDeleterService, ContactTagsDeleterService>();
+builder.Services.AddScoped<IContactTagsSeederService, ContactTagsSeederService>();
 
 builder.Services.AddScoped<IContactGroupsAdderService, ContactGroupsAdderService>();
 builder.Services.AddScoped<IContactGroupsGetterService, ContactGroupsGetterService>();
 builder.Services.AddScoped<IContactGroupsDeleterService, ContactGroupsDeleterService>();
 builder.Services.AddScoped<IContactGroupsUpdaterService, ContactGroupsUpdaterService>();
+builder.Services.AddScoped<IContactGroupsSeederService, ContactGroupsSeederService>();
 
 builder.Services.AddScoped<IContactLogsAdderService, ContactLogsAdderService>();
 builder.Services.AddScoped<IContactLogsGetterService, ContactLogsGetterService>();
@@ -116,6 +121,7 @@ builder.Services.AddScoped<IEventsAdderService, EventsAdderService>();
 builder.Services.AddScoped<IEventsGetterService, EventsGetterService>();
 builder.Services.AddScoped<IEventsUpdaterService, EventsUpdaterService>();
 builder.Services.AddScoped<IEventsDeleterService, EventsDeleterService>();
+builder.Services.AddScoped<IEventsSeederService, EventsSeederService>();
 
 builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
 builder.Services.AddScoped<IImageDeleterService, ImageDeleterService>();
@@ -123,13 +129,15 @@ builder.Services.AddScoped<IImageDeleterService, ImageDeleterService>();
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IContactGroupsGetterService, ContactGroupsGetterService>();
 
+builder.Services.AddScoped<IDemoUserService, DemoUserAccountService>();
+
 builder.Services.AddTransient<RedirectToIndexExceptionFilter>();  //ServiceFilter
 builder.Services.AddTransient<ContactLogsCardViewComponent>();
 
 /* DbContext */
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MagSciASPDemoDb"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ContactsManagement"));
     // options.EnableSensitiveDataLogging(); // The seed entity for entity type 'Country' cannot be added because another seed entity with the same key value for {'CountryId'} has already been added.
 });
 /* Logging */
@@ -173,22 +181,8 @@ var app = builder.Build();
      *  Seq account in User Secrets
      *  Section: 25 Interview Questions      
      *  Code Documentation Clean Up
-     *     
-     *      Minimal API for Learning ASPNEtCore
-     *          C: Product class - override ToString() - only use Map() Methods
-     *          Return a Json format of products i.e //Serialize the object using the built in JsonSerializer
-     *          context.WriteAsync()
-     *          Anki - 
-
-
-     */
-/* Remember: "Back-End"
-       
-        Azure Image Uploading & Retrieving
-        Database and ApplicationUser Relationships  -- Overhaul
-        Also: Finish Harsha's Course
-        Also: Document your code
-        
+     *  Why are you afraid of finding bugs? 
+ 
 */
 
 app.UseSerilogRequestLogging("Message Template: Maggot Scientist!"); // <-- adds log message as soon as request response is complete

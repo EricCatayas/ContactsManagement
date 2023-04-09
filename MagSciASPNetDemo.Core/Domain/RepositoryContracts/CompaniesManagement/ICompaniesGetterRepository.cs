@@ -9,7 +9,7 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.CompaniesManagement
 {
     public interface ICompaniesGetterRepository
     {
-        Task<List<Company>?> GetAllCompanies();
-        Task<Company?> GetCompanyById(int companyID);
+        Task<List<Company>?> GetAllCompanies(Guid userId);
+        Task<Company?> GetCompanyById(int companyID, Guid userId);
     }
 }

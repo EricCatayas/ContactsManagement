@@ -1,10 +1,12 @@
 ﻿using ContactsManagement.Core.Domain.Entities.ContactsManager;
+using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.DTO.CompaniesManagement;
 using ContactsManagement.Core.DTO.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
 using ContactsManagement.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -17,14 +19,16 @@ namespace ContactsManagement.Web.Controllers
         private readonly IEventsGetterService _eventsGetterService;
         private readonly IEventsUpdaterService _eventsUpdaterService;
         private readonly IEventsDeleterService _eventsDeleterService;
+        private readonly UserManager<ApplicationUser> _userManager;
         List<string> eventColorOptions;
         List<string> eventTypeOptions;
-        public EventsController(IEventsAdderService eventsAdderService, IEventsGetterService eventsGetterService, IEventsUpdaterService eventsUpdaterService, IEventsDeleterService eventsDeleterService) 
+        public EventsController(IEventsAdderService eventsAdderService, IEventsGetterService eventsGetterService, IEventsUpdaterService eventsUpdaterService, IEventsDeleterService eventsDeleterService, UserManager<ApplicationUser> userManager) 
         {
             _eventsAdderService = eventsAdderService;
             _eventsGetterService = eventsGetterService;
             _eventsUpdaterService = eventsUpdaterService;
             _eventsDeleterService = eventsDeleterService;
+            _userManager = userManager;
             eventColorOptions = new List<string>()
             {
                 "yellow","blue","green","grey","pink","brown","purple","orange"
@@ -39,7 +43,10 @@ namespace ContactsManagement.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(List<string>? error = null, bool isActiveEvent = true)
         {
-            List<EventResponse>? events = await _eventsGetterService.GetEvents();
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            List<EventResponse>? events = await _eventsGetterService.GetEvents(UserId);
 
             if (isActiveEvent)
             {
@@ -63,15 +70,17 @@ namespace ContactsManagement.Web.Controllers
         }
         [Route("[action]")]
         [HttpPost]
-        public async Task<IActionResult> Create(EventAddRequest eventAddRequest) //TODO StartDate and EndDate Kuan
+        public async Task<IActionResult> Create(EventAddRequest eventAddRequest) 
         {
             ViewBag.ThemeColors = eventColorOptions;
             ViewBag.TypeOptions = eventTypeOptions;
             if (ModelState.IsValid)
             {
-                _ = await _eventsAdderService.AddEvent(eventAddRequest);
+                string? userId = _userManager.GetUserId(User);
+                Guid UserId = Guid.Parse(userId);
+                _ = await _eventsAdderService.AddEvent(eventAddRequest, UserId);
                 ViewBag.Success = "Event has been added";
-                return View(null);
+                return View();
             }
             else
             {
@@ -102,14 +111,20 @@ namespace ContactsManagement.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] int eventId)
         {
-            bool isDeleted = await _eventsDeleterService.DeleteEvent(eventId);
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            bool isDeleted = await _eventsDeleterService.DeleteEvent(eventId, UserId);
             return isDeleted ? StatusCode(200) : StatusCode(500);
         }
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> EventCompleted([FromQuery] int eventId)
         {
-            bool isUpdated = await _eventsUpdaterService.UpdateEventCompletion(eventId);
+            string? userId = _userManager.GetUserId(User);
+            Guid UserId = Guid.Parse(userId);
+
+            bool isUpdated = await _eventsUpdaterService.UpdateEventCompletion(eventId, UserId);
             return isUpdated ? StatusCode(200) : StatusCode(500);
         }
     }

@@ -32,6 +32,9 @@ namespace ContactsManagement.Infrastructure.DbContexts
             base.OnModelCreating(modelBuilder);
 
             // See? Id is auto generated baby
+            modelBuilder.Entity<Country>()
+               .Property(temp => temp.CountryId)
+               .ValueGeneratedOnAdd();
             modelBuilder.Entity<Company>()
                 .Property(temp => temp.CompanyId)
                 .ValueGeneratedOnAdd();
@@ -58,12 +61,12 @@ namespace ContactsManagement.Infrastructure.DbContexts
 
 
             //Countries Seed using Fluent API
-            string countriesJson = File.ReadAllText("seedData/countries.json");
+           /* string countriesJson = File.ReadAllText("seedData/countries.json");
             List<Country>? countriesSeedData = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
             countriesSeedData.ForEach(country =>
             {
                 modelBuilder.Entity<Country>().HasData(country);
-            });            
+            });*/       
             // But fluent api is too explicit
         }
         /* ------------ Stored Procedure Sample ------------ */

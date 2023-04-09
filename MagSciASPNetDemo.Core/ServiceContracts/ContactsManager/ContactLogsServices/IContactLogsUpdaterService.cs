@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsServices
 {
+    /// <summary>
+    /// Defines a service for updating the contact log from the system
+    /// </summary>
     public interface IContactLogsUpdaterService
     {
-        public Task<ContactLogResponse> UpdateContactLog(ContactLogUpdateRequest contactLogAddRequest);
+        /// <summary>
+        /// Updates a contact log from the system.
+        /// </summary>
+        /// <param name="contactLogUpdateRequest">The request containing the data for the contact log to be updated.</param>
+        ///  /// <returns>A <see cref="ContactLogResponse"/> object containing the details of the updated contact log.</returns>
+        public Task<ContactLogResponse> UpdateContactLog(ContactLogUpdateRequest contactLogUpdateRequest);
     }
 }

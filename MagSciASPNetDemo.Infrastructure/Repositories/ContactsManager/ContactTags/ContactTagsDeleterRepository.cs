@@ -16,9 +16,9 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<bool> DeleteContactTagById(int contactTagId)
+        public async Task<bool> DeleteContactTagById(int contactTagId, Guid userId)
         {
-            _db.ContactTags.RemoveRange(_db.ContactTags.Where(temp => temp.TagId == contactTagId));
+            _db.ContactTags.RemoveRange(_db.ContactTags.Where(temp => temp.TagId == contactTagId && temp.UserId == userId));
 
             int rowsDeleted = await _db.SaveChangesAsync();
 

@@ -16,9 +16,9 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactTags
         {
             _contactTagsDeleterRepository = contactTagsDeleterRepository;
         }
-        public async Task<bool> DeleteContactTag(int contactTagId)
+        public async Task<bool> DeleteContactTag(int contactTagId, Guid userId)
         {
-            return await _contactTagsDeleterRepository.DeleteContactTagById(contactTagId);  
+            return await _contactTagsDeleterRepository.DeleteContactTagById(contactTagId, userId);  
         }
     }
 }

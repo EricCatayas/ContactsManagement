@@ -14,7 +14,7 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
         /// Returns all persons in the data store
         /// </summary>
         /// <returns>List of person objects from table</returns>
-        Task<List<Person>> GetAllPersons();
+        Task<List<Person>> GetAllPersons(Guid userId);
 
 
         /// <summary>
@@ -36,6 +36,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
         /// </summary>
         /// <param name="predicate">LINQ expression to check</param>
         /// <returns>All matching persons with given condition</returns>
-        Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
+        Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate, Guid userId);
     }
 }

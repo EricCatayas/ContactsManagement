@@ -9,6 +9,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
     public interface IContactGroupsDeleterRepository
     {
-        Task<bool> DeleteContactGroup(int contactGroupId);
+        Task<bool> DeleteContactGroup(int contactGroupId, Guid userId);
     }
 }

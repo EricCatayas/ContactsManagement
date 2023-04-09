@@ -22,17 +22,17 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Persons
             _db = db;
             _logger = logger;
         }
-        public async Task<List<Person>> GetAllPersons()
+        public async Task<List<Person>> GetAllPersons(Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(PersonsGetterRepository), nameof(GetAllPersons));
-            return await _db.Persons.Include("Country").Include("Company").Include("Tag").Include("ContactGroups")
+            return await _db.Persons.Where(p => p.UserId == userId).Include("Country").Include("Company").Include("Tag").Include("ContactGroups")
                 .ToListAsync();
         }
 
-        public async Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate)
+        public async Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate, Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(PersonsGetterRepository), nameof(GetFilteredPersons));
-            return await _db.Persons.Include("Country").Include("Company").Include("Tag").Include("ContactGroups")
+            return await _db.Persons.Where(p => p.UserId == userId).Include("Country").Include("Company").Include("Tag").Include("ContactGroups")
              .Where(predicate)
              .ToListAsync();
         }
@@ -40,7 +40,7 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Persons
         public async Task<Person?> GetPersonById(Guid personID)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(PersonsGetterRepository), nameof(GetPersonById));
-            return await _db.Persons.Include("Country").Include("Company").Include("Tag").Include("ContactGroups").Include("ContactLogs")
+            return await _db.Persons.Include("Country").Include("Company").Include("Tag").Include("ContactLogs").Include("ContactGroups")
              .FirstOrDefaultAsync(temp => temp.Id == personID);
         }
 

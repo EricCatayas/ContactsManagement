@@ -16,7 +16,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactLogs
         {
             _contactLogsDeleterRepository = contactLogsDeleterRepository;
         }
-        public async Task<bool> DeleteContactLog(int ContactLogId)
+        public async Task<bool> DeleteContactLog(int ContactLogId, Guid userId)
         {
             return await _contactLogsDeleterRepository.DeleteContactLog(ContactLogId);
         }

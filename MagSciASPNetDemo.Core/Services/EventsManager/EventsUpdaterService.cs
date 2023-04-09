@@ -31,9 +31,9 @@ namespace ContactsManagement.Core.Services.EventsManager
             return await _eventsUpdaterRepository.UpdateEvent(eventUpdateRequest.ToEvent());
         }
 
-        public async Task<bool> UpdateEventCompletion(int eventId)
+        public async Task<bool> UpdateEventCompletion(int eventId, Guid userId)
         {
-            Event? @event = await _eventsGetterRepository.GetEvent(eventId);
+            Event? @event = await _eventsGetterRepository.GetEvent(eventId, userId);
             if (@event == null)
                 return false;
             @event.Status = "Completed";

@@ -9,8 +9,8 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.EventsManager
 {
     public interface IEventsGetterRepository
     {
-        Task<List<Event>?> GetEvents();
-        Task<Event?> GetEvent(int EventId);
+        Task<List<Event>?> GetEvents(Guid userId);
+        Task<Event?> GetEvent(int EventId, Guid userId);
 
     }
 }

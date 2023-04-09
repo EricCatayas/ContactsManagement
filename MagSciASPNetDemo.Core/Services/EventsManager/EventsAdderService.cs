@@ -20,9 +20,10 @@ namespace ContactsManagement.Core.Services.EventsManager
             _eventsAdderRepository = eventsAdderRepository;
             _eventsStatusUpdaterRepository = eventsStatusUpdaterRepository;
         }
-        public async Task<EventResponse> AddEvent(EventAddRequest eventAddRequest)
+        public async Task<EventResponse> AddEvent(EventAddRequest eventAddRequest, Guid userId)
         {
             Event @event = eventAddRequest.ToEvent();
+            @event.UserId = userId;
             @event.Status = _eventsStatusUpdaterRepository.GetUpdatedStatus(@event.StartDate, @event.EndDate);
             @event.LastUpdatedDate = DateTime.Now;
             @event = await _eventsAdderRepository.AddEvent(@event);

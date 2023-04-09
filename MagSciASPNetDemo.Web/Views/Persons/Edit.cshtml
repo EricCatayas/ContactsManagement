@@ -1,7 +1,6 @@
 ﻿@using ContactsManagement.Web.ViewComponents;
  @model PersonUpdateRequest;
 @{
-    ViewBag.Title = "Edit Person";
     ViewBag.PersonId = Model.PersonId;
 }
 <div class="row">
@@ -10,12 +9,13 @@
             <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
                 <li class="breadcrumb-item"><a asp-controller="Persons" asp-action="Index">Contacts</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Edit Contact Information</li>
+                <li class="breadcrumb-item active" aria-current="page">Contact Information</li>
             </ol>
         </nav>
     </div>
 </div>
 
+<partial name="Partials/_ErrorCardPartial"></partial>
 <partial name="_DeleteModalPartial"></partial>
 
     <div class="row">

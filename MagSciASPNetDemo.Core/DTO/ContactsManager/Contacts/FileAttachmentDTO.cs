@@ -23,7 +23,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
     }
     public static class FileAttachmentDTOExtentions
     {
-        public static FileAttachmentDTO ToFileAttachmentDTO(this FileAttachment fileAttachment)
+       /* public static FileAttachmentDTO ToFileAttachmentDTO(this FileAttachment fileAttachment)
         {
             return new FileAttachmentDTO()
             {
@@ -32,6 +32,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
                 BlobUrl = fileAttachment.BlobUrl,
                 ContactLogId = fileAttachment.ContactLogId,
             };
-        }
+        }*/
     }
 }

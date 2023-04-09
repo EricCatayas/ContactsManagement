@@ -20,5 +20,6 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         public string? TagName { get; set; }
         [StringLength(30)]
         public string? TagColor { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

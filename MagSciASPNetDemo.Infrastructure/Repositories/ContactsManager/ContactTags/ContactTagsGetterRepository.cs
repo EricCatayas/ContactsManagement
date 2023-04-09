@@ -18,9 +18,9 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<List<ContactTag>?> GetAllContactTags()
+        public async Task<List<ContactTag>?> GetAllContactTags(Guid userId)
         {
-            return await _db.ContactTags.ToListAsync();
+            return await _db.ContactTags.Where(tag => tag.UserId == userId).ToListAsync();
         }
     }
 }

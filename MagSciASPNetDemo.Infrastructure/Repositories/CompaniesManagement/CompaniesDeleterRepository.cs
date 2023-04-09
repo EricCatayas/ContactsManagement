@@ -21,11 +21,11 @@ namespace ContactsManagement.Infrastructure.Repositories.CompaniesManagement
             _db = db;
             _logger = logger;
         }
-        public async Task<bool> DeleteCompany(int companyId)
+        public async Task<bool> DeleteCompany(int companyId, Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(CompaniesDeleterRepository), nameof(DeleteCompany));
 
-            Company? company = await _db.Companies.FirstOrDefaultAsync(c => c.CompanyId == companyId);
+            Company? company = await _db.Companies.FirstOrDefaultAsync(temp => temp.CompanyId == companyId && temp.UserId == userId);
             if(company == null)
             {
                 return false;

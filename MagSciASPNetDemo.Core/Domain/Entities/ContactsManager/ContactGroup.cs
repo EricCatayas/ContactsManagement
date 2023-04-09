@@ -17,5 +17,6 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         [StringLength(500)]
         public string? Description { get; set; }
         public virtual ICollection<Person>? Persons { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

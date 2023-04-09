@@ -16,9 +16,9 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
         {
             _contactGroupsDeleterRepository = contactGroupsDeleterRepository;
         }
-        public async Task<bool> DeleteContactGroup(int contactGroupId)
+        public async Task<bool> DeleteContactGroup(int contactGroupId, Guid userId)
         {
-            return await _contactGroupsDeleterRepository.DeleteContactGroup(contactGroupId);
+            return await _contactGroupsDeleterRepository.DeleteContactGroup(contactGroupId, userId);
         }
     }
 }

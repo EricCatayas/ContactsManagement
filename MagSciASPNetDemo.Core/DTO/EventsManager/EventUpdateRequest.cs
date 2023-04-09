@@ -16,7 +16,7 @@ namespace ContactsManagement.Core.DTO.EventsManager
         [Required]
         [StringLength(100)]
         public string? Title { get; set; }
-        [StringLength(500)]
+        [StringLength(1000)]
         public string? Description { get; set; }
         [StringLength(30)]
         public string? Type { get; set; }

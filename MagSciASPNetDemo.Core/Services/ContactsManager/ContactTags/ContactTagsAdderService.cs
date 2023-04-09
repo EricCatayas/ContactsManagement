@@ -18,10 +18,12 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactTags
         {
             _contactTagsAdderRepository = contactTagsAdderRepository;
         }
-        public async Task<ContactTagDTO> AddContactTag(ContactTagAddRequest contactTag)
+        public async Task<ContactTagDTO> AddContactTag(ContactTagAddRequest contactTagAddRequest, Guid userId)
         {
-            ContactTag contactTagResponse = await _contactTagsAdderRepository.AddContactTag(contactTag.ToContactTag());
-            return contactTagResponse.ToContactTagResponse();
+            ContactTag contactTag = contactTagAddRequest.ToContactTag();
+            contactTag.UserId = userId;
+            contactTag = await _contactTagsAdderRepository.AddContactTag(contactTag);
+            return contactTag.ToContactTagResponse();
         }
     }
 }

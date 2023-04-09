@@ -10,7 +10,7 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
     public class Country
     {
         [Key]
-        public Guid CountryId { get; set; }
+        public int CountryId { get; set; }
         [StringLength(50)]
         public string? CountryName { get; set; }
         public virtual ICollection<Person>? Persons { get; set; } //TODO : Remove

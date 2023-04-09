@@ -9,7 +9,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
 {
     public class CountryResponse
     {
-        public Guid CountryId { get; set; }
+        public int CountryId { get; set; }
         public string? CountryName { get; set; }
         public override bool Equals(object? obj)
         {

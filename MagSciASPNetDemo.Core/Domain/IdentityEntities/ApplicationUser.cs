@@ -12,7 +12,7 @@ namespace ContactsManagement.Core.Domain.IdentityEntities
     /// <summary>
     /// Nuget: AspNetCore.Identity, AspNetCore.Identity.EF
     /// </summary>
-    public class ApplicationUser : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid> 
     {
         public string? PersonName { get; set; }
         public int? CompanyId { get; set; }

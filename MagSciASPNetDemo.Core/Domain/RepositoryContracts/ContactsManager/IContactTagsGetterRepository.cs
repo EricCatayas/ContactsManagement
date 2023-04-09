@@ -9,6 +9,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
     public interface IContactTagsGetterRepository
     {
-        Task<List<ContactTag>?> GetAllContactTags();
+        Task<List<ContactTag>?> GetAllContactTags(Guid userId);
     }
 }

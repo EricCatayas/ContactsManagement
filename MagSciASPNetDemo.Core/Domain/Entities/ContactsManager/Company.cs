@@ -33,5 +33,6 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         [StringLength(30)]
         public string? ContactNumber2 { get; set; }
         public virtual ICollection<Person>? Employees { get; set; }
+        public Guid? UserId { get; set; }
     }
 }
