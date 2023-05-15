@@ -1,19 +1,34 @@
-﻿<div>
+﻿@using ContactsManagement.Core.ServiceContracts.AccountManager;
+@using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
+@inject IContactGroupsGetterService _contactGroupsGetterService;
+@{
+    List<ContactGroupResponse>? contactGroups = await _contactGroupsGetterService.GetAllContactGroups();
+    if (contactGroups != null)
+    {
+        Dictionary<string, int> contactGroupsFilter = new Dictionary<string, int>() { };
+        foreach (ContactGroupResponse contactGroup in contactGroups)
+        {
+            contactGroupsFilter.Add(contactGroup.GroupName, contactGroup.GroupId);
+        }
+        ViewBag.ContactGroupsFilter = contactGroupsFilter;
+    }
+}
+<div>
     <form action="~/persons/index" method="post">
         <div class="input-group mb-3">
             <label class="input-group-text" for="contactGroupSelect">Contacts: </label>
             <select class="form-select" name="groupId" id="contactGroupSelect">
                 <option value="@null">All</option>
                 @if(ViewBag.ContactGroupsFilter != null){
-                    @foreach (KeyValuePair<string, int> searchProperty in ViewBag.ContactGroupsFilter)
+                    @foreach (KeyValuePair<string, int> groupFilter in ViewBag.ContactGroupsFilter)
                     {
-                        if (searchProperty.Value == ViewBag.groupId)
+                        if (groupFilter.Value == ViewBag.groupId)
                         {
-                            <option value="@searchProperty.Value" selected>@searchProperty.Key</option>
+                            <option value="@groupFilter.Value" selected>@groupFilter.Key</option>
                         }
                         else
                         {
-                            <option value="@searchProperty.Value">@searchProperty.Key</option>
+                            <option value="@groupFilter.Value">@groupFilter.Key</option>
                         }
                     }
                 }

@@ -39,7 +39,7 @@ namespace ContactsManagement.Core.DTO.EventsManager
                 LastUpdatedDate = @event.LastUpdatedDate,
             };
         }
-        /*public static EventUpdateRequest ToEventUpdateRequest(this EventResponse @event)
+        public static EventUpdateRequest ToEventUpdateRequest(this EventResponse @event)
         {
             return new EventUpdateRequest()
             {
@@ -53,6 +53,6 @@ namespace ContactsManagement.Core.DTO.EventsManager
                 StartDate = @event.StartDate,
                 EndDate = @event.EndDate,
             };
-        }*/
+        }
     }
 }

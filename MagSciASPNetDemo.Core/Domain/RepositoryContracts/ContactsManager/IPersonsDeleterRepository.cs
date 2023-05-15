@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
+    /// <summary>
+    /// Defines a repository for deleting person data from the database.
+    /// </summary>
     public interface IPersonsDeleterRepository
     {
         /// <summary>
-        /// Deletes a person object based on the person id
+        /// Deletes a person from the database.
         /// </summary>
-        /// <param name="personID">Person ID (guid) to search</param>
-        /// <returns>Returns true, if the deletion is successful; otherwise false</returns>
+        /// <param name="personID">The ID of the person to delete.</param>
+        /// <returns><see langword="true"/> if the person was deleted from the repository; otherwise, <see langword="false"/>.</returns>
         Task<bool> DeletePersonById(Guid personID);
         /// <summary>
-        /// Deletes a person object based on the person
+        /// Deletes a person from the database.
         /// </summary>
-        /// <param name="personID">Person ID (guid) to search</param>
-        /// <returns>Returns true, if the deletion is successful; otherwise false</returns>
+        /// <param name="person">The person to delete.</param>
+        /// <returns><see langword="true"/> if the person was deleted from the repository; otherwise, <see langword="false"/>.</returns>
         Task<bool> DeletePerson(Person person);
     }
 }

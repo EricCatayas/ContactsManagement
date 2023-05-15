@@ -15,8 +15,7 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactTagsSe
         /// <summary>
         /// Retrieves a list of contact tag from the system.
         /// </summary>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>A list of contact tag object with the corresponding UserID</returns>
-        Task<List<ContactTagDTO>?> GetAllContactTags(Guid userId);
+        Task<List<ContactTagDTO>?> GetAllContactTags();
     }
 }

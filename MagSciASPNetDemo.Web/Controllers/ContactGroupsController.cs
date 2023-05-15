@@ -9,45 +9,37 @@ using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactTagsServic
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Services.ContactsManager.ContactGroups;
 using ContactsManagement.Core.Services.ContactsManager.ContactTags;
+using ContactsManagement.Web.Filters.ExceptionFilters;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContactsManagement.Web.Controllers
 {
     [Route("[controller]")]
+    [TypeFilter(typeof(RedirectToIndexExceptionFilter))]
     public class ContactGroupsController : Controller
     {
         private readonly IContactGroupsAdderService _contactGroupsAdderService;
         private readonly IPersonsGetterService _personsGetterService;
         private readonly IContactTagsGetterService _contactTagsGetterService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IDemoUserService _guestUserService;
         private readonly IContactGroupsGetterService _contactGroupsGetterService;
         private readonly IContactGroupsDeleterService _contactGroupsDeleterService;
 
-        public ContactGroupsController(IContactGroupsAdderService contactGroupsAdderService, IContactGroupsGetterService contactGroupsGetterService, IContactGroupsDeleterService contactGroupsDeleterService, IPersonsGetterService personsGetterService, IContactTagsGetterService contactTagsGetterService, UserManager<ApplicationUser> userManager, IDemoUserService guestUserService)
+        public ContactGroupsController(IContactGroupsAdderService contactGroupsAdderService, IContactGroupsGetterService contactGroupsGetterService, IContactGroupsDeleterService contactGroupsDeleterService, IPersonsGetterService personsGetterService, IContactTagsGetterService contactTagsGetterService)
         {
             _contactGroupsAdderService = contactGroupsAdderService;
             _contactGroupsGetterService = contactGroupsGetterService;
             _contactGroupsDeleterService = contactGroupsDeleterService;
             _personsGetterService = personsGetterService;
             _contactTagsGetterService = contactTagsGetterService;
-            _userManager = userManager;
-            _guestUserService = guestUserService;
         }
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> Index(List<string>? errors)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId;
-            if (userId != null)
-                UserId = Guid.Parse(userId);
-            else
-                UserId = _guestUserService.GetDemoUserId();
-            ViewBag.Persons = await _personsGetterService.GetAllPersons(UserId);
-            ViewBag.ContactGroups = await _contactGroupsGetterService.GetAllContactGroups(UserId); //TODO FILTER
-            ViewBag.ContactTags = await _contactTagsGetterService.GetAllContactTags(UserId);
+            ViewBag.Persons = await _personsGetterService.GetAllPersons();
+            ViewBag.ContactGroups = await _contactGroupsGetterService.GetAllContactGroups();
+            ViewBag.ContactTags = await _contactTagsGetterService.GetAllContactTags();
             ViewBag.Errors = errors;
             return View();
         }
@@ -55,20 +47,17 @@ namespace ContactsManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ContactGroupAddRequest contactGroupAddRequest)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
             if (ModelState.IsValid)
             {
-                ContactGroupResponse contactGroup = await _contactGroupsAdderService.AddContactGroup(contactGroupAddRequest, UserId);
+                ContactGroupResponse contactGroup = await _contactGroupsAdderService.AddContactGroup(contactGroupAddRequest);
                 return new RedirectToActionResult("Index", "Persons", new { groupId = contactGroup.GroupId });
             }
             else
             {
                 ViewBag.Errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
-                ViewBag.Persons = await _personsGetterService.GetAllPersons(UserId);
-                ViewBag.ContactGroups = await _contactGroupsGetterService.GetAllContactGroups(UserId);
-                ViewBag.ContactTags = await _contactTagsGetterService.GetAllContactTags(UserId);
+                ViewBag.Persons = await _personsGetterService.GetAllPersons();
+                ViewBag.ContactGroups = await _contactGroupsGetterService.GetAllContactGroups();
+                ViewBag.ContactTags = await _contactTagsGetterService.GetAllContactTags();
                 return View("Index");
             }
             
@@ -77,10 +66,7 @@ namespace ContactsManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int contactGroupId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isDeleted = await _contactGroupsDeleterService.DeleteContactGroup(contactGroupId, UserId);
+            bool isDeleted = await _contactGroupsDeleterService.DeleteContactGroup(contactGroupId);
             if (isDeleted)
             {
                 return Json(new { success = true });

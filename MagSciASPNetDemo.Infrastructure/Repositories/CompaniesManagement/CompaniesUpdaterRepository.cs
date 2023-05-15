@@ -24,7 +24,7 @@ namespace ContactsManagement.Infrastructure.Repositories.CompaniesManagement
         public async Task<Company> UpdateCompany(Company company)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(CompaniesUpdaterRepository), nameof(UpdateCompany));
-            Company? companyToUpdate = await _db.Companies.Include(c => c.Employees).FirstOrDefaultAsync(temp => temp.CompanyId == company.CompanyId);
+            Company? companyToUpdate = await _db.Companies.Include(c => c.Employees).FirstOrDefaultAsync(temp => temp.CompanyId == company.CompanyId && temp.UserId == company.UserId);
 
             if (companyToUpdate == null)
                 return company;

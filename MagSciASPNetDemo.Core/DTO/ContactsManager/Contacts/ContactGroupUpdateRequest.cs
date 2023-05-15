@@ -18,6 +18,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
         [StringLength(maximumLength: 500, ErrorMessage = "Tag name must not exceed 500 characters")]
         public string? Description { get; set; }
         public List<Guid>? Persons { get; set; }
+        public Guid? UserId { get; set; }
 
         public ContactGroup ToContactGroup()
         {
@@ -26,6 +27,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
                 GroupId = GroupId,
                 GroupName = GroupName,
                 Description = Description,
+                UserId = UserId
                 // Persons
             };
         }

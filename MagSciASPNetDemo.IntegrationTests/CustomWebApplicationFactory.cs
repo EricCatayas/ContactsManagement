@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace xUnitTesting
+namespace ContactsManagement.IntegrationTests
 {
     /// <summary>
     ///   During Testing, we don't want the application to use or make default EF SQL Server

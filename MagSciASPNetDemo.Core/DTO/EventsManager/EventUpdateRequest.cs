@@ -30,6 +30,7 @@ namespace ContactsManagement.Core.DTO.EventsManager
         public DateTime? StartDate { get; set; }
         [MinimumDateRange]
         public DateTime? EndDate { get; set; }
+        public Guid? UserId { get; set; }
 
         public Event ToEvent()
         {

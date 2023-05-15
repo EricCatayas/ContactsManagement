@@ -8,7 +8,6 @@ namespace ContactsManagement.Core.Enums.ContactsManager
 {
     public enum StatusType
     {
-        Completed, InProgress, Tomorrow, PendingCompletion, Upcoming
+        Completed, Due, Active
     }
-    //  Cancelled -- for simplification
 }

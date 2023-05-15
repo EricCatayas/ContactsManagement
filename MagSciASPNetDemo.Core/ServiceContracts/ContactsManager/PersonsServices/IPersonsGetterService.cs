@@ -13,7 +13,7 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServic
         /// </summary>
         /// <param name="userId">The Id of the user who owns the data.</param>
         /// <returns>A list of person object with the corresponding UserId</returns>
-        Task<List<PersonResponse>> GetAllPersons(Guid userId);
+        Task<List<PersonResponse>> GetAllPersons();
         /// <summary>
         /// Retrieves person from the system.
         /// </summary>
@@ -33,18 +33,18 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServic
         /// <param name="searchProperty">The property of person to be filtered.</param>
         /// <param name="searchString">The search text to filter by.</param>
         /// <returns>A filtered list of persons.</returns>
-        Task<List<PersonResponse>> GetFilteredPersons(Guid userId, string? searchProperty, string? searchString);
+        Task<List<PersonResponse>> GetFilteredPersons(string? searchProperty, string? searchString);
         /// <summary>
         /// Returns a CSV file as a MemoryStream containing the PersonResponse details of all persons belonging to a given user ID.
         /// </summary>
         /// <param name="userId">The Id of the user who owns the data.</param>
         /// <returns>A MemoryStream containing CSV data for all PersonResponse objects of the given user ID.</returns>
-        Task<MemoryStream> GetPersonsCSV(Guid userId);
+        Task<MemoryStream> GetPersonsCSV();
         /// <summary>
         /// Returns an excel file as a MemoryStream containing the PersonResponse details of all persons belonging to a given user ID.
         /// </summary>
         /// <param name="userId">The Id of the user who owns the data.</param>
         /// <returns>A MemoryStream containing excel data for all PersonResponse objects of the given user ID.</returns>
-        Task<MemoryStream> GetPersonsEXCEL(Guid userId);
+        Task<MemoryStream> GetPersonsEXCEL();
     }
 }

@@ -2,7 +2,7 @@
 @{
 
 }
-<table class="table">
+<table class="table align-middle">
     <thead>
         <tr>
             @foreach(KeyValuePair<string,string>property in ViewBag.SearchProperties)
@@ -19,9 +19,6 @@
         </tr>
     </thead>
     <tbody>
-        @*@{
-            int tablerow = 1;
-        }*@
         @foreach(PersonResponse person in Model){
             <tr>
                 <td>

@@ -38,6 +38,7 @@ namespace ContactsManagement.Core.DTO.CompaniesManagement
         [DataType(DataType.PhoneNumber)]
         public string? ContactNumber2 { get; set; }
         public List<Guid>? Employees { get; set; }  // Search Feature for this -- input[type="checkbox"]
+        public Guid? UserId { get; set; }
 
         public Company ToCompany()
         {
@@ -53,6 +54,7 @@ namespace ContactsManagement.Core.DTO.CompaniesManagement
                 ContactNumber1 = ContactNumber1,
                 ContactNumber2 = ContactNumber2,
                 WebUrl = WebUrl,
+                UserId = UserId
                 //Employees
             };
         }

@@ -16,15 +16,13 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsSe
         /// Retrieves contact log from the system.
         /// </summary>
         /// <param name="contactLogId">The request id of the contact log to be retrieved.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>The contact log object with the corresponding ID and UserID</returns>
-        public Task<ContactLogResponse?> GetContactLogById(int contactLogId, Guid userId);
+        public Task<ContactLogResponse?> GetContactLogById(int contactLogId);
         /// <summary>
         /// Retrieves list of contact log from the system.
         /// </summary>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>A list of contact log object with the corresponding UserID</returns>
-        public Task<List<ContactLogResponse>?> GetContactLogs(Guid userId);
+        public Task<List<ContactLogResponse>?> GetContactLogs();
         /// <summary>
         /// Retrieves list of contact log of person from the system.
         /// </summary>
@@ -34,13 +32,12 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsSe
         /// <summary>
         /// Filters a list of contact logs based on a search text.
         /// </summary>
-        /// <param name="contactLogs">The list of contact logs to filter.</param>
         /// <param name="searchText">The search text to filter by.</param>
         /// <returns>A filtered list of contact logs.</returns>
         /// <remarks>
         /// The search is case-insensitive and looks for matches in the PersonLog, LogTitle, and Note properties of each contact log.
         /// </remarks>
 
-        public List<ContactLogResponse>? GetFilteredContactLogs(List<ContactLogResponse>? contactLogs, string? searchText);
+        public Task<List<ContactLogResponse>?> GetFilteredContactLogs(string? searchText);
     }
 }

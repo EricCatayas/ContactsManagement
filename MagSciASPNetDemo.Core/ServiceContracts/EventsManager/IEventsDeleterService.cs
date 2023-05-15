@@ -15,7 +15,7 @@ namespace ContactsManagement.Core.ServiceContracts.EventsManager
         /// Deletes a event from the system.
         /// </summary>
         /// <param name="eventId">The request id of the event to be deleted.</param>
-        /// <returns>True if event with corresponding ID is deleted, otherwise false.</returns>
-        Task<bool> DeleteEvent(int eventId, Guid userId);
+        /// <returns><see langword="true"/> if event with corresponding ID is deleted; otherwise, <see langword="false"/>.</returns>
+        Task<bool> DeleteEvent(int eventId);
     }
 }

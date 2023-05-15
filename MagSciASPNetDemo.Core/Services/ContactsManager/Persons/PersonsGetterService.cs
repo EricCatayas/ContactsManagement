@@ -13,30 +13,36 @@ using Serilog;
 using SerilogTimings;
 using ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager;
 using ContactsManagement.Core.DTO.ContactsManager;
-using ContactsManagement.Core.Exceptions.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 using Microsoft.AspNetCore.Identity;
 using ContactsManagement.Core.Domain.IdentityEntities;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
+using ContactsManagement.Core.Exceptions;
 
 namespace ContactsManagement.Core.Services.ContactsManager.Persons
 {
     public class PersonsGetterService : IPersonsGetterService
     {
-        // R: Logger in Repository
         private readonly IPersonsGetterRepository _personsGetterRepository;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDiagnosticContext _diagnosticContext;
-        public PersonsGetterService(IPersonsGetterRepository personsRepository, IDiagnosticContext diagnostics)
+        private readonly ISignedInUserService _signedInUserService;
+
+        public PersonsGetterService(IPersonsGetterRepository personsRepository, IDiagnosticContext diagnostics, ISignedInUserService signedInUserService)
         {
             _personsGetterRepository = personsRepository;
             _diagnosticContext = diagnostics;
+            _signedInUserService = signedInUserService;
 
         }
-        public async Task<List<PersonResponse>> GetAllPersons(Guid userId)
+        public async Task<List<PersonResponse>> GetAllPersons()
         {
-            List<Person> persons = await _personsGetterRepository.GetAllPersons(userId);
+            Guid? userId = _signedInUserService.GetSignedInUserId();
+            if (userId == null)
+                throw new AccessDeniedException();
+
+            List<Person> persons = await _personsGetterRepository.GetAllPersons((Guid)userId);
             return persons.Select(p => p.ToPersonResponse()).ToList();
         }
         public async Task<PersonResponse?> GetPersonById(Guid? personId)
@@ -48,8 +54,13 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
                 throw new InvalidPersonIDException("Person with matching ID is not found");
             return matchingPerson.ToPersonResponse();
         }
-        public async Task<List<PersonResponse>> GetFilteredPersons(Guid userId, string? searchProperty, string? searchString = "") //TODO Filter Tags and/or Groups
+        public async Task<List<PersonResponse>> GetFilteredPersons(string? searchProperty, string? searchString = "")
         {
+            Guid userId = _signedInUserService.GetSignedInUserId() ?? Guid.Empty;
+            if (userId == Guid.Empty)
+            {
+                throw new AccessDeniedException();
+            }
             List<Person> persons = new List<Person>() { };
             using (Operation.Time("Time for GetFilteredPersons in PersonService")) // <-- SerilogTimings
             {
@@ -61,23 +72,23 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
                         {
                             nameof(PersonResponse.PersonName) =>
                              await _personsGetterRepository.GetFilteredPersons(temp =>
-                             temp.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                             temp.Name.Contains(searchString), userId),
 
                             nameof(PersonResponse.Email) =>
                              await _personsGetterRepository.GetFilteredPersons(temp =>
-                             temp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                             temp.Email.Contains(searchString), userId),
 
                             nameof(PersonResponse.JobTitle) =>
                              await _personsGetterRepository.GetFilteredPersons(temp =>
-                             temp.JobTitle.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                             temp.JobTitle.Contains(searchString), userId),
 
                             nameof(PersonResponse.CompanyName) =>
                              await _personsGetterRepository.GetFilteredPersons(temp =>
-                             temp.Company.CompanyName.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                             temp.Company.CompanyName.Contains(searchString), userId),
 
                             nameof(PersonResponse.Address) =>
                             await _personsGetterRepository.GetFilteredPersons(temp =>
-                            temp.Address.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                            temp.Address.Contains(searchString), userId),
 
                             nameof(PersonResponse.CountryName) =>
                              await _personsGetterRepository.GetFilteredPersons(temp =>
@@ -85,7 +96,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
 
                             nameof(ContactTagDTO.TagName) =>
                            await _personsGetterRepository.GetFilteredPersons(temp =>
-                           temp.Tag.TagName.Contains(searchString, StringComparison.OrdinalIgnoreCase), userId),
+                           temp.Tag.TagName.Contains(searchString), userId),
 
                             _ => await _personsGetterRepository.GetAllPersons(userId)
                         };
@@ -110,7 +121,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
             return matchingPersons?.Select(person => person.ToPersonResponse()).ToList();
         }
 
-        public async Task<MemoryStream> GetPersonsCSV(Guid userId)
+        public async Task<MemoryStream> GetPersonsCSV()
         {
             MemoryStream memoryStream = new();
             StreamWriter streamWriter = new(memoryStream); // The StreamWriter writes the stream to the memoryStream
@@ -129,7 +140,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
             csvWriter.WriteField(nameof(PersonResponse.ContactNumber2));            
             csvWriter.WriteField(nameof(PersonResponse.ProfileBlobUrl));            
             csvWriter.NextRecord();
-            List<PersonResponse> allPersons = await GetAllPersons(userId);
+            List<PersonResponse> allPersons = await GetAllPersons();
             allPersons.ForEach(person =>
             {
                 csvWriter.WriteField(person.PersonName);
@@ -151,7 +162,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
             return memoryStream;
         }
         // Nuget: EPPlus
-        public async Task<MemoryStream> GetPersonsEXCEL(Guid userId)
+        public async Task<MemoryStream> GetPersonsEXCEL()
         {
             MemoryStream memoryStream = new();
 
@@ -178,7 +189,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
                     headerCells.Style.Font.Bold = true;
                 }
                 int row = 2;
-                List<PersonResponse> persons = await GetAllPersons(userId);
+                List<PersonResponse> persons = await GetAllPersons();
                 foreach (PersonResponse person in persons)
                 {
                     worksheet.Cells[row, 1].Value = person.PersonName;

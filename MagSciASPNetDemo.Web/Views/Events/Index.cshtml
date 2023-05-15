@@ -57,7 +57,8 @@
                             {
                                 <button class="delete-btn category btn btn-danger btn-sm" style="color:white" type="button" value="@_event.EventId">Delete</button>
                             }
-                        </div>
+                                <a href="/Events/Edit?eventId=@_event.EventId"><i class="fa-solid fa-magnifying-glass"></i></a>
+                            </div>
                         </div>
                         <div class="content">
                             <div class="hover-disappear">
@@ -75,7 +76,7 @@
                                     }
                                  </small></p>
                             </div>
-                            <p class="hover-appear category" style="display:none;">@_event.Description.Substring(0, Math.Min(_event.Description.Length,75))</p>
+                            <p class="hover-appear category" style="display:none;">@_event.Description.Substring(0, Math.Min(_event.Description.Length,100))...</p>
                         </div>
                     </div> <!-- end card -->
                 @*</div>*@

@@ -16,7 +16,6 @@ using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.Helpers;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
-using ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager;
 
 namespace ContactsManagement.Core.Services.ContactsManager.Persons
 {
@@ -24,12 +23,10 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
     {
         // R: Logger in Repository
         private readonly IPersonsUpdaterRepository _personsUpdaterRepository;
-        private readonly IDiagnosticContext _diagnosticContext;
         private readonly IContactGroupsGetterRepository _contactGroupsRepository;
 
-        public PersonsUpdaterService(IDiagnosticContext diagnostics, IPersonsUpdaterRepository personsRepository, IContactGroupsGetterRepository contactGroupsRepository)
+        public PersonsUpdaterService(IPersonsUpdaterRepository personsRepository, IContactGroupsGetterRepository contactGroupsRepository)
         {
-            _diagnosticContext = diagnostics;
             _personsUpdaterRepository = personsRepository;
             _contactGroupsRepository = contactGroupsRepository;
         }

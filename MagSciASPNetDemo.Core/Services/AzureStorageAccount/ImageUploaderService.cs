@@ -24,34 +24,41 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
         }
         public async Task<string> UploadImageAsync(byte[] imageData, string imageName)
         {
-            imageName = imageName.Replace(' ', '_');
-            BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
-
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
-           
-            BlobClient blobClient = containerClient.GetBlobClient(imageName);
-
-            using (var imageStream = new MemoryStream(imageData))
+            try
             {
-                using (var image = System.Drawing.Image.FromStream(imageStream))
+                imageName = imageName.Replace(' ', '_');
+                BlobServiceClient blobServiceClient = new BlobServiceClient(_connectionString);
+
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
+           
+                BlobClient blobClient = containerClient.GetBlobClient(imageName);
+
+                using (var imageStream = new MemoryStream(imageData))
                 {
-                    int newHeight = (int)(((double)image.Height / (double)image.Width) * _imageSize);
-
-                    using (var bitmap = new Bitmap(image, new Size(_imageSize, newHeight)))
+                    using (var image = System.Drawing.Image.FromStream(imageStream))
                     {
-                        // Save the resized image to a memory stream
-                        using (var resizedImageStream = new MemoryStream())
-                        {
-                            bitmap.Save(resizedImageStream, ImageFormat.Jpeg);
+                        int newHeight = (int)(((double)image.Height / (double)image.Width) * _imageSize);
 
-                            // Upload the resized image to Azure Blob Storage
-                            resizedImageStream.Position = 0;
-                            await blobClient.UploadAsync(resizedImageStream, overwrite: false);
+                        using (var bitmap = new Bitmap(image, new Size(_imageSize, newHeight)))
+                        {
+                            // Save the resized image to a memory stream
+                            using (var resizedImageStream = new MemoryStream())
+                            {
+                                bitmap.Save(resizedImageStream, ImageFormat.Jpeg);
+
+                                // Upload the resized image to Azure Blob Storage
+                                resizedImageStream.Position = 0;
+                                await blobClient.UploadAsync(resizedImageStream, overwrite: false);
+                            }
                         }
                     }
                 }
+                    return blobClient.Uri.ToString();
             }
-                return blobClient.Uri.ToString();
+            catch(Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

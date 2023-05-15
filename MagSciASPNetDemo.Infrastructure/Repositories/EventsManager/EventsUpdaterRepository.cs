@@ -20,7 +20,7 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
         }
         public async Task<bool> UpdateEvent(Event @event)
         {
-            Event? matchingEvent = await _db.Events.FirstOrDefaultAsync(temp => temp.EventId == @event.EventId);
+            Event? matchingEvent = await _db.Events.FirstOrDefaultAsync(temp => temp.EventId == @event.EventId && temp.UserId == @event.UserId);
             if (matchingEvent == null)
                 return false;
             matchingEvent.Title = @event.Title;

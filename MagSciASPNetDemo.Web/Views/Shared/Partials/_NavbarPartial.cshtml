@@ -37,13 +37,13 @@
         <!-- Right elements -->
         <ul class="navbar-nav flex-row">            
             <li class="nav-item dropdown me-3 me-lg-1">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-expanded="false">
                     Download Data
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsPDF"><i class="fa-solid fa-file-pdf"></i> PDF</a></li>
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsCSV"><i class="fa-solid fa-file-csv"></i> CSV</a></li>
-                    <li><a class="nav-link" asp-controller="Person" asp-action="PersonsExcel"><i class="fa-solid fa-table"></i> EXCEL</a></li>
+                    <li><a class="nav-link" asp-controller="Persons" asp-action="PersonsPDF"><i class="fa-solid fa-file-pdf"></i> PDF</a></li>
+                    <li><a class="nav-link" asp-controller="Persons" asp-action="PersonsCSV"><i class="fa-solid fa-file-csv"></i> CSV</a></li>
+                    <li><a class="nav-link" asp-controller="Persons" asp-action="PersonsExcel"><i class="fa-solid fa-table"></i> EXCEL</a></li>
                 </ul>
             </li>           
             <partial name="_AuthenticationPartial"></partial>

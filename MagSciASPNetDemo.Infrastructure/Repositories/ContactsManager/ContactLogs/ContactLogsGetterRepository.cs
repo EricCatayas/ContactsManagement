@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,6 +36,10 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
             List<ContactLog>? contactLogs = await _db.ContactLogs.Include(log => log.PersonLog).Where(log => log.PersonId == personId).ToListAsync();
             
             return contactLogs?.ToList();
+        }
+        public async Task<List<ContactLog>> GetFilteredContactLogs(Expression<Func<ContactLog, bool>> predicate, Guid userId)
+        {
+            return await _db.ContactLogs.Where(log => log.UserId == userId).Include(log => log.PersonLog).Where(predicate).ToListAsync();
         }
     }
 }

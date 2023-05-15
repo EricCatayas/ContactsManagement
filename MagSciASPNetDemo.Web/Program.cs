@@ -88,50 +88,53 @@ builder.Services.AddScoped<IEventsStatusUpdaterRepository, EventsStatusUpdaterRe
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
 
-builder.Services.AddScoped<IPersonsAdderService, PersonsAdderService>();
-builder.Services.AddScoped<IPersonsGetterService, PersonsGetterService>();
-builder.Services.AddScoped<IPersonsSorterService, PersonsSorterService>();
-builder.Services.AddScoped<IPersonsUpdaterService, PersonsUpdaterService>();
-builder.Services.AddScoped<IPersonsDeleterService, PersonsDeleterService>();
+builder.Services.AddTransient<IPersonsAdderService, PersonsAdderService>();
+builder.Services.AddTransient<IPersonsGetterService, PersonsGetterServiceForDemo>();
+builder.Services.AddTransient<IPersonsSorterService, PersonsSorterService>();
+builder.Services.AddTransient<IPersonsUpdaterService, PersonsUpdaterService>();
+builder.Services.AddTransient<IPersonsDeleterService, PersonsDeleterService>();
+builder.Services.AddTransient<IPersonsGroupIdFilteredGetterService, PersonsGroupIdFilteredGetterServiceForDemo>();
 
-builder.Services.AddScoped<ICompanyAdderService, CompanyAdderService>();
-builder.Services.AddScoped<ICompanyGetterService, CompanyGetterService>();
-builder.Services.AddScoped<ICompanyDeleterService, CompanyDeleterService>();
-builder.Services.AddScoped<ICompanyUpdaterService, CompanyUpdaterService>();
+builder.Services.AddTransient<ICompanyAdderService, CompanyAdderService>();
+builder.Services.AddTransient<ICompanyAdderByNameService, CompanyAdderByNameService>();
+builder.Services.AddTransient<ICompanyGetterService, CompanyGetterServiceForDemo>();
+builder.Services.AddTransient<ICompanyDeleterService, CompanyDeleterService>();
+builder.Services.AddTransient<ICompanyUpdaterService, CompanyUpdaterService>();
 
-builder.Services.AddScoped<IContactTagsAdderService, ContactTagsAdderService>();
-builder.Services.AddScoped<IContactTagsGetterService, ContactTagsGetterService>();
-builder.Services.AddScoped<IContactTagsUpdaterService, ContactTagsUpdaterService>();
-builder.Services.AddScoped<IContactTagsDeleterService, ContactTagsDeleterService>();
-builder.Services.AddScoped<IContactTagsSeederService, ContactTagsSeederService>();
+builder.Services.AddTransient<IContactTagsAdderService, ContactTagsAdderService>();
+builder.Services.AddTransient<IContactTagsGetterService, ContactTagsGetterServiceForDemo>();
+builder.Services.AddTransient<IContactTagsUpdaterService, ContactTagsUpdaterService>();
+builder.Services.AddTransient<IContactTagsDeleterService, ContactTagsDeleterService>();
+builder.Services.AddTransient<IContactTagsSeederService, ContactTagsSeederService>();
 
-builder.Services.AddScoped<IContactGroupsAdderService, ContactGroupsAdderService>();
-builder.Services.AddScoped<IContactGroupsGetterService, ContactGroupsGetterService>();
-builder.Services.AddScoped<IContactGroupsDeleterService, ContactGroupsDeleterService>();
-builder.Services.AddScoped<IContactGroupsUpdaterService, ContactGroupsUpdaterService>();
-builder.Services.AddScoped<IContactGroupsSeederService, ContactGroupsSeederService>();
+builder.Services.AddTransient<IContactGroupsAdderService, ContactGroupsAdderService>();
+builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
+builder.Services.AddTransient<IContactGroupsDeleterService, ContactGroupsDeleterService>();
+builder.Services.AddTransient<IContactGroupsUpdaterService, ContactGroupsUpdaterService>();
+builder.Services.AddTransient<IContactGroupsSeederService, ContactGroupsSeederService>();
 
-builder.Services.AddScoped<IContactLogsAdderService, ContactLogsAdderService>();
-builder.Services.AddScoped<IContactLogsGetterService, ContactLogsGetterService>();
-builder.Services.AddScoped<IContactLogsDeleterService, ContactLogsDeleterService>();
-builder.Services.AddScoped<IContactLogsUpdaterService, ContactLogsUpdaterService>();
-builder.Services.AddScoped<IContactLogsSorterService, ContactLogsSorterService>();
+builder.Services.AddTransient<IContactLogsAdderService, ContactLogsAdderService>();
+builder.Services.AddTransient<IContactLogsGetterService, ContactLogsGetterServiceForDemo>();
+builder.Services.AddTransient<IContactLogsDeleterService, ContactLogsDeleterService>();
+builder.Services.AddTransient<IContactLogsUpdaterService, ContactLogsUpdaterService>();
+builder.Services.AddTransient<IContactLogsSorterService, ContactLogsSorterService>();
 
-builder.Services.AddScoped<IEventsAdderService, EventsAdderService>();
-builder.Services.AddScoped<IEventsGetterService, EventsGetterService>();
-builder.Services.AddScoped<IEventsUpdaterService, EventsUpdaterService>();
-builder.Services.AddScoped<IEventsDeleterService, EventsDeleterService>();
-builder.Services.AddScoped<IEventsSeederService, EventsSeederService>();
+builder.Services.AddTransient<IEventsAdderService, EventsAdderService>();
+builder.Services.AddTransient<IEventsGetterService, EventsGetterServiceForDemo>();
+builder.Services.AddTransient<IEventsUpdaterService, EventsUpdaterService>();
+builder.Services.AddTransient<IEventsDeleterService, EventsDeleterService>();
+builder.Services.AddTransient<IEventsSeederService, EventsSeederService>();
 
-builder.Services.AddScoped<IImageUploaderService, ImageUploaderService>();
-builder.Services.AddScoped<IImageDeleterService, ImageDeleterService>();
+builder.Services.AddTransient<IImageUploaderService, ImageUploaderService>();
+builder.Services.AddTransient<IImageDeleterService, ImageDeleterService>();
 
-builder.Services.AddScoped<ICountriesService, CountriesService>();
-builder.Services.AddScoped<IContactGroupsGetterService, ContactGroupsGetterService>();
+builder.Services.AddTransient<ICountriesService, CountriesService>();
+builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
 
 builder.Services.AddScoped<IDemoUserService, DemoUserAccountService>();
+builder.Services.AddScoped<ISignedInUserService, SignedInUserService>();
 
-builder.Services.AddTransient<RedirectToIndexExceptionFilter>();  //ServiceFilter
+// builder.Services.AddTransient<RedirectToIndexExceptionFilter>();  <-- ServiceFilter
 builder.Services.AddTransient<ContactLogsCardViewComponent>();
 
 /* DbContext */
@@ -174,7 +177,7 @@ builder.Services.ConfigureApplicationCookie(options =>
    /* So unauthenticated user will be redirected here*/
    options.LoginPath = "/Account/Login"; 
 });
-
+builder.Services.AddHttpContextAccessor(); //TODO
 var app = builder.Build();
 
 /*TODO     
@@ -182,6 +185,11 @@ var app = builder.Build();
      *  Section: 25 Interview Questions      
      *  Code Documentation Clean Up
      *  Why are you afraid of finding bugs? 
+     *      Unit Test UpdateServices
+     *      Test UpdateServices deployment
+     *          Event, ContactLog, Company
+     *          
+     *      Integration Test for: ContactGroups, ContactLogs, CompanyGetter
  
 */
 
@@ -210,8 +218,6 @@ app.UseRouting();
 app.UseAuthentication();               // <-- The SignIn Cookie will be supplied auto to the http Req whenever you make another request
 app.UseAuthorization();
 app.MapControllers();
-
-
 
 app.Run();
 public partial class Program

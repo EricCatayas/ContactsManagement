@@ -16,8 +16,7 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsSe
         /// Adds a new contact log to the system.
         /// </summary>
         /// <param name="contactlogAddRequest">The request containing the data for the contact log to add.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         ///  /// <returns>A <see cref="ContactLogResponse"/> object containing the details of the added contact log.</returns>
-        public Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest, Guid userId);
+        public Task<ContactLogResponse> AddContactLog(ContactLogAddRequest contactLogAddRequest);
     }
 }

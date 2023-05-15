@@ -21,17 +21,24 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
         }
         public async Task<bool> DeleteBlobFile(string azureBlobUrl)
         {
-            var blobUrl = new Uri(azureBlobUrl);
-            var blobName = blobUrl.Segments[blobUrl.Segments.Length - 1];
+            try
+            {
+                var blobUrl = new Uri(azureBlobUrl);
+                var blobName = blobUrl.Segments[blobUrl.Segments.Length - 1];
 
-            var blobServiceClient = new BlobServiceClient(_connectionString);
+                var blobServiceClient = new BlobServiceClient(_connectionString);
 
-            var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
+                var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
 
-            // Get a reference to the blob file using its name or URL
-            var blobClient = containerClient.GetBlobClient(blobName);
+                // Get a reference to the blob file using its name or URL
+                var blobClient = containerClient.GetBlobClient(blobName);
 
-            return await blobClient.DeleteIfExistsAsync();
+                return await blobClient.DeleteIfExistsAsync();
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

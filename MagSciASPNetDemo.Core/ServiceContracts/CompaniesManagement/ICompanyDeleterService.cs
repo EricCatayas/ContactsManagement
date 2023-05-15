@@ -16,8 +16,7 @@ namespace ContactsManagement.Core.ServiceContracts.CompaniesManagement
         /// Deletes a company from the system.
         /// </summary>
         /// <param name="companyID">The request id of the company to be deleted.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
-        /// <returns>True if company with corresponding ID is deleted, otherwise false.</returns>
-        public Task<bool> DeleteCompany(int companyID, Guid userId);
+        /// <returns><see langword="true"/> if company with corresponding ID is deleted; otherwise, <see langword="false"/>. </returns>
+        public Task<bool> DeleteCompany(int companyID);
     }
 }

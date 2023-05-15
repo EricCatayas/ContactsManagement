@@ -59,14 +59,18 @@ namespace ContactsManagement.Infrastructure.DbContexts
             modelBuilder.Entity<Company>().ToTable("Companies");
             modelBuilder.Entity<Event>().ToTable("Events");
 
-
+            modelBuilder.Entity<ContactLog>()
+              .HasOne(cl => cl.PersonLog)
+              .WithMany(p => p.ContactLogs)
+              .HasForeignKey(cl => cl.PersonId)
+              .OnDelete(DeleteBehavior.Cascade);
             //Countries Seed using Fluent API
-           /* string countriesJson = File.ReadAllText("seedData/countries.json");
-            List<Country>? countriesSeedData = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
-            countriesSeedData.ForEach(country =>
-            {
-                modelBuilder.Entity<Country>().HasData(country);
-            });*/       
+            /* string countriesJson = File.ReadAllText("seedData/countries.json");
+             List<Country>? countriesSeedData = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
+             countriesSeedData.ForEach(country =>
+             {
+                 modelBuilder.Entity<Country>().HasData(country);
+             });*/
             // But fluent api is too explicit
         }
         /* ------------ Stored Procedure Sample ------------ */

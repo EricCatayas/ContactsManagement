@@ -22,8 +22,7 @@ namespace ContactsManagement.Core.ServiceContracts.EventsManager
         /// Removes an Event from a Event.
         /// </summary>
         /// <param name="eventId">The request ID of the Event.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>True if Event.IsCompleted with corresponding ID is updated, otherwise false.</returns>
-        Task<bool> UpdateEventCompletion(int  eventId, Guid userId);
+        Task<bool> UpdateEventCompletion(int  eventId);
     }
 }

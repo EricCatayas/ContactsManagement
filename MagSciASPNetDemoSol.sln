@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManagement.Controll
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManagement.IntegrationTests", "MagSciASPNetDemo.IntegrationTests\ContactsManagement.IntegrationTests.csproj", "{CA3573D4-20F8-48A8-914B-D85AE4B1D390}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManagement.ServiceTests", "MagSciASPNetDemo.ServiceTests\ContactsManagement.ServiceTests.csproj", "{40DF172B-208B-473E-9751-EBAC1B74B171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsManagement.UnitTests", "MagSciASPNetDemo.ServiceTests\ContactsManagement.UnitTests.csproj", "{40DF172B-208B-473E-9751-EBAC1B74B171}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

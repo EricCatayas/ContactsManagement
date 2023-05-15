@@ -1,20 +1,32 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ContactsManagement.Web.Filters.ExceptionFilters
 {
-    public class RedirectToIndexExceptionFilter : IAsyncExceptionFilter
+    public class RedirectToIndexExceptionFilter : IExceptionFilter
     {
-        public readonly ILogger<RedirectToIndexExceptionFilter> _logger;
-        public RedirectToIndexExceptionFilter(ILogger<RedirectToIndexExceptionFilter> logger)
+        public void OnException(ExceptionContext context)
         {
-            _logger = logger;
-        }
-        public Task OnExceptionAsync(ExceptionContext context)
-        {
-            _logger.LogError("Exception Filter {FilterName}.{MethodName}\n{ExceptionType}\n{ExceptionMessage}", nameof(RedirectToIndexExceptionFilter), nameof(OnExceptionAsync), context.Exception.GetType().ToString(), context.Exception.Message);
-            context.Result = new RedirectToActionResult("Index", "Home", new { });
-            return Task.CompletedTask;
+            var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+
+            if (controllerActionDescriptor != null)
+            {
+                string controllerName = controllerActionDescriptor.ControllerName;
+                string actionMethod = controllerActionDescriptor.ActionName;
+
+                if (actionMethod == "Index")
+                {
+                    context.Result = new RedirectToActionResult("Error", "Home", new { });
+                } else
+                {
+                    context.Result = new RedirectToActionResult("Index", controllerName, new { errors = new List<string>() { context.Exception.Message } });
+                }
+            }
+            else
+            {
+                context.Result = new RedirectToActionResult("Error", "Home", new { });
+            }
         }
     }
 }

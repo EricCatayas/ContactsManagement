@@ -2,8 +2,11 @@
 using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.DTO.CompaniesManagement;
 using ContactsManagement.Core.DTO.EventsManager;
+using ContactsManagement.Core.Enums.ContactsManager;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
+using ContactsManagement.Web.Filters.ExceptionFilters;
 using ContactsManagement.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,49 +16,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace ContactsManagement.Web.Controllers
 {
     [Route("[controller]")]
+    [TypeFilter(typeof(RedirectToIndexExceptionFilter))]
     public class EventsController : Controller
     {
         private readonly IEventsAdderService _eventsAdderService;
         private readonly IEventsGetterService _eventsGetterService;
         private readonly IEventsUpdaterService _eventsUpdaterService;
         private readonly IEventsDeleterService _eventsDeleterService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        List<string> eventColorOptions;
-        List<string> eventTypeOptions;
-        public EventsController(IEventsAdderService eventsAdderService, IEventsGetterService eventsGetterService, IEventsUpdaterService eventsUpdaterService, IEventsDeleterService eventsDeleterService, UserManager<ApplicationUser> userManager) 
+        private readonly IDemoUserService _demoUserService;
+        public EventsController(IEventsAdderService eventsAdderService, IEventsGetterService eventsGetterService, IEventsUpdaterService eventsUpdaterService, IEventsDeleterService eventsDeleterService) 
         {
             _eventsAdderService = eventsAdderService;
             _eventsGetterService = eventsGetterService;
             _eventsUpdaterService = eventsUpdaterService;
             _eventsDeleterService = eventsDeleterService;
-            _userManager = userManager;
-            eventColorOptions = new List<string>()
-            {
-                "yellow","blue","green","grey","pink","brown","purple","orange"
-            };
-            eventTypeOptions = new List<string>()
-            {
-                "Task", "Reminder", "Activity", "Meeting", "Conference", "Webinar", "Workshop", "Birthday", "Call", "Email", "Occassion", "Appointment"
-            };
         }
         [Route("[action]")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(List<string>? error = null, bool isActiveEvent = true)
+        public async Task<IActionResult> Index(List<string>? errors = null, bool isActiveEvent = true)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
 
-            List<EventResponse>? events = await _eventsGetterService.GetEvents(UserId);
-
+            List<EventResponse>? events = new List<EventResponse>();
             if (isActiveEvent)
             {
-                events = events.Where(temp => temp.isActive).ToList();
+                events = await _eventsGetterService.GetFilteredEvents(statusType: StatusType.Active);
                 ViewBag.IsActiveEvents = true;
             }
             else
             {
-                events = events.Where(temp => !temp.isActive).ToList();
+                events = await _eventsGetterService.GetFilteredEvents(statusType: StatusType.Completed);
                 ViewBag.IsActiveEvents = false;
             }
             return View(events);
@@ -64,21 +54,15 @@ namespace ContactsManagement.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.ThemeColors = eventColorOptions;
-            ViewBag.TypeOptions = eventTypeOptions;
             return View();
         }
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> Create(EventAddRequest eventAddRequest) 
         {
-            ViewBag.ThemeColors = eventColorOptions;
-            ViewBag.TypeOptions = eventTypeOptions;
             if (ModelState.IsValid)
             {
-                string? userId = _userManager.GetUserId(User);
-                Guid UserId = Guid.Parse(userId);
-                _ = await _eventsAdderService.AddEvent(eventAddRequest, UserId);
+                _ = await _eventsAdderService.AddEvent(eventAddRequest);
                 ViewBag.Success = "Event has been added";
                 return View();
             }
@@ -88,7 +72,7 @@ namespace ContactsManagement.Web.Controllers
                 return View(eventAddRequest);
             }
         }
-        /*[Route("[action]")]            // How bout don't make a mistake? :^)
+        [Route("[action]")]            // How bout don't make a mistake? :^)
         [HttpGet]
         public async Task<IActionResult> Edit(int eventId)
         {
@@ -99,32 +83,37 @@ namespace ContactsManagement.Web.Controllers
             }
             EventUpdateRequest eventUpdateRequest = @event.ToEventUpdateRequest();
             return View(eventUpdateRequest);
-        }*/
-        /*[Route("[action]")]
+        }
+        [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> Edit(EventUpdateRequest eventUpdateRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
+                return View(eventUpdateRequest);
+            }
             bool isUpdated = await _eventsUpdaterService.UpdateEvent(eventUpdateRequest);
-            return isUpdated ? StatusCode(200) : StatusCode(500);
-        }*/
+            if (isUpdated)
+            {
+                return RedirectToAction("Index");
+            } else {
+                ViewBag.Errors = new List<string>() { "Error: Something went wrong. Please try again later"};
+                return View(eventUpdateRequest);
+            }
+        }
         [Route("[action]")]
         [HttpDelete]
         public async Task<IActionResult> Delete([FromQuery] int eventId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isDeleted = await _eventsDeleterService.DeleteEvent(eventId, UserId);
+            bool isDeleted = await _eventsDeleterService.DeleteEvent(eventId);
             return isDeleted ? StatusCode(200) : StatusCode(500);
         }
         [Route("[action]")]
         [HttpPost]
         public async Task<IActionResult> EventCompleted([FromQuery] int eventId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isUpdated = await _eventsUpdaterService.UpdateEventCompletion(eventId, UserId);
+            bool isUpdated = await _eventsUpdaterService.UpdateEventCompletion(eventId);
             return isUpdated ? StatusCode(200) : StatusCode(500);
         }
     }

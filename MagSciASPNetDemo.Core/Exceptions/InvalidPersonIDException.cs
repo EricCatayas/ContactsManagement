@@ -1,4 +1,4 @@
-﻿namespace ContactsManagement.Core.Exceptions.ContactsManager
+﻿namespace ContactsManagement.Core.Exceptions
 {
     public class InvalidPersonIDException : ArgumentException
     {

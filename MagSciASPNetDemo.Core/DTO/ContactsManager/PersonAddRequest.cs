@@ -22,7 +22,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Alpha characters only")]
         [MaxLength(100)]
         public string? PersonName { get; set; }
-        [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [DataType(DataType.EmailAddress)]
         public string? Email { get; set; }
@@ -32,7 +31,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         public DateTime? DateOfBirth { get; set; }
         public GenderOptions? Gender { get; set; }
         public int? CountryId { get; set; }
-        /* - The Hard Part - */
         [StringLength(75)]
         public string? JobTitle { get; set; }
         [DisplayName("Contact Number 1")]
@@ -41,7 +39,8 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [DisplayName("Contact Number 2")]
         [DataType(DataType.PhoneNumber)]
         public string? ContactNumber2 { get; set; }
-        /* - Panza - */
+        [DisplayName("Company")]
+        public string? CompanyName { get; set; }
         public int? CompanyId { get; set; }
         [DisplayName("Tag")]
         public int? TagId { get; set; }
@@ -61,7 +60,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager
                 Email = Email,
                 Address = Address,
                 DateOfBirth = DateOfBirth,
-                CountryId = (Int16)CountryId,
+                CountryId = CountryId,
                 Gender = Gender.ToString(),
                 
                 JobTitle = JobTitle,

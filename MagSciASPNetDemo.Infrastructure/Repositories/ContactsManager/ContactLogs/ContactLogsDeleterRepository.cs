@@ -18,23 +18,9 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<bool> DeleteContactLog(int contactLogId)
+        public async Task<bool> DeleteContactLog(ContactLog contactLog)
         {
-            ContactLog? contactLog = await _db.ContactLogs.FirstOrDefaultAsync(log => log.LogId == contactLogId);
-
-            _db.ContactLogs.Remove(contactLog);
-            return await _db.SaveChangesAsync() > 0;
-        }
-
-        public  async Task<bool> DeleteContactLogsFromPerson(Person? person)
-        {
-            if (person == null) 
-                return false;
-            List<ContactLog>? contactLogs = person.ContactLogs.ToList();
-            if (contactLogs == null) 
-                return false;
-
-            _db.ContactLogs.RemoveRange(contactLogs);
+            _db.ContactLogs.RemoveRange(contactLog);
             return await _db.SaveChangesAsync() > 0;
         }
     }

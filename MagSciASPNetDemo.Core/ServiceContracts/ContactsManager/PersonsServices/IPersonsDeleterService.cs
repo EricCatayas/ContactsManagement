@@ -9,7 +9,7 @@
         /// Deletes a person from the system.
         /// </summary>
         /// <param name="personId">The request id of the person to be deleted.</param>
-        /// <returns>True if person with corresponding ID is deleted, otherwise false.</returns>
+        /// <returns><see langword="true"/> if person with corresponding ID is deleted; otherwise, <see langword="false"/>.</returns>
         Task<bool> DeletePerson(Guid personId);
     }
 }

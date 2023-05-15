@@ -13,6 +13,11 @@ using ContactsManagement.Web.Controllers;
 using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
+using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
+using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
+using ContactsManagement.Core.Domain.IdentityEntities;
+using Microsoft.AspNetCore.Identity;
 
 namespace xUnitTesting
 {
@@ -23,36 +28,61 @@ namespace xUnitTesting
         private readonly IPersonsDeleterService _personsDeleterService;
         private readonly IPersonsUpdaterService _personsUpdaterService;
         private readonly IPersonsSorterService _personsSorterService;
+        private readonly IPersonsGroupIdFilteredGetterService _personsGroupIdFilteredGetterService;
+        private readonly IContactGroupsGetterService _contactGroupsGetterService;
+        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageDeleterService _imageDeleterService;
+        private readonly IDemoUserService _demoUserService;
         private readonly ICountriesService _countriesService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        private readonly Mock<ICountriesService> _countriesServiceMock;
         private readonly Mock<IPersonsGetterService> _personsGetterServiceMock;
         private readonly Mock<IPersonsAdderService> _personsAdderServiceMock;
         private readonly Mock<IPersonsDeleterService> _personsDeleterServiceMock;
         private readonly Mock<IPersonsSorterService> _personsSorterServiceMock;
         private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
+        private readonly Mock<IContactGroupsGetterService> _contactGroupsServiceMock;
+        private readonly Mock<IImageUploaderService> _imageUploaderServiceMock;
+        private readonly Mock<IImageDeleterService> _imageDeleterServiceMock;
+        private readonly Mock<IDemoUserService> _demoUserServiceMock;
+        private readonly Mock<ICountriesService> _countriesServiceMock;
+        private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
+
+        private readonly PersonsController PersonController;
 
         private readonly Fixture _fixture;
-        private readonly ILogger<PersonController> _personsControllerLogger;
+        private readonly ILogger<PersonsController> _personsControllerLogger;
 
         public PersonControllerTest()
         {
-            _countriesServiceMock = new Mock<ICountriesService>();
             _personsGetterServiceMock = new Mock<IPersonsGetterService>();
             _personsAdderServiceMock = new Mock<IPersonsAdderService>();
             _personsDeleterServiceMock = new Mock<IPersonsDeleterService>();
             _personsSorterServiceMock = new Mock<IPersonsSorterService>();
             _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
+            _contactGroupsServiceMock = new Mock<IContactGroupsGetterService>();
+            _imageUploaderServiceMock = new Mock<IImageUploaderService>();
+            _imageDeleterServiceMock = new Mock<IImageDeleterService>();
+            _demoUserServiceMock = new Mock<IDemoUserService>();
+            _countriesServiceMock = new Mock<ICountriesService>();
+            _userManagerMock = new Mock<UserManager<ApplicationUser>>();
 
-            _countriesService = _countriesServiceMock.Object;
             _personsGetterService = _personsGetterServiceMock.Object;
             _personsAdderService = _personsAdderServiceMock.Object;
             _personsDeleterService = _personsDeleterServiceMock.Object;
             _personsSorterService = _personsSorterServiceMock.Object;
             _personsUpdaterService = _personsUpdaterServiceMock.Object;
+            _contactGroupsGetterService = _contactGroupsServiceMock.Object;
+            _imageUploaderService = _imageUploaderServiceMock.Object;
+            _imageDeleterService = _imageDeleterServiceMock.Object;
+            _demoUserService = _demoUserServiceMock.Object;
+            _countriesService = _countriesServiceMock.Object;
+            _userManager = _userManagerMock.Object;
+
+            PersonController = new PersonsController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _personsGroupIdFilteredGetterService, _countriesService, _contactGroupsGetterService, _imageUploaderService, _imageDeleterService, _userManager, _demoUserService);
 
             _fixture = new Fixture();
-            Mock<ILogger<PersonController>> _personControllerLoggerMock = new Mock<ILogger<PersonController>>();
+            Mock<ILogger<PersonsController>> _personControllerLoggerMock = new Mock<ILogger<PersonsController>>();
             _personsControllerLogger = _personControllerLoggerMock.Object;
         }
 
@@ -64,10 +94,10 @@ namespace xUnitTesting
             //Arrange
             List<PersonResponse> persons_response_list = _fixture.Create<List<PersonResponse>>();
 
-            PersonController PersonController = new PersonController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _countriesService, _personsControllerLogger);
+            
 
             _personsGetterServiceMock
-             .Setup(temp => temp.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>()))
+             .Setup(temp => temp.GetFilteredPersons(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>()))
              .ReturnsAsync(persons_response_list);
 
             _personsSorterServiceMock
@@ -75,7 +105,7 @@ namespace xUnitTesting
              .ReturnsAsync(persons_response_list);
 
             //Act
-            IActionResult result = await PersonController.Index(_fixture.Create<string>(), _fixture.Create<string>(), _fixture.Create<string>(), _fixture.Create<SortOrderOptions>().ToString());
+            IActionResult result = await PersonController.Index(_fixture.Create<string>(), _fixture.Create<string>(), _fixture.Create<int>(),"Name", _fixture.Create<SortOrderOptions>().ToString());
 
             //Assert
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
@@ -97,7 +127,7 @@ namespace xUnitTesting
                 .With(person => person.PersonName, "")
                 .With(person => person.Gender, Gender.Get("Male"))
                 .With(person => person.DateOfBirth, DateTime.Parse("2020-12-01"))
-                .With(person => person.CountryId, Guid.NewGuid()).Create();
+                .With(person => person.CountryId, 1000).Create();
 
             PersonResponse person_response = person_add_request.ToPerson().ToPersonResponse();
 
@@ -108,17 +138,14 @@ namespace xUnitTesting
              .ReturnsAsync(countries);
 
             _personsAdderServiceMock
-             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
-             .ReturnsAsync(person_response);
-
-            PersonController personController = new PersonController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _countriesService, _personsControllerLogger);
-
-
+             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>(), It.IsAny<Guid>()))
+             .ReturnsAsync(person_response);            
+             
             //Act
-            personController.ViewBag.Countries = countries;
-            personController.ModelState.AddModelError("PersonName", "Person Name can't be blank"); //Custom model error
+            PersonController.ViewBag.Countries = countries;
+            PersonController.ModelState.AddModelError("PersonName", "Person Name can't be blank"); //Custom model error
 
-            IActionResult result = await personController.Create(person_add_request);
+            IActionResult result = await PersonController.Create(person_add_request, null);
 
             //Assert
             ViewResult viewResult = Assert.IsType<ViewResult>(result);
@@ -138,18 +165,16 @@ namespace xUnitTesting
                 .With(person => person.PersonName, "jojobart")
                 .With(person => person.Gender, Gender.Get("Male"))
                 .With(person => person.DateOfBirth, DateTime.Parse("2000-12-01"))
-                .With(person => person.CountryId, Guid.NewGuid()).Create();
+                .With(person => person.CountryId, 1000).Create();
 
             PersonResponse person_response = person_add_request.ToPerson().ToPersonResponse();
 
             _personsAdderServiceMock
-             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
+             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>(), It.IsAny<Guid>()))
              .ReturnsAsync(person_response);
-
-            PersonController PersonController = new PersonController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _countriesService, _personsControllerLogger);
-
+            
             //Act
-            IActionResult result = await PersonController.Create(person_add_request);
+            IActionResult result = await PersonController.Create(person_add_request, null);
 
             //Assert
             ViewResult viewResult = Assert.IsType<ViewResult>(result);

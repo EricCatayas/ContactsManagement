@@ -28,7 +28,6 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Persons
             return await _db.Persons.Where(p => p.UserId == userId).Include("Country").Include("Company").Include("Tag").Include("ContactGroups")
                 .ToListAsync();
         }
-
         public async Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate, Guid userId)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(PersonsGetterRepository), nameof(GetFilteredPersons));
@@ -36,7 +35,6 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Persons
              .Where(predicate)
              .ToListAsync();
         }
-
         public async Task<Person?> GetPersonById(Guid personID)
         {
             _logger.LogDebug("{RepositoryName}.{MethodName}", nameof(PersonsGetterRepository), nameof(GetPersonById));

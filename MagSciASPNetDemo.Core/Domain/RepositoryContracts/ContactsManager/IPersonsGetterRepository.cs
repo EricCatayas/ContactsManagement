@@ -8,34 +8,35 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
+    /// <summary>
+    /// Defines a repository for retrieving persons data from the database.
+    /// </summary>
     public interface IPersonsGetterRepository
     {
         /// <summary>
-        /// Returns all persons in the data store
+        /// Retrieves all Person entities from the database.
         /// </summary>
-        /// <returns>List of person objects from table</returns>
+        /// <param name="userId">The ID of the user associated with the Persons to be retrieved.</param>
+        /// <returns>A list of Person entities associated with the user ID.</returns>
         Task<List<Person>> GetAllPersons(Guid userId);
-
-
         /// <summary>
-        /// Returns a person object based on the given person id
+        /// Retrieves the Person entity with the corresponding ID.
         /// </summary>
-        /// <param name="personID">PersonID (guid) to search</param>
-        /// <returns>A person object or null</returns>
+        /// <param name="personID">The ID of the Person to be retrieved.</param>
+        /// <returns>The Person entity with the corresponding ID or null if not found.</returns>
         Task<Person?> GetPersonById(Guid personID);
         /// <summary>
-        /// Returns a list of person object based on the given list of person id
+        /// Retrieves a list of Person entities with the corresponding list of IDs.
         /// </summary>
-        /// <param name="personID">PersonID (guid) to search</param>
-        /// <returns>A list of person object or null</returns>
+        /// <param name="personIDs">The list of IDs of Persons to be retrieved.</param>
+        /// <returns>A list of Person entities with the corresponding list of IDs or null if the input list is null.</returns>
         Task<List<Person>?> GetPersonsById(List<Guid>? personIDs);
-
-
         /// <summary>
-        /// Returns all person objects based on the given expression
+        /// Retrieves a filtered list of Person entities with the corresponding user ID and filter predicate.
         /// </summary>
-        /// <param name="predicate">LINQ expression to check</param>
-        /// <returns>All matching persons with given condition</returns>
+        /// <param name="predicate">The filter predicate to be applied.</param>
+        /// <param name="userId">The ID of the user associated with the Persons to be retrieved.</param>
+        /// <returns>A list of Person entities associated with the user ID and filtered by the filter predicate.</returns>
         Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate, Guid userId);
     }
 }

@@ -16,6 +16,8 @@ using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.Helpers;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
 using ContactsManagement.Core.Domain.Entities.ContactsManager;
+using ContactsManagement.Core.ServiceContracts.AccountManager;
+using ContactsManagement.Core.Exceptions;
 
 namespace ContactsManagement.Core.Services.ContactsManager.Persons
 {
@@ -23,15 +25,21 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
     {
         private readonly IPersonsAdderRepository _personsRepository;
         private readonly IContactGroupsGetterRepository _contactGroupsRepository;
-        public PersonsAdderService(IPersonsAdderRepository personsRepository, IContactGroupsGetterRepository contactGroupsRepository)
+        private readonly ISignedInUserService _signedInUserService;
+
+        public PersonsAdderService(IPersonsAdderRepository personsRepository, IContactGroupsGetterRepository contactGroupsRepository, ISignedInUserService signedInUserService)
         {
             _personsRepository = personsRepository;
             _contactGroupsRepository = contactGroupsRepository;
+            _signedInUserService = signedInUserService;
         }
-        public async Task<PersonResponse?> AddPerson(PersonAddRequest? personAddRequest, Guid userId)
+        public async Task<PersonResponse?> AddPerson(PersonAddRequest? personAddRequest)
         {
             if (personAddRequest == null)
                 throw new ArgumentNullException(nameof(personAddRequest));
+            Guid? userId = _signedInUserService.GetSignedInUserId();
+            if (userId == null)
+                throw new AccessDeniedException();
             try
             {
                 ValidationHelper.ModelValidation(personAddRequest);

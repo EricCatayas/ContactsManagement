@@ -2,6 +2,7 @@
 using ContactsManagement.Core.Domain.RepositoryContracts.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Infrastructure.DbContexts;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,22 +36,24 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
         }
         public async Task<List<Event>?> UpdateEventsStatus(List<Event>? events)
         {
-            if (events == null)
+            if (events.IsNullOrEmpty())
                 return events;
 
             DateTime currentDate = DateTime.Now;
-            events.ForEach(temp =>
+            Event @event = events[0];
+
+            if ((currentDate - @event.LastUpdatedDate).TotalHours > 12)
             {
-                if(temp.isActive)
+                events.ForEach(temp =>
                 {
-                    if ((currentDate - temp.LastUpdatedDate).TotalHours > 12)
-                    {
+                    if(temp.isActive)
+                    {                    
                         temp.Status = this.GetUpdatedStatus(temp.StartDate, temp.EndDate);
                         temp.LastUpdatedDate = currentDate;
-                    }
-                }                
-            });
+                    }                
+                });
             int changes =  await _db.SaveChangesAsync();
+            }
             return events;
         }
         public string GetUpdatedStatus(DateTime? StartDate, DateTime? EndDate)
@@ -66,14 +69,14 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
                 {
                     return "In Progress";
                 }
-                /*else if (StartDate.Value.Date == currentDate.AddDays(1).Date)
+                else if (StartDate.Value.Date == currentDate.AddDays(1).Date)
                 {
                     return "Tomorrow";
-                }*/
+                }
                 else
                 {
                     int daysRemaining = (StartDate.Value.Date - currentDate.Date).Days;
-                    return $"{daysRemaining} day/s from now";
+                    return $"Due in {daysRemaining} day/s";
                 }
             }
             else if (StartDate != null)
@@ -89,7 +92,7 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
                 else
                 {
                     int daysRemaining = (StartDate.Value.Date - currentDate.Date).Days;
-                    return $"{daysRemaining} day/s from now";
+                    return $"Due in {daysRemaining} day/s";
                 }
             }
             else if (EndDate != null)

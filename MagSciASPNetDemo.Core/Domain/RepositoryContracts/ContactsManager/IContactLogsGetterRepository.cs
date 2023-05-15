@@ -14,6 +14,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
         Task<List<ContactLog>?> GetContactLogs(Guid userId);
         Task<List<ContactLog>?> GetContactLogsFromPerson(Guid personId);
         
-        // Task<List<ContactLog>> GetFilteredContactLogs(List<ContactLog> contactLogs ,Expression<Func<ContactLog, bool>> predicate);
+        Task<List<ContactLog>> GetFilteredContactLogs(Expression<Func<ContactLog, bool>> predicate, Guid userId);
     }
 }

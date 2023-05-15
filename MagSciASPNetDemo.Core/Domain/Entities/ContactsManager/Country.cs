@@ -13,7 +13,7 @@ namespace ContactsManagement.Core.Domain.Entities.ContactsManager
         public int CountryId { get; set; }
         [StringLength(50)]
         public string? CountryName { get; set; }
-        public virtual ICollection<Person>? Persons { get; set; } //TODO : Remove
+        public virtual ICollection<Person>? Persons { get; set; } 
 
     }
 }

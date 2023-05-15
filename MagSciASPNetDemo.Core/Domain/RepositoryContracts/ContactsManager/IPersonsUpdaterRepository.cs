@@ -7,13 +7,16 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
+    /// <summary>
+    /// Interface for a repository that updates information of a person.
+    /// </summary>
     public interface IPersonsUpdaterRepository
     {
         /// <summary>
-        /// Updates a person object (person name and other details) based on the given person id
-        /// </summary>
-        /// <param name="person">Person object to update</param>
-        /// <returns>Returns the updated person object</returns>
+        /// Updates the information of a person in the database.
+        /// </summary> The person object containing the updated information.
+        /// <param name="person"></param>
+        /// <returns>The <see cref="Person"/> object that was updated from the database.</returns>
         Task<Person> UpdatePerson(Person person);
     }
 }

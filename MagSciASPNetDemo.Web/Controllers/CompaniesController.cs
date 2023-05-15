@@ -5,10 +5,12 @@ using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
+using ContactsManagement.Web.Filters.ExceptionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml.Drawing.Chart;
 using System.ComponentModel.Design;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -16,6 +18,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 namespace ContactsManagement.Web.Controllers
 {
     [Route("[controller]")]
+    [TypeFilter(typeof(RedirectToIndexExceptionFilter))]
     public class CompaniesController : Controller
     {
         private readonly ICompanyAdderService _companiesAdderService;
@@ -24,9 +27,8 @@ namespace ContactsManagement.Web.Controllers
         private readonly ICompanyDeleterService _companiesDeleterService;
         private readonly IPersonsGetterService _personsGetterService;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IDemoUserService _guestUserService;
         private List<string> CompanyIndustries;
-        public CompaniesController(ICompanyAdderService companyAdderService, ICompanyGetterService companyGetterService, ICompanyUpdaterService companiesUpdaterService, ICompanyDeleterService companyDeleterService, IPersonsGetterService personsGetterService, UserManager<ApplicationUser> userManager, IDemoUserService guestUserService)
+        public CompaniesController(ICompanyAdderService companyAdderService, ICompanyGetterService companyGetterService, ICompanyUpdaterService companiesUpdaterService, ICompanyDeleterService companyDeleterService, IPersonsGetterService personsGetterService, UserManager<ApplicationUser> userManager)
         {
             _companiesAdderService = companyAdderService;
             _companiesGetterService = companyGetterService;
@@ -34,7 +36,6 @@ namespace ContactsManagement.Web.Controllers
             _companiesDeleterService = companyDeleterService;
             _personsGetterService = personsGetterService;
             _userManager = userManager;
-            _guestUserService = guestUserService;
             CompanyIndustries = new List<string>()
             {
                 "Agriculture and farming",
@@ -69,13 +70,7 @@ namespace ContactsManagement.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(List<string>? errors = null)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId;
-            if (userId != null)
-                UserId = Guid.Parse(userId);
-            else
-                UserId = _guestUserService.GetDemoUserId();
-            List<CompanyResponse>? companies = await _companiesGetterService.GetAllCompanies(UserId);
+            List<CompanyResponse>? companies = await _companiesGetterService.GetAllCompanies();
             ViewBag.Errors = errors;
             return View(companies);
         }
@@ -84,12 +79,10 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Create(CompanyAddRequest companyAddRequest, string? companyUserId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
 
             if (ModelState.IsValid)
             {
-                CompanyResponse companyResponse = await _companiesAdderService.AddCompany(companyAddRequest, UserId);
+                CompanyResponse companyResponse = await _companiesAdderService.AddCompany(companyAddRequest);
                 ViewBag.Success = "Company has been added";
 
                 if(companyUserId != null)
@@ -107,7 +100,7 @@ namespace ContactsManagement.Web.Controllers
             {
                 ViewBag.UserId = companyUserId;
 
-                List<PersonResponse> persons = await _personsGetterService.GetAllPersons(UserId);
+                List<PersonResponse> persons = await _personsGetterService.GetAllPersons();
                 ViewBag.CompanyIndustries = CompanyIndustries;
                 ViewBag.Persons = persons.ToList();
                 ViewBag.Errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
@@ -118,11 +111,8 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Create(string? companyUserId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
             ViewBag.CompanyIndustries = CompanyIndustries;
-            ViewBag.Persons = await _personsGetterService.GetAllPersons(UserId);
+            ViewBag.Persons = await _personsGetterService.GetAllPersons();
             ViewBag.UserId = companyUserId;
 
             return View();
@@ -131,10 +121,7 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Details(int companyId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            CompanyResponse? company = await _companiesGetterService.GetCompanyById(companyId, UserId);
+            CompanyResponse? company = await _companiesGetterService.GetCompanyById(companyId);
             if (company == null)
                 return RedirectToAction("Index", new { errors = new List<string>() { "Company does not exist" } });
 
@@ -145,10 +132,10 @@ namespace ContactsManagement.Web.Controllers
         public async Task<IActionResult> ManageMyCompany()
         {
             string? userId = _userManager.GetUserId(User);
-            //Guid UserId = Guid.Parse(userId);
+            Guid UserId = Guid.Parse(userId);
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if(user.company != null)
+            var user = await _userManager.Users.Include(u => u.company).FirstOrDefaultAsync(u => u.Id == UserId);
+            if (user.company != null)
             {
                 return RedirectToAction("Details", new { companyId = user.CompanyId });
             } else
@@ -163,20 +150,19 @@ namespace ContactsManagement.Web.Controllers
             string? userId = _userManager.GetUserId(User);
             Guid UserId = Guid.Parse(userId);
 
-            CompanyResponse? company = await _companiesGetterService.GetCompanyById(companyId, UserId);
+            CompanyResponse? company = await _companiesGetterService.GetCompanyById(companyId);
             if (company == null)
                 return RedirectToAction("Index", new { errors = new List<string>() { "Company does not exist" } });
 
             ViewBag.CompanyIndustries = CompanyIndustries;
             ViewBag.Employees = company.Employees?.Select(p => p.PersonId).ToList();
-            ViewBag.Persons = await _personsGetterService.GetAllPersons(UserId);
+            ViewBag.Persons = await _personsGetterService.GetAllPersons();
             return View(company.ToCompanyUpdateRequest());
         }
         [HttpPost]
         [Route("[action]")]
         public async Task<IActionResult> Edit(CompanyUpdateRequest companyUpdateRequest)
         {
-
             if (ModelState.IsValid)
             {
                 CompanyResponse companyResponse = await _companiesUpdaterService.UpdateCompany(companyUpdateRequest);
@@ -185,12 +171,9 @@ namespace ContactsManagement.Web.Controllers
             }
             else
             {
-                string? userId = _userManager.GetUserId(User);
-                Guid UserId = Guid.Parse(userId);
-
                 ViewBag.CompanyIndustries = CompanyIndustries;
                 ViewBag.Employees = companyUpdateRequest.Employees;
-                ViewBag.Persons = await _personsGetterService.GetAllPersons(UserId);
+                ViewBag.Persons = await _personsGetterService.GetAllPersons();
                 ViewBag.Errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
                 return View();
             }
@@ -199,11 +182,8 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         public async Task<IActionResult> Delete(int companyId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isDeleted = await _companiesDeleterService.DeleteCompany(companyId, UserId);
-
+            bool isDeleted = await _companiesDeleterService.DeleteCompany(companyId);
+            
             if (isDeleted)
             {
                 return StatusCode(200);

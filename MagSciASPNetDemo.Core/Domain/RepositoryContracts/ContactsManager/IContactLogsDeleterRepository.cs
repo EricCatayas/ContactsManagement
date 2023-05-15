@@ -9,7 +9,6 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
 {
     public interface IContactLogsDeleterRepository
     {
-        Task<bool> DeleteContactLog(int contactLogId);
-        Task<bool> DeleteContactLogsFromPerson(Person? person);
+        Task<bool> DeleteContactLog(ContactLog contactLog);
     }
 }

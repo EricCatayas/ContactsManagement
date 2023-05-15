@@ -18,8 +18,7 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroups
         /// Deletes a contact group from the system.
         /// </summary>
         /// <param name="contactGroupId">The request id of the contact group to be deleted.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
-        /// <returns>True if contact group with corresponding ID is deleted, otherwise false.</returns>
-        Task<bool> DeleteContactGroup(int contactGroupId, Guid userId);
+        /// <returns><see langword="true"/> if contact group with corresponding ID is deleted; otherwise, <see langword="false"/>.</returns>
+        Task<bool> DeleteContactGroup(int contactGroupId);
     }
 }

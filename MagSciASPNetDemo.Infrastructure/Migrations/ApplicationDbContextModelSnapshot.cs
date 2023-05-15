@@ -531,7 +531,8 @@ namespace ContactsManagement.Infrastructure.Migrations
                 {
                     b.HasOne("ContactsManagement.Core.Domain.Entities.ContactsManager.Person", "PersonLog")
                         .WithMany("ContactLogs")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("PersonLog");
                 });

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using HtmlAgilityPack;
 
-namespace xUnitTesting
+namespace ContactsManagement.IntegrationTests.Controllers
 {
     /// <summary>
     /// Here, you are the client sending requests to the program

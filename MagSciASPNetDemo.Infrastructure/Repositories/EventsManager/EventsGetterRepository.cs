@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +27,12 @@ namespace ContactsManagement.Infrastructure.Repositories.EventsManager
 
         public async Task<List<Event>?> GetEvents(Guid userId)
         {
-            return await _db.Events.Where(temp => temp.UserId == userId).ToListAsync();
+            return await _db.Events.Where(temp => temp.UserId == userId).OrderBy(temp => temp.StartDate).ToListAsync();
+        }
+
+        public async Task<List<Event>?> GetFilteredEvents(Expression<Func<Event, bool>> predicate, Guid userId)
+        {
+            return await _db.Events.Where(temp => temp.UserId == userId).Where(predicate).ToListAsync();
         }
     }
 }

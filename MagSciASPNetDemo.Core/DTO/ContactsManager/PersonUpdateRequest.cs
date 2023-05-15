@@ -23,17 +23,13 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Alpha characters only")]
         [MaxLength(100)]
         public string? PersonName { get; set; }
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
-        [Required(ErrorMessage = "Address is required")]
         public string? Address { get; set; }
         [DisplayName("Date of Birth")]
         [DateOfBirth(MinAge = 12, MaxAge = 100)]
         public DateTime? DateOfBirth { get; set; }
-        [Required(ErrorMessage = "Gender is required")]
         public GenderOptions? Gender { get; set; }
-        [Required(ErrorMessage = "CountryId is required")]
         public int? CountryId { get; set; }
         /* - The Hard Part - */
         [StringLength(75)]

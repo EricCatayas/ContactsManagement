@@ -83,9 +83,9 @@ else
                 const companyDetailsLink = companyProfile.querySelector("#company-ViewDetails");
 
                 companyProfileName.innerText = companyName;
-                companyProfileAddress1.innerText = `Address: ${companyAddress1}`;
-                companyProfileIndustry.innerText = `Industry: ${companyIndustry}`;
-                companyProfileDescription.innerText = `Description: ${companyDescription}`;
+                companyProfileAddress1.innerText = `<strong>Address</strong>: ${companyAddress1}`;
+                companyProfileIndustry.innerText = `<strong>Industry</strong>: ${companyIndustry}`;
+                companyProfileDescription.innerText = `<strong>Description</strong>: ${companyDescription}`;
                 companyProfileLink.setAttribute("href", companyWebUrl);
                 companyDetailsLink.setAttribute("href", `Details?companyId=${companyId}`);
 

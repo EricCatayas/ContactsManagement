@@ -53,7 +53,7 @@ namespace ContactsManagement.Web.Filters.ActionFilters
                     Value = country.CountryId.ToString()
                 }).ToList();
                 //ViewBag.Companies
-                List<CompanyResponse>? companies = await _companiesService.GetAllCompanies(UserId);
+                List<CompanyResponse>? companies = await _companiesService.GetAllCompanies();
                 if (companies != null)
                     personController.ViewBag.Companies = companies.Select(company => new SelectListItem()
                     {
@@ -61,12 +61,12 @@ namespace ContactsManagement.Web.Filters.ActionFilters
                         Value = company.CompanyId.ToString()
                     });
                 //ViewBag.ContactTags
-                List<ContactTagDTO>? contactTags = await _contactTagsGetterService.GetAllContactTags(UserId);
+                List<ContactTagDTO>? contactTags = await _contactTagsGetterService.GetAllContactTags();
                 if (contactTags != null)
                     personController.ViewBag.ContactTags = contactTags;
 
                 //ViewBag.ContactGroups
-                List<ContactGroupResponse>? contactGroups = await _contactGroupsGetterService.GetAllContactGroups(UserId);
+                List<ContactGroupResponse>? contactGroups = await _contactGroupsGetterService.GetAllContactGroups();
                 personController.ViewBag.ContactGroups = contactGroups;
 
                 if (!personController.ModelState.IsValid)

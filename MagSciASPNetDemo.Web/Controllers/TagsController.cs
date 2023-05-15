@@ -14,14 +14,12 @@ namespace ContactsManagement.Web.Controllers
         private readonly IContactTagsAdderService _contactTagsAdderService;
         private readonly IContactTagsUpdaterService _contactTagsUpdaterService;
         private readonly IContactTagsDeleterService _contactTagsDeleterService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         public TagsController(IContactTagsAdderService contactTagsAdderService, IContactTagsUpdaterService contactTagsUpdaterService, IContactTagsDeleterService contactTagsDeleterService, UserManager<ApplicationUser> userManager)
         {
             _contactTagsAdderService = contactTagsAdderService;
             _contactTagsUpdaterService = contactTagsUpdaterService;
             _contactTagsDeleterService = contactTagsDeleterService;
-            _userManager = userManager;
         }
         [HttpPost]
         [Route("[action]")]
@@ -43,10 +41,7 @@ namespace ContactsManagement.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string? userId = _userManager.GetUserId(User);
-                Guid UserId = Guid.Parse(userId);
-
-                _ = await _contactTagsAdderService.AddContactTag(contactTagAddRequest, UserId);
+                _ = await _contactTagsAdderService.AddContactTag(contactTagAddRequest);
                 return RedirectToAction("Index", "ContactGroups");
             }
             else
@@ -59,10 +54,7 @@ namespace ContactsManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int TagId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isDeleted = await _contactTagsDeleterService.DeleteContactTag(TagId, UserId);
+            bool isDeleted = await _contactTagsDeleterService.DeleteContactTag(TagId);
             if (isDeleted)
             {
                 return Json(new { success = true });

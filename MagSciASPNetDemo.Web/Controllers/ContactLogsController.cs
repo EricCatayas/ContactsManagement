@@ -5,6 +5,7 @@ using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactLogsServices;
 using ContactsManagement.Core.Services.ContactsManager.ContactLogs;
+using ContactsManagement.Web.Filters.ExceptionFilters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ContactsManagement.Web.Controllers
 {
     [Route("[controller]")]
+    [TypeFilter(typeof(RedirectToIndexExceptionFilter))]
     public class ContactLogsController : Controller
     {
         private readonly IContactLogsAdderService _contactLogsAdderService;
@@ -19,20 +21,16 @@ namespace ContactsManagement.Web.Controllers
         private readonly IContactLogsSorterService _contactLogsSorterService;
         private readonly IContactLogsUpdaterService _contactLogsUpdaterService;
         private readonly IContactLogsDeleterService _contactLogsDeleterService;
-        private readonly IDemoUserService _guestUserService;
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly Dictionary<string, string> sortProperties;
         private readonly List<string> communicationTypes;
 
-        public ContactLogsController(IContactLogsAdderService contactLogsAdderService, IContactLogsGetterService contactLogsGetterService, IContactLogsSorterService contactLogsSorterService, IContactLogsUpdaterService contactLogsUpdaterService, IContactLogsDeleterService contactLogsDeleterService, UserManager<ApplicationUser> userManager, IDemoUserService guestUserService)
+        public ContactLogsController(IContactLogsAdderService contactLogsAdderService, IContactLogsGetterService contactLogsGetterService, IContactLogsSorterService contactLogsSorterService, IContactLogsUpdaterService contactLogsUpdaterService, IContactLogsDeleterService contactLogsDeleterService)
         {
             _contactLogsAdderService = contactLogsAdderService;
             _contactLogsGetterService = contactLogsGetterService;
             _contactLogsSorterService = contactLogsSorterService;
             _contactLogsUpdaterService = contactLogsUpdaterService;
             _contactLogsDeleterService = contactLogsDeleterService;
-            _guestUserService = guestUserService;
-            _userManager = userManager;
             sortProperties = new Dictionary<string, string>()
             {
                 { "Person Log", nameof(ContactLogResponse.PersonLog) },
@@ -47,19 +45,19 @@ namespace ContactsManagement.Web.Controllers
         [Route("[action]")]
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchText, string sortProperty = "PersonLog", string sortOrder = "ASC", List<string>? error = null)
+        public async Task<IActionResult> Index(string? searchText, string sortProperty = "PersonLog", string sortOrder = "ASC", List<string>? errors = null)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId;
-            if (userId != null)
-                UserId = Guid.Parse(userId);
+            List<ContactLogResponse>? contactLogs = new List<ContactLogResponse>();
+            if(searchText != null)
+            {
+                contactLogs = await _contactLogsGetterService.GetFilteredContactLogs(searchText);
+            }
             else
-                UserId = _guestUserService.GetDemoUserId();
-
-            List<ContactLogResponse>? contactLogs = await _contactLogsGetterService.GetContactLogs(UserId);
+            {
+                contactLogs = await _contactLogsGetterService.GetContactLogs();
+            }
             if (contactLogs != null)
             {
-                contactLogs = _contactLogsGetterService.GetFilteredContactLogs(contactLogs, searchText);
                 switch (sortOrder)
                 {
                     case "ASC":
@@ -74,7 +72,7 @@ namespace ContactsManagement.Web.Controllers
             ViewBag.sortProperty = sortProperty;
             ViewBag.sortOrder = sortOrder;
             ViewBag.sortProperties = sortProperties;
-            ViewBag.Errors = error;
+            ViewBag.Errors = errors;
             return View(contactLogs);
         }
         [Route("[action]")]
@@ -83,30 +81,25 @@ namespace ContactsManagement.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string? userId = _userManager.GetUserId(User);
-                Guid UserId = Guid.Parse(userId);
 
-                await _contactLogsAdderService.AddContactLog(contactLogAddRequest, UserId);
+                await _contactLogsAdderService.AddContactLog(contactLogAddRequest);
                 return RedirectToAction("Edit", "Persons", new { personId = contactLogAddRequest.PersonId });
             }
             else
             {
-                List<string> errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
-                return RedirectToAction("Edit", "Persons", new { personId = contactLogAddRequest.PersonId, error = errors });
+                List<string> Errors = ModelState.Values.SelectMany(V => V.Errors).Select(err => err.ErrorMessage).ToList();
+                return RedirectToAction("Edit", "Persons", new { personId = contactLogAddRequest.PersonId, errors = Errors });
             }
         }
         [Route("[action]")]
         [HttpGet]
         public async Task<IActionResult> Details(int contactLogId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            ContactLogResponse? contactLog = await _contactLogsGetterService.GetContactLogById(contactLogId, UserId);
+            ViewBag.CommunicationTypes = communicationTypes;
+            ContactLogResponse? contactLog = await _contactLogsGetterService.GetContactLogById(contactLogId);
             if (contactLog == null)
                 return StatusCode(500);
             ContactLogUpdateRequest contactLogUpdate = contactLog.ToContactLogUpdateRequest();
-            ViewBag.CommunicationTypes = communicationTypes;
             return View(contactLogUpdate);
         }
         [Route("[action]")]
@@ -130,10 +123,7 @@ namespace ContactsManagement.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int contactLogId)
         {
-            string? userId = _userManager.GetUserId(User);
-            Guid UserId = Guid.Parse(userId);
-
-            bool isDeleted = await _contactLogsDeleterService.DeleteContactLog(contactLogId, UserId);
+            bool isDeleted = await _contactLogsDeleterService.DeleteContactLog(contactLogId);
 
             if (isDeleted)
             {

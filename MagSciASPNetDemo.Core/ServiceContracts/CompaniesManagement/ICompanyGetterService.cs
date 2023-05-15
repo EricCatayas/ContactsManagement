@@ -17,14 +17,12 @@ namespace ContactsManagement.Core.ServiceContracts.CompaniesManagement
         /// Retrieves company from the system.
         /// </summary>
         /// <param name="companyID">The request id of the company to be deleted.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>The company object with the corresponding ID and UserID</returns>
-        public Task<CompanyResponse?> GetCompanyById(int companyID, Guid userId);
+        public Task<CompanyResponse?> GetCompanyById(int companyID);
         /// <summary>
         /// Retrieves list of company from the system.
         /// </summary>
-        /// <param name="userId">The ID of the user who owns the data.</param>
         /// <returns>A list of company object with the corresponding UserID</returns>
-        public Task<List<CompanyResponse>?> GetAllCompanies(Guid userId);
+        public Task<List<CompanyResponse>?> GetAllCompanies();
     }
 }

@@ -15,8 +15,7 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactTagsSe
         /// Deletes a contact tag from the system.
         /// </summary>
         /// <param name="contactTagId">The request id of the contact tag to be deleted.</param>
-        /// <param name="userId">The ID of the user who owns the data.</param>
-        /// <returns>True if contact tag with corresponding ID is deleted, otherwise false.</returns>
-        public Task<bool> DeleteContactTag(int contactTagId, Guid userId);
+        /// <returns><see langword="true"/> if contact tag with corresponding ID is deleted; otherwise, <see langword="false"/>.</returns>
+        public Task<bool> DeleteContactTag(int contactTagId);
     }
 }

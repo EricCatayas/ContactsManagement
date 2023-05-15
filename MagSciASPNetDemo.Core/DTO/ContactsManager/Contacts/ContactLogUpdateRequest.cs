@@ -25,7 +25,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
         public string? Note { get; set; } 
         public Guid? PersonId { get; set; }
         public DateTime? DateCreated { get; set; }
-
+        public Guid? UserId { get; set; }
         public ContactLog ToContactLog()
         {
             return new ContactLog()
@@ -36,6 +36,7 @@ namespace ContactsManagement.Core.DTO.ContactsManager.Contacts
                 Note = Note,
                 PersonId = PersonId,
                 DateCreated = DateCreated,
+                UserId = UserId,
             };
         }
     }

@@ -20,7 +20,7 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         }
         public async Task<ContactLog> UpdateContactLog(ContactLog contactLog)
         {
-            ContactLog? matchingLog = await _db.ContactLogs.Include(log => log.PersonLog).FirstOrDefaultAsync(log => log.LogId== contactLog.LogId);
+            ContactLog? matchingLog = await _db.ContactLogs.Include(log => log.PersonLog).FirstOrDefaultAsync(log => log.LogId== contactLog.LogId && log.UserId == contactLog.UserId);
             if (matchingLog == null)
             {
                 return contactLog;

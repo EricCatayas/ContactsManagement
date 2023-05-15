@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Enums.ContactsManager
 {
-    public enum EventType
+    public enum EventTypeOptions
     {       
         Task,
         Reminder,
