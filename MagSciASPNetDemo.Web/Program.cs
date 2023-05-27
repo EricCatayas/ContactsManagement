@@ -36,6 +36,11 @@ using ContactsManagement.Core.Services.AzureStorageAccount;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
+using ContactsManagement.Core.ServiceContracts.EmailServices;
+using ContactsManagement.Core.Services.EmailServices;
+using Google.Apis.Auth.AspNetCore3;
+using ContactsManagement.Core.ServiceContracts.Others;
+using ContactsManagement.Core.Services.Others;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,15 +49,6 @@ builder.Host.UseSerilog((HostBuilderContext builderContext, IServiceProvider ser
     config.ReadFrom.Configuration(builderContext.Configuration) // <- Reading the config of program.cs 
           .ReadFrom.Services(serviceProvider);
 });
-
-// Add services to the container.
-
-builder.Services.AddControllersWithViews(options =>
-{
-    //var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
-    // options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
-});
-
 /* IoC Container */
 
 builder.Services.AddScoped<IPersonsAdderRepository, PersonsAdderRepository>();
@@ -130,6 +126,9 @@ builder.Services.AddTransient<IImageDeleterService, ImageDeleterService>();
 
 builder.Services.AddTransient<ICountriesService, CountriesService>();
 builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
+builder.Services.AddTransient<IEmailService,UserEmailService>();
+/*builder.Services.AddScoped<IViewMessagesService, ViewMessagesService>();*/
+
 
 builder.Services.AddScoped<IDemoUserService, DemoUserAccountService>();
 builder.Services.AddScoped<ISignedInUserService, SignedInUserService>();
@@ -145,6 +144,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 /* Logging */
 // builder.Logging.AddEventLog(); // <-- Built-In
+builder.Services.AddLogging(builder =>
+{
+    builder.AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug); // Enable authentication logging
+    builder.AddFilter("Microsoft.AspNetCore.Authorization", LogLevel.Debug); // Enable authorization logging
+});
 builder.Services.AddHttpLogging(options =>
 {
     // Displays on console
@@ -177,19 +181,38 @@ builder.Services.ConfigureApplicationCookie(options =>
    /* So unauthenticated user will be redirected here*/
    options.LoginPath = "/Account/Login"; 
 });
-builder.Services.AddHttpContextAccessor(); //TODO
+builder.Services
+    .AddAuthentication(options =>
+    {
+        /* Google People API */
+        //options.DefaultScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+        //options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+    }).AddGoogle(options =>
+    {
+        /* Google Authentication */
+        options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
+        options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
+
+    });/*AddGoogleOpenIdConnect(options =>
+    {
+        options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
+        options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
+    });*/
+
+// Add services to the container.
+builder.Services.AddControllersWithViews(options =>
+{
+    //var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    // options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
+});
+
+builder.Services.AddHttpContextAccessor(); 
 var app = builder.Build();
 
 /*TODO     
-     *  Seq account in User Secrets
-     *  Section: 25 Interview Questions      
+     *  Seq account in User Secrets 
      *  Code Documentation Clean Up
      *  Why are you afraid of finding bugs? 
-     *      Unit Test UpdateServices
-     *      Test UpdateServices deployment
-     *          Event, ContactLog, Company
-     *          
-     *      Integration Test for: ContactGroups, ContactLogs, CompanyGetter
  
 */
 

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<PersonResponse>
 @{
-
+    ContactsDisplayType displayType = ViewBag.ContactsDisplayType;
 }
 <table class="table align-middle">
     <thead>
@@ -36,12 +36,37 @@
                         </div>
                     </div>  
                 </td>
-                <td>
-                    <p class="fw-normal mb-1">@person.Address</p>
-                </td>
-                <td>
-                    <p class="fw-normal mb-1">@person.JobTitle</p>
-                </td>
+                @if (displayType == ContactsDisplayType.Default || displayType == ContactsDisplayType.Employment)
+                {             
+                    <td>
+                        <p class="fw-normal mb-1">@person.JobTitle</p>
+                    </td>                    
+                    <td>
+                        <p class="fw-normal mb-1">@person.CompanyName</p>
+                    </td>
+                }
+                else if (displayType == ContactsDisplayType.Profile)
+                {
+                    <td>
+                        <p class="fw-normal mb-1">@person.Email</p>
+                    </td>
+                    <td>
+                        <p class="fw-normal mb-1">@person.Address</p>
+                    </td>
+                    <td>
+                        <p class="fw-normal mb-1">@person.DateOfBirth?.ToString("MMMM dd, yyyy")</p>
+                    </td>
+                }
+                else if (displayType == ContactsDisplayType.Contact)
+                {
+                    <td>
+                        <p class="fw-normal mb-1">@person.Email</p>
+                    </td>
+                    <td>
+                        <p class="fw-normal mb-1">@person.ContactNumber1</p>
+                        <p class="fw-normal mb-1">@person.ContactNumber2</p>
+                    </td>
+                }
                 @if(person.Tag != null)
                 {
                     <td>
@@ -55,10 +80,8 @@
                     <td></td>
                 }
                 <td>
-                    <p class="fw-normal mb-1">@person.CompanyName</p>
-                </td>
-                <td>
                     <a asp-controller="Persons" asp-action="Edit" asp-route-personId="@person.PersonId">View</a>
+                    @*<a href="https://mail.google.com/mail/u/0/#inbox?compose=new&to=\@person.Email" target="_blank"><i class="fa-solid fa-envelope" style="color: #1e7ba9;"></i></a>*@
                 </td>
             </tr>
         }

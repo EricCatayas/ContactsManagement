@@ -20,6 +20,7 @@
 					<br />
 					<a asp-controller="Account" asp-action="Register">Create New Account</a>
 					<button type="submit" class="login-button">Log In</button>
+					<a class="btn btn-primary" href="@Url.Action("ExternalLogin", "Account", new { provider = "Google", returnUrl = @Context.Request.Query["ReturnUrl"] })">Sign in with <img src="~/images/google-icon.png" style="width: 30px; height: 30px" /></a>
 				</form>
 			</div>
 			<div class="overlay-container">

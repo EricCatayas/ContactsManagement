@@ -6,6 +6,7 @@ using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactTagsServic
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.ContactsManager.ContactGroups;
 using ContactsManagement.Core.Services.EventsManager;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -121,6 +122,76 @@ namespace ContactsManagement.Web.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
+        // Enabling Google Login
+        [HttpGet]
+        [Route("[action]")]
+        [AllowAnonymous]
+        public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl = returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+			//This method triggers the external authentication process and redirects the user to the Google login page.
+			return Challenge(properties, provider);
+        }
+		[HttpGet]
+        [Route("[action]")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+        {
+            if (remoteError != null)
+            {
+                // Handle error
+                return RedirectToAction("Login");
+            }
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                // Handle error
+                return RedirectToAction("Login");
+            }
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                // User is successfully signed in
+                if(returnUrl!= null)
+                {
+                    return LocalRedirect(returnUrl);
+                }
+                else
+                {
+                    return LocalRedirect("/");
+                }
+            }
+            if (signInResult.IsLockedOut)
+            {
+                // Handle locked out user
+                return RedirectToAction("Lockout");
+            }
+            else
+            {
+                // New user, prompt for additional registration information or handle as needed
+                // Example: return RedirectToAction("AdditionalRegistration", new { email = info.Principal.FindFirstValue(ClaimTypes.Email) });
+                return RedirectToAction("Registration");
+            }
+        }
+        public async Task<IActionResult> ExternalLoginGoogleAsync(string googleTokenId)
+        {
+            GoogleJsonWebSignature.ValidationSettings settings = new GoogleJsonWebSignature.ValidationSettings();
+            settings.Audience = new List<string>() { "Get_Google_OAuth_ClientId" };
+            GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(googleTokenId, settings);
+
+            ApplicationUser user = await _userManager.FindByEmailAsync(payload.Email);
+            if (user == null) //create new user if not exsits
+            {
+                user = new ApplicationUser
+                {
+                    Email = payload.Email,
+                    UserName = payload.Name
+                };
+        }
+            return Ok();
+        }
+
         public async Task<IActionResult> IsEmailAlreadyRegistered(string email)
         {
             ApplicationUser? user =  await _userManager.FindByEmailAsync(email);

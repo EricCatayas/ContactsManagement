@@ -1,0 +1,18 @@
+﻿@{
+    string? infoMessage = ViewBag.Info;
+    if (!User.Identity.IsAuthenticated)
+    {
+        infoMessage = "You are currently using a demo version.";
+    }
+
+}
+@if (infoMessage != null)
+{
+    <section class="mb-3" id="status_card_section">
+        <div class="alert alert-info alert-dismissible fade show">
+            @infoMessage
+            <button type="button" class="btn-close" aria-label="Close"></button>
+        </div>
+    </section>
+}
+

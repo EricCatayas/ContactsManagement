@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Enums.ContactsManager
 {
-    /// <summary>
-    /// Redundant because of ContactGroups and Label
-    /// </summary>
-    public enum RelationshipType
+    public enum ContactsDisplayType
     {
-        Friend, Family, Colleague, Acquaintance, Service
+        Default, Profile, Employment, Contact
     }
 }

@@ -3,9 +3,26 @@
     ViewBag.Title = "Index";
 }
 <partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="Partials/_InfoCardPartial"></partial>
 <ul class="nav nav-tabs">    
     <li class="nav-item">
         <a class="nav-link" asp-controller="Persons" asp-action="Create">Create New Contact</a>
+    </li>
+    <li class="nav-item">
+    </li>
+    <li class="nav-item d-flex align-items-center">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="contactsDisplayOptions" value="Profile" @(ViewBag.ContactsDisplayType == ContactsDisplayType.Profile ? "checked" : "")>
+            <label class="form-check-label">Profile</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="contactsDisplayOptions" value="Employment" @(ViewBag.ContactsDisplayType == ContactsDisplayType.Employment ? "checked" : "")>
+            <label class="form-check-label">Employment</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="contactsDisplayOptions" value="Contact" @(ViewBag.ContactsDisplayType == ContactsDisplayType.Contact ? "checked" : "")>
+            <label class="form-check-label">Contact</label>
+        </div>
     </li>
 </ul>
 
@@ -15,26 +32,37 @@
 @section Scripts
 {
     <script>
-    $(document).ready(function () {
-        $('#removeTagIcon').click(function () {
-                var contactTagDiv = $(this).parent('#contactTag'); //'#removeTagIcon'
-            var personId = $(this).find('input[type=hidden]').val();            
-            $.ajax({
-                type: 'POST',
-                url: `/Tags/RemoveContactTagFromPerson?personId=${personId}`,
-                success: function (data) {
-                        if (data.success) {
-                            contactTagDiv.remove();
-                        }
-                },
-                error: function (xhr, status, error) {
-                    PresentErrorCardPopUp("Error removing contact tag");
-                }
+        $(document).ready(function () {
+            //Removing Tag from person
+            $('#removeTagIcon').click(function () {
+                    var contactTagDiv = $(this).parent('#contactTag'); //'#removeTagIcon'
+                var personId = $(this).find('input[type=hidden]').val();            
+                $.ajax({
+                    type: 'POST',
+                    url: `/Tags/RemoveContactTagFromPerson?personId=${personId}`,
+                    success: function (data) {
+                            if (data.success) {
+                                contactTagDiv.remove();
+                            }
+                    },
+                    error: function (xhr, status, error) {
+                        PresentErrorCardPopUp("Error removing contact tag");
+                    }
+                });
             });
-        });
-    });        
 
-</script>
-<script src="~/js/ErrorCardPopUp.js"></script>
+            //Selecting display type radio button
+            $(document).ready(function () {
+                $('input[name="contactsDisplayOptions"]').click(function () {
+                    var selectedValue = $(this).val();
+
+                    // Redirect the browser to the desired URL
+                    window.location.href = '/Persons/Index?displayType=' + selectedValue;
+                });
+            });
+        });      
+    </script>
+    <script src="~/js/ErrorCardPopUp.js"></script>
+    <partial name="Partials/_AutoScriptsPartial"></partial>
 }
 

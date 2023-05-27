@@ -22,6 +22,7 @@ using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
 using ContactsManagement.Core.Services.CompaniesManagement;
+using ContactsManagement.Core.ServiceContracts.Others;
 
 namespace ContactsManagement.Web.Controllers
 {
@@ -41,9 +42,8 @@ namespace ContactsManagement.Web.Controllers
         private readonly ICompanyAdderByNameService _companyAdderByNameService;
         private readonly IImageUploaderService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
-        private readonly IDemoUserService _demoUserService;
 
-        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, IPersonsGroupIdFilteredGetterService personsGroupIdFilteredGetterService, ICountriesService countriesService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService, ICompanyAdderByNameService companyAdderByNameService, IDemoUserService demoUserService)
+        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, IPersonsGroupIdFilteredGetterService personsGroupIdFilteredGetterService, ICountriesService countriesService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService, ICompanyAdderByNameService companyAdderByNameService)
         {
             _personGetterService = personsGetterService;
             _personAdderService = personsAdderService;
@@ -55,13 +55,12 @@ namespace ContactsManagement.Web.Controllers
             _companyAdderByNameService = companyAdderByNameService;
             _imageUploaderService = imageUploaderService;
             _imageDeleterService = imageDeleterService;
-            _demoUserService = demoUserService;
         }        
         [Route("[action]")]
         [AllowAnonymous]
         [TypeFilter(typeof(PersonsListActionFilter))]
         [ResponseHeaderActionFilter("Action-Key", "In-Index-Method", 1)]        
-        public async Task<IActionResult> Index(string? searchProperty, string? searchString, int? groupId, string sortProperty = "Name", string sortOrder = "ASC", List<string>? errors = null)
+        public async Task<IActionResult> Index(string? searchProperty, string? searchString, int? groupId, string? displayType, string sortProperty = "Name", string sortOrder = "ASC", List<string>? errors = null)
         {
             ViewBag.Errors = errors;
             List<PersonResponse>? personList = new List<PersonResponse>() { };

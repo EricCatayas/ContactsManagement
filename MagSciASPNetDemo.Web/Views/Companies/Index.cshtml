@@ -5,6 +5,8 @@
 
 }
 <partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="Partials/_InfoCardPartial"></partial>
+
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <a asp-controller="Companies" asp-action="Create" class="nav-link">Add Company</a>
@@ -83,9 +85,9 @@ else
                 const companyDetailsLink = companyProfile.querySelector("#company-ViewDetails");
 
                 companyProfileName.innerText = companyName;
-                companyProfileAddress1.innerText = `<strong>Address</strong>: ${companyAddress1}`;
-                companyProfileIndustry.innerText = `<strong>Industry</strong>: ${companyIndustry}`;
-                companyProfileDescription.innerText = `<strong>Description</strong>: ${companyDescription}`;
+                companyProfileAddress1.innerHTML = `<strong>Address</strong>: ${companyAddress1}`;
+                companyProfileIndustry.innerHTML = `<strong>Industry</strong>: ${companyIndustry}`;
+                companyProfileDescription.innerHTML = `<strong>Description</strong>: ${companyDescription}`;
                 companyProfileLink.setAttribute("href", companyWebUrl);
                 companyDetailsLink.setAttribute("href", `Details?companyId=${companyId}`);
 
@@ -93,4 +95,5 @@ else
             });
         });
     </script>
+    <partial name="Partials/_AutoScriptsPartial"></partial>
 }

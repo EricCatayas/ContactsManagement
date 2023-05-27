@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<ContactLogResponse>;
 
 <partial name="Partials/_ErrorCardPartial"></partial>
+<partial name="Partials/_InfoCardPartial"></partial>
 <div>
     <form asp-asp-controller="ContactLogs" asp-action="Index" method="get">
         <div class="input-group mb-3">
@@ -63,4 +64,5 @@
             }
         });
     </script>
+    <partial name="Partials/_AutoScriptsPartial"></partial>
 }

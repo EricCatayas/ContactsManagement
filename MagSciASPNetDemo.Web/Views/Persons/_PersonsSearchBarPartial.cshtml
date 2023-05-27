@@ -16,6 +16,7 @@
 <div>
     <form action="~/persons/index" method="post">
         <div class="input-group mb-3">
+            @*Contact Group Filter*@
             <label class="input-group-text" for="contactGroupSelect">Contacts: </label>
             <select class="form-select" name="groupId" id="contactGroupSelect">
                 <option value="@null">All</option>
@@ -33,6 +34,7 @@
                     }
                 }
             </select>
+            @*Search Property*@
             <label class="input-group-text" for="searchPropertySelect">Property</label>
             <select class="form-select" name="searchProperty" id="searchPropertySelect">
                 @foreach(KeyValuePair<string,string> searchProperty in ViewBag.SearchProperties)

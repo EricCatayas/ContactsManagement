@@ -23,7 +23,6 @@ namespace ContactsManagement.Web.Controllers
         private readonly IEventsGetterService _eventsGetterService;
         private readonly IEventsUpdaterService _eventsUpdaterService;
         private readonly IEventsDeleterService _eventsDeleterService;
-        private readonly IDemoUserService _demoUserService;
         public EventsController(IEventsAdderService eventsAdderService, IEventsGetterService eventsGetterService, IEventsUpdaterService eventsUpdaterService, IEventsDeleterService eventsDeleterService) 
         {
             _eventsAdderService = eventsAdderService;

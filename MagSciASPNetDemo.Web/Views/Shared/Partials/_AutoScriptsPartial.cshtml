@@ -1,6 +1,13 @@
-﻿<!-- This is a using statement for .js-->
-<!-- Including unobtrusive client-side validation to ensure more responsiveness of modal-login -->
-<!-- Contains 2 refs to jQuery files, which contain form-field validation for the client -->
-
+﻿@*
 <script src="~/js/UserLogin.js" asp-append-version="true"></script>
-<script src="~/js/BootstrapAlert.js" asp-append-version="true"></script>
+<script src="~/js/BootstrapAlert.js" asp-append-version="true"></script>*@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var closeButton = document.querySelector("#status_card_section .btn-close");
+        var alertElement = document.querySelector("#status_card_section .alert");
+
+        closeButton.addEventListener("click", function () {
+            alertElement.classList.add("d-none");
+        });
+    });
+</script>

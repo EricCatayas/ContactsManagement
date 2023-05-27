@@ -1,8 +1,7 @@
 ﻿@using ContactsManagement.Web.ViewModels;
 @model IEnumerable<EventResponse>
 
-    <!-- Worry about calendar later or not? -->
-<!-- Search Bar w/ Status and Type checkboxes? -->
+<partial name="Partials/_InfoCardPartial"></partial>
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -168,4 +167,5 @@
             });
         }
     </script>
+    <partial name="Partials/_AutoScriptsPartial"></partial>
 }

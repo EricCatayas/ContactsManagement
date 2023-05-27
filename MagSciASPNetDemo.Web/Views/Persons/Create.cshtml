@@ -124,7 +124,9 @@
                         </div>
                         @* Company *@
                         <div class="col-md-12 flex">
-                            <label asp-for="CompanyId" class="labels">Company</label>
+                            <label asp-for="CompanyName" class="labels">Company</label>
+                            <input asp-for="CompanyName" type="text" class="form-control">
+                            <label asp-for="CompanyId" class="labels">Or</label>
                             @if (ViewBag.Companies != null)
                             {
                                 <select asp-for="CompanyId" name="CompanyId" asp-items="@ViewBag.Companies" id="CompanyId" class="form-select">
@@ -135,7 +137,7 @@
                             {
                                 <p>No companies found</p>
                             }
-                            <a asp-controller="Companies" asp-action="Create">Add New Company</a>                            
+                            <a asp-controller="Companies" asp-action="Create">Add New Company</a>
                         </div>
                     </div>
                     @* Country *@

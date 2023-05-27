@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
+using Microsoft.AspNetCore.Http;
+using ContactsManagement.Core.Enums.ContactsManager;
+using ContactsManagement.Core.Helpers;
 
 namespace ContactsManagement.Web.Filters.ActionFilters
 {
     public class PersonsListActionFilter : IActionFilter 
     {
-        //inject logger
-        private readonly ILogger<PersonsListActionFilter> _logger;        
+        private readonly ILogger<PersonsListActionFilter> _logger;
+        private const string contactDisplayTypeKey = "ContactsDisplayType";
 
         public PersonsListActionFilter(ILogger<PersonsListActionFilter> logger)
         {
@@ -18,18 +21,9 @@ namespace ContactsManagement.Web.Filters.ActionFilters
         {
             _logger.LogInformation("{FilterName}.{MethodName} method", nameof(PersonsListActionFilter), nameof(OnActionExecuted));
 
-            PersonsController personController = (PersonsController)context.Controller;
+            PersonsController personController = (PersonsController)context.Controller;            
 
             IDictionary<string, object?>? ActionArgs = (IDictionary<string, object?>?)context.HttpContext.Items["arguments"];
-
-            personController.ViewBag.SearchProperties = new Dictionary<string, string>()
-            {
-                { "Name", nameof(PersonResponse.PersonName) },
-                { "Address", nameof(PersonResponse.Address) },
-                { "Job Title", nameof(PersonResponse.JobTitle) },
-                { "Tag", nameof(ContactTagDTO.TagName) },
-                { "Company Name", nameof(PersonResponse.CompanyName) },
-            };            
 
             if (ActionArgs.ContainsKey("searchProperty"))
             {
@@ -51,11 +45,42 @@ namespace ContactsManagement.Web.Filters.ActionFilters
             {
                 personController.ViewBag.groupId = Convert.ToInt32(ActionArgs["groupId"]);
             }
-            /*if (ActionArgs.ContainsKey("error"))
+
+            // Display type Cookie
+            string? displayContactsType;
+            if (ActionArgs.ContainsKey("displayType"))
             {
-                var errors = ActionArgs["error"];
-                personController.ViewBag.Errors = errors
-            }*/
+                displayContactsType = ActionArgs["displayType"]?.ToString();
+
+                CookieOptions cookieOptions = new CookieOptions()
+                {
+                    Expires = DateTime.Now.AddDays(30),
+                    Secure = true, // Set to true if using HTTPS
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict
+                };
+                context.HttpContext.Response.Cookies.Append(contactDisplayTypeKey, displayContactsType, cookieOptions);
+            }
+            else
+            {
+                displayContactsType = context.HttpContext.Request.Cookies[contactDisplayTypeKey];
+            }
+
+            if (displayContactsType == null)
+            {
+                CookieOptions cookieOptions = new CookieOptions()
+                {
+                    Expires = DateTime.Now.AddDays(30),
+                    HttpOnly = true, 
+                    SameSite = SameSiteMode.Strict 
+                };
+                context.HttpContext.Response.Cookies.Append(contactDisplayTypeKey, ContactsDisplayType.Profile.ToString(), cookieOptions);
+            }
+
+            ContactsDisplayType displayType = ContactsDisplayHelper.GetDisplayType(displayContactsType);
+
+            personController.ViewBag.SearchProperties = ContactsDisplayHelper.GetDisplayProperties(displayType);
+            personController.ViewBag.ContactsDisplayType = displayType;
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
