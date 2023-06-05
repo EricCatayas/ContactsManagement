@@ -18,6 +18,7 @@ using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServ
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Domain.IdentityEntities;
 using Microsoft.AspNetCore.Identity;
+using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
 
 namespace xUnitTesting
 {
@@ -30,6 +31,7 @@ namespace xUnitTesting
         private readonly IPersonsSorterService _personsSorterService;
         private readonly IPersonsGroupIdFilteredGetterService _personsGroupIdFilteredGetterService;
         private readonly IContactGroupsGetterService _contactGroupsGetterService;
+        private readonly ICompanyAdderByNameService _companyAdderService;
         private readonly IImageUploaderService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
         private readonly IDemoUserService _demoUserService;
@@ -42,6 +44,7 @@ namespace xUnitTesting
         private readonly Mock<IPersonsSorterService> _personsSorterServiceMock;
         private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
         private readonly Mock<IContactGroupsGetterService> _contactGroupsServiceMock;
+        private readonly Mock<ICompanyAdderByNameService> _companyAdderServiceMock;
         private readonly Mock<IImageUploaderService> _imageUploaderServiceMock;
         private readonly Mock<IImageDeleterService> _imageDeleterServiceMock;
         private readonly Mock<IDemoUserService> _demoUserServiceMock;
@@ -63,6 +66,7 @@ namespace xUnitTesting
             _contactGroupsServiceMock = new Mock<IContactGroupsGetterService>();
             _imageUploaderServiceMock = new Mock<IImageUploaderService>();
             _imageDeleterServiceMock = new Mock<IImageDeleterService>();
+            _companyAdderServiceMock = new Mock<ICompanyAdderByNameService>();
             _demoUserServiceMock = new Mock<IDemoUserService>();
             _countriesServiceMock = new Mock<ICountriesService>();
             _userManagerMock = new Mock<UserManager<ApplicationUser>>();
@@ -73,13 +77,14 @@ namespace xUnitTesting
             _personsSorterService = _personsSorterServiceMock.Object;
             _personsUpdaterService = _personsUpdaterServiceMock.Object;
             _contactGroupsGetterService = _contactGroupsServiceMock.Object;
+            _companyAdderService = _companyAdderServiceMock.Object;
             _imageUploaderService = _imageUploaderServiceMock.Object;
             _imageDeleterService = _imageDeleterServiceMock.Object;
             _demoUserService = _demoUserServiceMock.Object;
             _countriesService = _countriesServiceMock.Object;
             _userManager = _userManagerMock.Object;
 
-            PersonController = new PersonsController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _personsGroupIdFilteredGetterService, _countriesService, _contactGroupsGetterService, _imageUploaderService, _imageDeleterService, _userManager, _demoUserService);
+            PersonController = new PersonsController(_personsGetterService, _personsAdderService, _personsDeleterService, _personsSorterService, _personsUpdaterService, _personsGroupIdFilteredGetterService, _countriesService, _imageUploaderService, _imageDeleterService, _companyAdderService);
 
             _fixture = new Fixture();
             Mock<ILogger<PersonsController>> _personControllerLoggerMock = new Mock<ILogger<PersonsController>>();
@@ -97,7 +102,7 @@ namespace xUnitTesting
             
 
             _personsGetterServiceMock
-             .Setup(temp => temp.GetFilteredPersons(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<string>()))
+             .Setup(temp => temp.GetFilteredPersons(It.IsAny<string>(), It.IsAny<string>()))
              .ReturnsAsync(persons_response_list);
 
             _personsSorterServiceMock
@@ -138,7 +143,7 @@ namespace xUnitTesting
              .ReturnsAsync(countries);
 
             _personsAdderServiceMock
-             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>(), It.IsAny<Guid>()))
+             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
              .ReturnsAsync(person_response);            
              
             //Act
@@ -170,7 +175,7 @@ namespace xUnitTesting
             PersonResponse person_response = person_add_request.ToPerson().ToPersonResponse();
 
             _personsAdderServiceMock
-             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>(), It.IsAny<Guid>()))
+             .Setup(temp => temp.AddPerson(It.IsAny<PersonAddRequest>()))
              .ReturnsAsync(person_response);
             
             //Act
