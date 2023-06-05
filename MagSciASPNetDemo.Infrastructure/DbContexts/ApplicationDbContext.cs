@@ -73,8 +73,18 @@ namespace ContactsManagement.Infrastructure.DbContexts
              });*/
             // But fluent api is too explicit
         }
-        /* ------------ Stored Procedure Sample ------------ */
-        public List<Person> sp_GetAllPersons()
+		/* ------------ Stored Procedure Sample ------------ */
+		/// <summary>
+		/// Method to execute the GetEventsByUserId stored procedure in SQL Server
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns></returns>
+		public async Task<List<Event>> GetAutoUpdatedEventsByUserId(Guid userId)
+		{
+			var userIdParam = new SqlParameter("@UserId", userId);
+			return await Events.FromSqlInterpolated($"EXEC GetAutoUpdatedEventsByUserId {userIdParam}").ToListAsync();
+		}
+		public List<Person> sp_GetAllPersons()
         {
             return Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
         }

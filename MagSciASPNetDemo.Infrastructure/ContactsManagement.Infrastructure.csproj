@@ -19,4 +19,8 @@
     <ProjectReference Include="..\MagSciASPNetDemo.Core\ContactsManagement.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SQL\" />
+  </ItemGroup>
+
 </Project>

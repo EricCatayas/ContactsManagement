@@ -137,9 +137,11 @@ builder.Services.AddScoped<ISignedInUserService, SignedInUserService>();
 builder.Services.AddTransient<ContactLogsCardViewComponent>();
 
 /* DbContext */
+var connectionString = builder.Configuration["AzureSQLDatabase"].ToString();
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ContactsManagement"));
+    options.UseSqlServer(connectionString);
     // options.EnableSensitiveDataLogging(); // The seed entity for entity type 'Country' cannot be added because another seed entity with the same key value for {'CountryId'} has already been added.
 });
 /* Logging */

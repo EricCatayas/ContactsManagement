@@ -115,9 +115,17 @@ namespace ContactsManagement.Web.Controllers
 
             if (personAddRequest.CompanyName != null)
                 personAddRequest.CompanyId = await _companyAdderByNameService.AddCompanyByName(personAddRequest.CompanyName);
-
-            _ = await _personAdderService.AddPerson(personAddRequest);
-            ViewBag.Success = "Person has been successfully added!";
+            try
+            {
+                _ = await _personAdderService.AddPerson(personAddRequest);
+                ViewBag.Success = "Person has been successfully added!";
+            }
+            catch
+            {
+                //Delete Image if exception occurs during transaction
+                if(personAddRequest.ProfileBlobUrl != null)
+                    await _imageDeleterService.DeleteBlobFile(personAddRequest.ProfileBlobUrl);
+            }
             return View(new PersonAddRequest() { });
         }
         [HttpPost]
@@ -127,21 +135,29 @@ namespace ContactsManagement.Web.Controllers
         {
             if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
             {
-                if(personUpdateRequest.ProfileBlobUrl != null)
-                    _ = await _imageDeleterService.DeleteBlobFile(personUpdateRequest.ProfileBlobUrl);
-                
-                using (var memoryStream = new MemoryStream())
+                bool isImageDeleted = false;
+                if (personUpdateRequest.ProfileBlobUrl != null)
+                    isImageDeleted = await _imageDeleterService.DeleteBlobFile(personUpdateRequest.ProfileBlobUrl);
+
+                if (isImageDeleted)
                 {
-                    await profileImage.CopyToAsync(memoryStream);
-                    byte[] fileData = memoryStream.ToArray();
-                    try
+                    using (var memoryStream = new MemoryStream())
                     {
-                        personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                        await profileImage.CopyToAsync(memoryStream);
+                        byte[] fileData = memoryStream.ToArray();
+                        try
+                        {
+                            personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                        }
+                        catch
+                        {
+                            ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
+                        }
                     }
-                    catch
-                    {
-                        ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
-                    }
+                }
+                else
+                {
+                    ViewBag.Error = new List<string>() { "An error occured while updating the image." };
                 }
             }
                 

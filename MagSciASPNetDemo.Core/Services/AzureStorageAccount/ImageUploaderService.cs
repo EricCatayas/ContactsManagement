@@ -19,7 +19,7 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
 
         public ImageUploaderService(IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("StorageAccountConnectionString");
+            _connectionString = config["StorageAccountConnectionString"].ToString();
             _containerName = config["BlobContainerName"].ToString();
         }
         public async Task<string> UploadImageAsync(byte[] imageData, string imageName)

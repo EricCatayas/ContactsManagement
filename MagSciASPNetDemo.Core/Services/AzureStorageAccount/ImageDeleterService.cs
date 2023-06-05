@@ -16,7 +16,7 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
 
         public ImageDeleterService(IConfiguration config)
         {
-            _connectionString = config.GetConnectionString("StorageAccountConnectionString");
+            _connectionString = config["StorageAccountConnectionString"].ToString();
             _containerName = config["BlobContainerName"].ToString();
         }
         public async Task<bool> DeleteBlobFile(string azureBlobUrl)
