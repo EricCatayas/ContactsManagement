@@ -38,7 +38,6 @@ using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
 using ContactsManagement.Core.ServiceContracts.EmailServices;
 using ContactsManagement.Core.Services.EmailServices;
-using Google.Apis.Auth.AspNetCore3;
 using ContactsManagement.Core.ServiceContracts.Others;
 using ContactsManagement.Core.Services.Others;
 
@@ -189,13 +188,18 @@ builder.Services
         /* Google People API */
         //options.DefaultScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
         //options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-    }).AddGoogle(options =>
+    }).AddFacebook(options =>
     {
-        /* Google Authentication */
+        options.AppId = builder.Configuration["facebook_AppId"].ToString();
+        options.AppSecret = builder.Configuration["facebook_AppSecret"].ToString();
+    });
+    /*.AddGoogle(options =>
+    {
+        *//* Google Authentication *//*
         options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
         options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
 
-    });/*AddGoogleOpenIdConnect(options =>
+    });*//*AddGoogleOpenIdConnect(options =>
     {
         options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
         options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
