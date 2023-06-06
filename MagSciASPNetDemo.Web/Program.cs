@@ -182,18 +182,9 @@ builder.Services.ConfigureApplicationCookie(options =>
    /* So unauthenticated user will be redirected here*/
    options.LoginPath = "/Account/Login"; 
 });
-builder.Services
-    .AddAuthentication(options =>
-    {
-        /* Google People API */
-        //options.DefaultScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-        //options.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
-    }).AddFacebook(options =>
-    {
-        options.AppId = builder.Configuration["facebook_AppId"].ToString();
-        options.AppSecret = builder.Configuration["facebook_AppSecret"].ToString();
-    });
-    /*.AddGoogle(options =>
+/*builder.Services
+    .AddAuthentication()
+    .AddGoogle(options =>
     {
         *//* Google Authentication *//*
         options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
@@ -206,11 +197,11 @@ builder.Services
     });*/
 
 // Add services to the container.
-builder.Services.AddControllersWithViews(options =>
+/*builder.Services.AddControllersWithViews(options =>
 {
     //var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
     // options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
-});
+});*/
 
 builder.Services.AddHttpContextAccessor(); 
 var app = builder.Build();
