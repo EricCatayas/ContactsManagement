@@ -197,11 +197,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     });*/
 
 // Add services to the container.
-/*builder.Services.AddControllersWithViews(options =>
+builder.Services.AddControllersWithViews(/*options =>
 {
-    //var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
-    // options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
-});*/
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
+}*/);
 
 builder.Services.AddHttpContextAccessor(); 
 var app = builder.Build();
