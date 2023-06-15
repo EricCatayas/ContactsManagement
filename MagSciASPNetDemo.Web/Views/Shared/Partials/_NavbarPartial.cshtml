@@ -1,16 +1,21 @@
 ﻿
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid justify-content-between">
+    <div class="container-fluid">
         <!-- Left elements -->
         <div class="d-flex">
             <!-- Brand -->
             <a asp-controller="Home" asp-action="Index" class="navbar-brand" style="font-family: 'Roboto Mono', monospace;
-                  font-weight: bold;
-                  color:#124265;
-                  font-size: 24px;">Contacts Management</a>
+                    font-weight: bold;
+                    color:#124265;
+                    font-size: 24px;">Contacts Management
+            </a>
         </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-around" id="navbarNav">
         <!-- Center elements -->
-        <ul class="navbar-nav flex-row d-none d-md-flex">
+        <ul class="navbar-nav flex-row d-flex">
             <li class="nav-item me-3 me-lg-1">
                 <a asp-controller="Persons" asp-action="Index" class="nav-link">
                     <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="Contacts"><i class="fa-solid fa-address-book fa-lg"></i></span>
@@ -35,7 +40,7 @@
             </li>            
         </ul>
         <!-- Right elements -->
-        <ul class="navbar-nav flex-row">            
+        <ul class="navbar-nav flex-row d-flex">            
             <li class="nav-item dropdown me-3 me-lg-1">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" aria-expanded="false">
                     Download Data
@@ -48,7 +53,8 @@
             </li>           
             <partial name="_AuthenticationPartial"></partial>
         </ul>
-        <!-- Right elements -->
+        <!-- Right elements -->        
+        </div>
     </div>
 </nav>
 <!-- Navbar -->
