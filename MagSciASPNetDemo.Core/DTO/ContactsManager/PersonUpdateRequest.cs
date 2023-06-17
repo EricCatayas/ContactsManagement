@@ -20,7 +20,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
         [Required(ErrorMessage = "PersonId must be specified")]
         public Guid PersonId { get; set; }
         [Required(ErrorMessage = "Name is required")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Alpha characters only")]
         [MaxLength(100)]
         public string? PersonName { get; set; }
         [EmailAddress(ErrorMessage = "Invalid email address")]
