@@ -19,7 +19,6 @@ namespace ContactsManagement.Core.DTO.ContactsManager
     {
         [Required(ErrorMessage = "Name is required")]
         [DisplayName("Name")]
-        [RegularExpression("^[A-Za-z ]+$", ErrorMessage = "Alpha characters only")]
         [MaxLength(100)]
         public string? PersonName { get; set; }
         [EmailAddress(ErrorMessage = "Invalid email address")]
