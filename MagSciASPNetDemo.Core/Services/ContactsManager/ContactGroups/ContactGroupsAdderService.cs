@@ -16,6 +16,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
     {
         private readonly IContactGroupsAdderRepository _contactGroupsAdderRepository;
         private readonly ISignedInUserService _signedInUserService;
+        private Guid? _userId;
 
         public ContactGroupsAdderService(IContactGroupsAdderRepository contactGroupsAdderRepository, ISignedInUserService signedInUserService)
         {
@@ -24,14 +25,21 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
         }
         public async Task<ContactGroupResponse> AddContactGroup(ContactGroupAddRequest contactGroupAddRequest)
         {
-            Guid? userId = _signedInUserService.GetSignedInUserId();
-            if (userId == null)
+            var isSignedIn = IsRequestSignedIn();
+            if (!isSignedIn)
                 throw new AccessDeniedException();
 
             ContactGroup contactGroup = contactGroupAddRequest.ToContactGroup();
-            contactGroup.UserId = userId;
+            contactGroup.UserId = _userId;
+
             contactGroup = await _contactGroupsAdderRepository.AddContactGroup(contactGroup, contactGroupAddRequest.Persons);
             return contactGroup.ToContactGroupResponse();
+        }
+        private bool IsRequestSignedIn()
+        {
+            _userId = _signedInUserService.GetSignedInUserId();
+
+            return _userId == null ? false : true;
         }
     }
 }

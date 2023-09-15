@@ -1,6 +1,7 @@
 ﻿using ContactsManagement.Core.Domain.Entities.ContactsManager;
 using ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
+using ContactsManagement.Core.Exceptions;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.Services.ContactsManager.ContactGroups;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace ContactsManagement.IntegrationTests.ContactGroupsServices
 {
@@ -22,7 +24,7 @@ namespace ContactsManagement.IntegrationTests.ContactGroupsServices
         public ContactGroupsAdderServiceTest()
         {
             _mockSignedInUserService = new Mock<ISignedInUserService>();
-        }
+        }        
         [Fact]
         public async void AddContactGroup_WithPersons_ToBeSuccessful()
         {
