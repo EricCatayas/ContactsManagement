@@ -25,12 +25,12 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
             return await _db.ContactGroups.Include(p => p.Persons).FirstOrDefaultAsync(c => c.GroupId == contactGroupId && c.UserId == userId);
         }
 
-        public async Task<List<ContactGroup>?> GetContactGroups(Guid userId)
+        public async Task<List<ContactGroup>> GetContactGroups(Guid userId)
         {
             return await _db.ContactGroups.Where(c => c.UserId == userId).Include(p => p.Persons).ToListAsync();
         }
 
-        public async Task<List<ContactGroup>?> GetContactGroupsById(List<int>? contactGroupIds)
+        public async Task<List<ContactGroup>> GetContactGroupsById(List<int>? contactGroupIds)
         {
             return await _db.ContactGroups.Where(c => contactGroupIds.Contains(c.GroupId)).Include(p => p.Persons).ToListAsync();
         }

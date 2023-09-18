@@ -15,6 +15,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
 {
     public class ContactGroupsGetterServiceForDemo : IContactGroupsGetterService
     {
+        private Guid _userId;
         private readonly IContactGroupsGetterRepository _contactGroupsGetterRepository;
         private readonly ISignedInUserService _signedInUserService;
         private readonly IDemoUserService _demoUserService;
@@ -25,38 +26,61 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
             _signedInUserService = signedInUserService;
             _demoUserService = demoUserService;
         }
-        public async Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId)
+        public async Task<List<PersonResponse>> GetAllContactGroupPersons(int contactGroupId)
         {
-            Guid? userId = _signedInUserService.GetSignedInUserId();
-            if (userId == null)
+            
+            if (!IsUserSignedIn())
                 throw new AccessDeniedException();
 
-            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, (Guid)userId);
+            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, _userId);
 
-            if (contactGroup == null) return null;
-            List<Person>? persons = contactGroup.Persons.ToList();
+            List<PersonResponse> personsFromContactGroup = new List<PersonResponse>();
 
-            return persons != null ? persons?.Select(person => person.ToPersonResponse()).ToList() : null;
+            if (contactGroup == null) 
+                return personsFromContactGroup;
+
+            personsFromContactGroup = contactGroup.Persons.ToList();
+
+            return personsFromContactGroup != null ? personsFromContactGroup?.Select(person => person.ToPersonResponse()).ToList() : null;
         }
 
-        public async Task<List<ContactGroupResponse>?> GetAllContactGroups()
+        public async Task<List<ContactGroupResponse>> GetAllContactGroups()
         {
-            Guid? userId = _signedInUserService.GetSignedInUserId();
-            if (userId == null)
-                userId = _demoUserService.GetDemoUserId();
+            if (!IsUserSignedIn())
+                UseDemoUserId();
 
-            List<ContactGroup>? contactGroups = await _contactGroupsGetterRepository.GetContactGroups((Guid)userId);
-            return contactGroups != null ? contactGroups.Select(group => group.ToContactGroupResponse()).ToList() : null;
+            List<ContactGroup> contactGroups = await _contactGroupsGetterRepository.GetContactGroups(_userId);
+
+            return contactGroups.Count > 0 ? 
+                contactGroups.Select(group => group.ToContactGroupResponse()).ToList() : 
+                new List<ContactGroupResponse>();
         }
 
         public async Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId)
         {
-            Guid? userId = _signedInUserService.GetSignedInUserId();
-            if (userId == null)
+            if (!IsUserSignedIn())
                 throw new AccessDeniedException();
 
-            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, (Guid)userId);
+            ContactGroup? contactGroup = await _contactGroupsGetterRepository.GetContactGroupById(contactGroupId, _userId);
             return contactGroup != null ? contactGroup.ToContactGroupResponse() : null;
+        }
+        private bool IsUserSignedIn()
+        {
+            var userId = _signedInUserService.GetSignedInUserId();
+
+            if(userId != null)
+            {
+                _userId = (Guid)userId;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void UseDemoUserId()
+        {
+            _userId = _demoUserService.GetDemoUserId();
         }
     }
 }

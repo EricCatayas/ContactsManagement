@@ -4,11 +4,6 @@ using ContactsManagement.Core.DTO.ContactsManager.Contacts;
 using ContactsManagement.Core.Exceptions;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
 {
@@ -31,8 +26,10 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
                 throw new AccessDeniedException();
 
             ContactGroup contactGroup = contactGroupUpdateRequest.ToContactGroup();
+
             contactGroup.UserId = userId;
             contactGroup.Persons = await _personsGetterRepository.GetPersonsById(contactGroupUpdateRequest.Persons);
+
             contactGroup = await _contactGroupsUpdaterRepository.UpdateContactGroup(contactGroup);
             return contactGroup.ToContactGroupResponse();
         }

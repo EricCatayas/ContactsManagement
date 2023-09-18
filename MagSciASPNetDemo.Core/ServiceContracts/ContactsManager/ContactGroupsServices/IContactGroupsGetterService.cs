@@ -18,12 +18,12 @@ namespace ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroups
         /// Retrieves list of person from the contact group.
         /// </summary>
         /// <returns>A list of persons from the corresponding contact group with the UserID</returns>
-        Task<List<PersonResponse>?> GetAllContactGroupPersons(int contactGroupId);
+        Task<List<PersonResponse>> GetAllContactGroupPersons(int contactGroupId);
         /// <summary>
         /// Retrieves list of contact group from the system.
         /// </summary>
         /// <returns>A list of contact group object with the corresponding UserID</returns>
-        Task<List<ContactGroupResponse>?> GetAllContactGroups();
+        Task<List<ContactGroupResponse>> GetAllContactGroups();
         /// <summary>
         /// Retrieves contact group from the system.
         /// </summary>

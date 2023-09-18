@@ -10,8 +10,8 @@ namespace ContactsManagement.Core.Domain.RepositoryContracts.ContactsManager
     public interface IContactGroupsGetterRepository
     {
         Task<ContactGroup?> GetContactGroupById(int contactGroupId, Guid userId);
-        Task<List<ContactGroup>?> GetContactGroups(Guid userId);
-        Task<List<ContactGroup>?> GetContactGroupsById(List<int>? contactGroupIds);
+        Task<List<ContactGroup>> GetContactGroups(Guid userId);
+        Task<List<ContactGroup>> GetContactGroupsById(List<int>? contactGroupIds);
 
     }
 }
