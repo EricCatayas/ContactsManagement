@@ -24,10 +24,10 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
             ContactGroup familyGroup = new ContactGroup() { GroupName = "Family", Description = "Family contacts", UserId = userId };
             ContactGroup servicesGroup = new ContactGroup() { GroupName = "Services", Description = "Services contacts", UserId = userId };
             
-            await _contactGroupsAdderRepository.AddContactGroup(friendsGroup, null);
-            await _contactGroupsAdderRepository.AddContactGroup(workGroup, null);
-            await _contactGroupsAdderRepository.AddContactGroup(familyGroup, null);
-            await _contactGroupsAdderRepository.AddContactGroup(servicesGroup, null);
+            await _contactGroupsAdderRepository.AddContactGroup(friendsGroup);
+            await _contactGroupsAdderRepository.AddContactGroup(workGroup);
+            await _contactGroupsAdderRepository.AddContactGroup(familyGroup);
+            await _contactGroupsAdderRepository.AddContactGroup(servicesGroup);
         }
     }
 }

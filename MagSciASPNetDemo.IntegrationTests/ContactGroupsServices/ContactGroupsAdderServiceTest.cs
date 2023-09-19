@@ -21,6 +21,7 @@ namespace ContactsManagement.IntegrationTests.ContactGroupsServices
     public class ContactGroupsAdderServiceTest
     {
         private readonly Mock<ISignedInUserService> _mockSignedInUserService;
+        private readonly Mock<IPersonsGetterRepository> _mockPersonsGetterRepository = new();
         public ContactGroupsAdderServiceTest()
         {
             _mockSignedInUserService = new Mock<ISignedInUserService>();
@@ -66,10 +67,10 @@ namespace ContactsManagement.IntegrationTests.ContactGroupsServices
                 context.SaveChanges();
 
                 IContactGroupsAdderRepository contactGroupsAdderRepository = new ContactGroupsAdderRepository(context);
-                IContactGroupsAdderService contactGroupsAdderService = new ContactGroupsAdderService(contactGroupsAdderRepository, _mockSignedInUserService.Object);
+                IContactGroupsAdderService contactGroupsAdderService = new ContactGroupsAdderService(contactGroupsAdderRepository, _mockPersonsGetterRepository.Object, _mockSignedInUserService.Object);
 
                 _mockSignedInUserService.Setup(temp => temp.GetSignedInUserId()).Returns(UserId);
-
+                _mockPersonsGetterRepository.Setup(temp => temp.GetPersonsById(It.IsAny<List<Guid>>())).ReturnsAsync(new List<Person>() { person1, person2 });
                 //Act
                 ContactGroupResponse contactGroup_FromAddContactGroup = await contactGroupsAdderService.AddContactGroup(contactGroup_ToAdd);
 

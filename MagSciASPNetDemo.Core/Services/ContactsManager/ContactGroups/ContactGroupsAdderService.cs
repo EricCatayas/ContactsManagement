@@ -15,26 +15,39 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
     public class ContactGroupsAdderService : IContactGroupsAdderService
     {
         private readonly IContactGroupsAdderRepository _contactGroupsAdderRepository;
+        private readonly IPersonsGetterRepository _personsGetterRepository;
         private readonly ISignedInUserService _signedInUserService;
         private Guid? _userId;
+        private ContactGroup? _contactGroupToAdd;
 
-        public ContactGroupsAdderService(IContactGroupsAdderRepository contactGroupsAdderRepository, ISignedInUserService signedInUserService)
+        public ContactGroupsAdderService(IContactGroupsAdderRepository contactGroupsAdderRepository, IPersonsGetterRepository personsGetterRepository, ISignedInUserService signedInUserService)
         {
             _contactGroupsAdderRepository = contactGroupsAdderRepository;
+            _personsGetterRepository = personsGetterRepository;
             _signedInUserService = signedInUserService;
         }
         public async Task<ContactGroupResponse> AddContactGroup(ContactGroupAddRequest contactGroupAddRequest)
         {
-            var isSignedIn = IsRequestSignedIn();
-            if (!isSignedIn)
+            if (!IsRequestSignedIn())
                 throw new AccessDeniedException();
 
-            ContactGroup contactGroup = contactGroupAddRequest.ToContactGroup();
-            contactGroup.UserId = _userId;
+            await CreateContactGroupToAdd(contactGroupAddRequest);
 
-            contactGroup = await _contactGroupsAdderRepository.AddContactGroup(contactGroup, contactGroupAddRequest.Persons);
-            return contactGroup.ToContactGroupResponse();
+            _contactGroupToAdd = await _contactGroupsAdderRepository.AddContactGroup(_contactGroupToAdd);
+            return _contactGroupToAdd.ToContactGroupResponse();
         }
+        private async Task CreateContactGroupToAdd(ContactGroupAddRequest contactGroupAddRequest)
+        {
+            _contactGroupToAdd = contactGroupAddRequest.ToContactGroup();
+            _contactGroupToAdd.UserId = _userId;
+            await GetPersonsForContactGroup(contactGroupAddRequest.Persons);
+        }
+
+        private async Task GetPersonsForContactGroup(List<Guid>? persons)
+        {
+            _contactGroupToAdd!.Persons = await _personsGetterRepository.GetPersonsById(persons);
+        }
+
         private bool IsRequestSignedIn()
         {
             _userId = _signedInUserService.GetSignedInUserId();

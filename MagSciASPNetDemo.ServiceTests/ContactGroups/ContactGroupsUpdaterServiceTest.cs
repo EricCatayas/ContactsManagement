@@ -5,28 +5,27 @@ using ContactsManagement.Core.Exceptions;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.Services.ContactsManager.ContactGroups;
-using ContactsManagement.Infrastructure.Repositories.ContactsManager.ContactGroups;
 using Moq;
 
 namespace ContactsManagement.UnitTests.ContactGroups
 {
-    public class ContactGroupsAdderServiceTest
+    public class ContactGroupsUpdaterServiceTest
     {
         private readonly Mock<ISignedInUserService> _mockSignedInUserService;
-        private readonly Mock<IContactGroupsAdderRepository> _mockContactGroupsAdderRepository = new();
+        private readonly Mock<IContactGroupsUpdaterRepository> _mockContactGroupsUpdaterRepository = new();
         private readonly Mock<IPersonsGetterRepository> _mockPersonsGetterRepository = new();
-        private readonly IContactGroupsAdderService _contactGroupsAdderService; 
-        public ContactGroupsAdderServiceTest()
+        private readonly IContactGroupsUpdaterService _contactGroupsUpdaterService;
+        public ContactGroupsUpdaterServiceTest()
         {
             _mockSignedInUserService = new Mock<ISignedInUserService>();
-            _contactGroupsAdderService = new ContactGroupsAdderService(_mockContactGroupsAdderRepository.Object, _mockPersonsGetterRepository.Object, _mockSignedInUserService.Object);
+            _contactGroupsUpdaterService = new ContactGroupsUpdaterService(_mockContactGroupsUpdaterRepository.Object, _mockPersonsGetterRepository.Object, _mockSignedInUserService.Object);
         }
         [Fact]
         public async Task AddContactGroup_NonSignedInRequest_ToThrowAccessDeniedException()
         {
             Guid? nullUserId = null;
 
-            ContactGroupAddRequest contactGroup_ToAdd = new()
+            ContactGroupUpdateRequest contactGroup_ToUpdate = new()
             {
                 GroupName = "Sample Test",
                 Description = "Sample Test",
@@ -37,13 +36,8 @@ namespace ContactsManagement.UnitTests.ContactGroups
 
             await Assert.ThrowsAsync<AccessDeniedException>(async () =>
             {
-                await _contactGroupsAdderService.AddContactGroup(contactGroup_ToAdd);
+                await _contactGroupsUpdaterService.UpdateContactGroup(contactGroup_ToUpdate);
             });
-        }
-        [Fact]
-        public async Task AddContactGroup_ValidArguments_ToReturnValidContactGroupResponse()
-        {
-
         }
     }
 }

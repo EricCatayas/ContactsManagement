@@ -20,27 +20,27 @@ namespace ContactsManagement.Infrastructure.Repositories.ContactsManager.Contact
         {
             _db = db;
         }
-        public async Task<ContactGroup> AddContactGroup(ContactGroup contactGroup, List<Guid>? persons)
+        public async Task<ContactGroup> AddContactGroup(ContactGroup contactGroup)
         {
-            _db.ContactGroups.Add(contactGroup);  // Id is configured to be auto generated
-            _db.SaveChanges();
+            _db.ContactGroups.Add(contactGroup); 
 
-            if (persons != null)
+            if(contactGroup.Persons != null && contactGroup.Persons.Count > 0)
             {
-                List<Person>? personsList = await _db.Persons.Where(person => persons.Contains(person.Id)).ToListAsync();
+                List<Guid>? personIDs = contactGroup.Persons.Select(x => x.Id).ToList();            
+
+                List<Person>? personsList = await _db.Persons.Where(person => personIDs.Contains(person.Id)).ToListAsync();
 
                 if (personsList != null)
                 {
-                    contactGroup.Persons = personsList;
                     foreach (Person person in personsList)
                     {
                         person.ContactGroups ??= new List<ContactGroup>();
                         person.ContactGroups.Add(contactGroup);
                     }
-                    await _db.SaveChangesAsync();
                 }
 
             }
+            await _db.SaveChangesAsync();
             return contactGroup;
         }
     }
