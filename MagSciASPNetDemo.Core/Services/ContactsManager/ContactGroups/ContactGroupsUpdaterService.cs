@@ -9,6 +9,8 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
 {
     public class ContactGroupsUpdaterService : IContactGroupsUpdaterService
     {
+        private Guid? _userId;
+        private ContactGroup? _contactGroupToUpdate;
         private readonly IContactGroupsUpdaterRepository _contactGroupsUpdaterRepository;
         private readonly IPersonsGetterRepository _personsGetterRepository;
         private readonly ISignedInUserService _signedInUserService;
@@ -21,17 +23,26 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
         }
         public async Task<ContactGroupResponse?> UpdateContactGroup(ContactGroupUpdateRequest contactGroupUpdateRequest)
         {
-            Guid? userId = _signedInUserService.GetSignedInUserId();
-            if (userId == null)
+            if (!IsRequestSignedIn())
                 throw new AccessDeniedException();
 
-            ContactGroup contactGroup = contactGroupUpdateRequest.ToContactGroup();
+            await CreateContactGroupToUpdate(contactGroupUpdateRequest);            
 
-            contactGroup.UserId = userId;
-            contactGroup.Persons = await _personsGetterRepository.GetPersonsById(contactGroupUpdateRequest.Persons);
+            var updatedContactGroup = await _contactGroupsUpdaterRepository.UpdateContactGroup(_contactGroupToUpdate);
+            return updatedContactGroup.ToContactGroupResponse();
+        }
 
-            contactGroup = await _contactGroupsUpdaterRepository.UpdateContactGroup(contactGroup);
-            return contactGroup.ToContactGroupResponse();
+        private async Task CreateContactGroupToUpdate(ContactGroupUpdateRequest contactGroupUpdateRequest)
+        {
+            _contactGroupToUpdate = contactGroupUpdateRequest.ToContactGroup();
+            _contactGroupToUpdate.UserId = _userId;
+            _contactGroupToUpdate.Persons = await _personsGetterRepository.GetPersonsById(contactGroupUpdateRequest.Persons);
+        }
+        private bool IsRequestSignedIn()
+        {
+            _userId = _signedInUserService.GetSignedInUserId();
+
+            return _userId == null ? false : true;
         }
     }
 }

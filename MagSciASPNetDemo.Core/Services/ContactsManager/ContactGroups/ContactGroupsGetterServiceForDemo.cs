@@ -39,9 +39,15 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
             if (contactGroup == null) 
                 return personsFromContactGroup;
 
-            personsFromContactGroup = contactGroup.Persons.ToList();
+            if (contactGroup.Persons == null || contactGroup.Persons.Count < 1)
+            {
+                return personsFromContactGroup;
+            }
+            else
+            {
+                return contactGroup.Persons.Select(person => person.ToPersonResponse()).ToList();
+            }
 
-            return personsFromContactGroup != null ? personsFromContactGroup?.Select(person => person.ToPersonResponse()).ToList() : null;
         }
 
         public async Task<List<ContactGroupResponse>> GetAllContactGroups()
@@ -51,9 +57,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.ContactGroups
 
             List<ContactGroup> contactGroups = await _contactGroupsGetterRepository.GetContactGroups(_userId);
 
-            return contactGroups.Count > 0 ? 
-                contactGroups.Select(group => group.ToContactGroupResponse()).ToList() : 
-                new List<ContactGroupResponse>();
+            return contactGroups.Select(group => group.ToContactGroupResponse()).ToList();
         }
 
         public async Task<ContactGroupResponse?> GetContactGroupById(int contactGroupId)
