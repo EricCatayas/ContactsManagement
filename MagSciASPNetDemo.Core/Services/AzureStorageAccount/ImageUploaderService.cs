@@ -1,13 +1,8 @@
 ﻿using Azure.Storage.Blobs;
 using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContactsManagement.Core.Services.AzureStorageAccount
 {
@@ -15,7 +10,8 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
     {
         private readonly string _connectionString;
         private readonly string _containerName;
-        private readonly int _imageSize = 150;
+        private const int IMAGE_WIDTH = 150;
+        private const int IMAGE_HEIGHT = 150;
 
         public ImageUploaderService(IConfiguration config)
         {
@@ -37,9 +33,8 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
                 {
                     using (var image = System.Drawing.Image.FromStream(imageStream))
                     {
-                        int newHeight = (int)(((double)image.Height / (double)image.Width) * _imageSize);
 
-                        using (var bitmap = new Bitmap(image, new Size(_imageSize, newHeight)))
+                        using (var bitmap = new Bitmap(image, new Size(IMAGE_WIDTH, IMAGE_HEIGHT)))
                         {
                             // Save the resized image to a memory stream
                             using (var resizedImageStream = new MemoryStream())
@@ -55,7 +50,7 @@ namespace ContactsManagement.Core.Services.AzureStorageAccount
                 }
                     return blobClient.Uri.ToString();
             }
-            catch(Exception ex)
+            catch
             {
                 throw;
             }
