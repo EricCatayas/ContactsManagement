@@ -33,6 +33,7 @@ namespace ContactsManagement.Core.Services.ContactsManager.Persons
             _contactGroupsRepository = contactGroupsRepository;
             _signedInUserService = signedInUserService;
         }
+        //TODO Code Refactor
         public async Task<PersonResponse?> AddPerson(PersonAddRequest? personAddRequest)
         {
             if (personAddRequest == null)

@@ -16,7 +16,7 @@ using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.DTO.ContactsManager.Contacts;
-using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
+using MediaStorageServices.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
@@ -104,7 +104,7 @@ namespace ContactsManagement.Web.Controllers
                     byte[] fileData = memoryStream.ToArray();
                     try
                     {
-                        personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                        personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(fileData);
                     }
                     catch
                     {
@@ -124,7 +124,7 @@ namespace ContactsManagement.Web.Controllers
             {
                 //Delete Image if exception occurs during transaction
                 if(personAddRequest.ProfileBlobUrl != null)
-                    await _imageDeleterService.DeleteBlobFile(personAddRequest.ProfileBlobUrl);
+                    await _imageDeleterService.DeleteAsync(personAddRequest.ProfileBlobUrl);
             }
             return View(new PersonAddRequest() { });
         }
@@ -137,7 +137,7 @@ namespace ContactsManagement.Web.Controllers
             {
                 bool isImageDeleted = false;
                 if (personUpdateRequest.ProfileBlobUrl != null)
-                    isImageDeleted = await _imageDeleterService.DeleteBlobFile(personUpdateRequest.ProfileBlobUrl);
+                    isImageDeleted = await _imageDeleterService.DeleteAsync(personUpdateRequest.ProfileBlobUrl);
 
                 if (isImageDeleted)
                 {
@@ -147,7 +147,7 @@ namespace ContactsManagement.Web.Controllers
                         byte[] fileData = memoryStream.ToArray();
                         try
                         {
-                            personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadImageAsync(fileData, profileImage.FileName);
+                            personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(fileData);
                         }
                         catch
                         {
@@ -191,7 +191,7 @@ namespace ContactsManagement.Web.Controllers
             if (person.ProfileBlobUrl != null)
             {
                 bool isImageDeleted = false;
-                isImageDeleted = await _imageDeleterService.DeleteBlobFile(person.ProfileBlobUrl);
+                isImageDeleted = await _imageDeleterService.DeleteAsync(person.ProfileBlobUrl);
 
                 if (isImageDeleted)
                     isPersonDeleted = await _personsDeleterService.DeletePerson(personId);

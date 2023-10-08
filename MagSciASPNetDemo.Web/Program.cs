@@ -31,15 +31,13 @@ using ContactsManagement.Core.Domain.RepositoryContracts.EventsManager;
 using ContactsManagement.Infrastructure.Repositories.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
-using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
-using ContactsManagement.Core.Services.AzureStorageAccount;
+using MediaStorageServices.Interfaces;
+using MediaStorageServices.Services.AzureStorageContainer;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
 using ContactsManagement.Core.ServiceContracts.EmailServices;
 using ContactsManagement.Core.Services.EmailServices;
-using ContactsManagement.Core.ServiceContracts.Others;
-using ContactsManagement.Core.Services.Others;
 
 var builder = WebApplication.CreateBuilder(args);
 

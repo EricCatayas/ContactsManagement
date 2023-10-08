@@ -1,10 +1,6 @@
 ﻿using AutoFixture;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -13,12 +9,11 @@ using ContactsManagement.Web.Controllers;
 using ContactsManagement.Core.DTO.ContactsManager;
 using ContactsManagement.Core.Enums.ContactsManager;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.PersonsServices;
-using ContactsManagement.Core.ServiceContracts.AzureBlobServices;
 using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Domain.IdentityEntities;
-using Microsoft.AspNetCore.Identity;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
+using MediaStorageServices.Interfaces;
 
 namespace xUnitTesting
 {
