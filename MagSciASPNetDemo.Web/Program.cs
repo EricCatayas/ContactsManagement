@@ -38,6 +38,7 @@ using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
 using ContactsManagement.Core.ServiceContracts.EmailServices;
 using ContactsManagement.Core.Services.EmailServices;
+using ContactsManagement.Core.Services.Others;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -118,8 +119,13 @@ builder.Services.AddTransient<IEventsUpdaterService, EventsUpdaterService>();
 builder.Services.AddTransient<IEventsDeleterService, EventsDeleterService>();
 builder.Services.AddTransient<IEventsSeederService, EventsSeederService>();
 
-builder.Services.AddTransient<IImageUploaderService, ImageUploaderService>();
 builder.Services.AddTransient<IImageDeleterService, ImageDeleterService>();
+builder.Services.AddTransient<IImageUploaderService>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    var imageUploaderService = new ImageUploaderService(config);
+    return new ImageResizeAndUploadService(imageUploaderService);
+});
 
 builder.Services.AddTransient<ICountriesService, CountriesService>();
 builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
