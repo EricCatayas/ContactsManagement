@@ -22,7 +22,9 @@ using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
 using ContactsManagement.Core.Services.CompaniesManagement;
-using ContactsManagement.Core.ServiceContracts.Others;
+using ContactsManagement.Core.ServiceContracts.Others.V2;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs;
 
 namespace ContactsManagement.Web.Controllers
 {
@@ -40,10 +42,10 @@ namespace ContactsManagement.Web.Controllers
         private readonly IPersonsUpdaterService _personsUpdaterService;
         private readonly ICountriesService _countriesService;
         private readonly ICompanyAdderByNameService _companyAdderByNameService;
-        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageUploadService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
 
-        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, IPersonsGroupIdFilteredGetterService personsGroupIdFilteredGetterService, ICountriesService countriesService, IImageUploaderService imageUploaderService, IImageDeleterService imageDeleterService, ICompanyAdderByNameService companyAdderByNameService)
+        public PersonsController(IPersonsGetterService personsGetterService, IPersonsAdderService personsAdderService, IPersonsDeleterService personsDeleterService, IPersonsSorterService personsSorterService, IPersonsUpdaterService personsUpdaterService, IPersonsGroupIdFilteredGetterService personsGroupIdFilteredGetterService, ICountriesService countriesService, IImageUploadService imageUploadService, IImageDeleterService imageDeleterService, ICompanyAdderByNameService companyAdderByNameService)
         {
             _personGetterService = personsGetterService;
             _personAdderService = personsAdderService;
@@ -53,7 +55,7 @@ namespace ContactsManagement.Web.Controllers
             _personsGroupIdFilteredGetterService = personsGroupIdFilteredGetterService;
             _countriesService = countriesService;
             _companyAdderByNameService = companyAdderByNameService;
-            _imageUploaderService = imageUploaderService;
+            _imageUploaderService = imageUploadService;
             _imageDeleterService = imageDeleterService;
         }        
         [Route("[action]")]
@@ -157,14 +159,15 @@ namespace ContactsManagement.Web.Controllers
                 }
                 else
                 {
+                    // TODO: Display error message in view
                     ViewBag.Error = new List<string>() { "An error occured while updating the image." };
                 }
             }
                 
-            PersonResponse? updatedPerson = await _personsUpdaterService.UpdatePerson(personUpdateRequest);              
-            PersonUpdateRequest personToUpdate = updatedPerson.ToPersonUpdateRequest(); //Check ToPersonUpdateRequest-- catch block not caught in Service
+            PersonResponse? personResponse = await _personsUpdaterService.UpdatePerson(personUpdateRequest);              
+            PersonUpdateRequest personUpdated = personResponse.ToPersonUpdateRequest();
             ViewBag.Success = "Person has been successfully updated!";
-            return View(personToUpdate);            
+            return View(personUpdated);            
         }
         [HttpGet]
         [Route("[action]/{personId}")]

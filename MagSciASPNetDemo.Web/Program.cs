@@ -38,8 +38,13 @@ using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
 using ContactsManagement.Core.ServiceContracts.EmailServices;
 using ContactsManagement.Core.Services.EmailServices;
-using ContactsManagement.Core.Services.Others;
+using ContactsManagement.Core.ServiceContracts.Others.V2;
+using ContactsManagement.Core.Services.Others.V2;
+using IImageUploaderService = MediaStorageServices.Services.AzureStorageContainer.v2.ImageUploaderService;
+using ImageUploaderService = MediaStorageServices.Services.AzureStorageContainer.v2.ImageUploaderService;
 using ContactsManagement.Core.ServiceContracts.Others;
+using ContactsManagement.Core.Services.Others;
+using ImageResizeAndUploadService = ContactsManagement.Core.Services.Others.v2.ImageResizeAndUploadService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +53,11 @@ builder.Host.UseSerilog((HostBuilderContext builderContext, IServiceProvider ser
     config.ReadFrom.Configuration(builderContext.Configuration) // <- Reading the config of program.cs 
           .ReadFrom.Services(serviceProvider);
 });
+
+// TODO
+//     ImageUploaderService does not upload
+//     Make persons index web responsive
+
 /* IoC Container */
 
 builder.Services.AddScoped<IPersonsAdderRepository, PersonsAdderRepository>();
@@ -120,13 +130,22 @@ builder.Services.AddTransient<IEventsUpdaterService, EventsUpdaterService>();
 builder.Services.AddTransient<IEventsDeleterService, EventsDeleterService>();
 builder.Services.AddTransient<IEventsSeederService, EventsSeederService>();
 
-builder.Services.AddTransient<IImageDeleterService, ImageDeleterService>();
-builder.Services.AddTransient<IImageResizeAndUploadService>(provider =>
+builder.Services.AddTransient<IImageDeleterService>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
-    var imageUploaderService = new ImageUploaderService(config);
-    return new ImageResizeAndUploadService(imageUploaderService);
+    string storageAccConnectionString = config["StorageAccountConnectionString"].ToString();
+    string blobContainerName = config["BlobContainerName"].ToString();
+    return new ImageDeleterService(storageAccConnectionString, blobContainerName);
 });
+builder.Services.AddTransient<IImageUploadService, ImageResizeAndUploadService>();
+builder.Services.AddTransient<IImageUploaderService>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    string storageAccConnectionString = config["StorageAccountConnectionString"].ToString();
+    string blobContainerName = config["BlobContainerName"].ToString();
+    return new ImageUploaderService(storageAccConnectionString, blobContainerName);
+});
+builder.Services.AddTransient<IImageResizer, ImageResizer>();
 
 builder.Services.AddTransient<ICountriesService, CountriesService>();
 builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
@@ -141,7 +160,7 @@ builder.Services.AddScoped<ISignedInUserService, SignedInUserService>();
 builder.Services.AddTransient<ContactLogsCardViewComponent>();
 
 /* DbContext */
-var connectionString = builder.Configuration["AzureSQLDatabase"].ToString();
+var connectionString = builder.Configuration["MicrosoftSQLServer"].ToString();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -149,7 +168,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // options.EnableSensitiveDataLogging(); // The seed entity for entity type 'Country' cannot be added because another seed entity with the same key value for {'CountryId'} has already been added.
 });
 /* Logging */
-// builder.Logging.AddEventLog(); // <-- Built-In
 builder.Services.AddLogging(builder =>
 {
     builder.AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug); // Enable authentication logging
