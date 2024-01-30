@@ -2,88 +2,90 @@
 @{
     ContactsDisplayType displayType = ViewBag.ContactsDisplayType;
 }
-<table class="table align-middle">
-    <thead>
-        <tr>
-            @foreach(KeyValuePair<string,string>property in ViewBag.SearchProperties)
-            {
-                if(ViewBag.sortProperty == property.Value && ViewBag.sortOrder == "DESC")
-                {
-                    <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=ASC"> @property.Key @Html.Raw("&darr;")</a></th>
-                } else
-                {
-                    <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=DESC"> @property.Key @Html.Raw("&uarr;")</a></th>
-                }
-            }
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(PersonResponse person in Model){
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
             <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        @if(person.ProfileBlobUrl != null)
-                        {                            
-                            <img src="@person.ProfileBlobUrl" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
-                        }
-                        else
-                        {                            
-                            <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
-                        }
-                        <div class="ms-3">
-                            <p class="fw-bold mb-1">@person.PersonName</p>
-                        </div>
-                    </div>  
-                </td>
-                @if (displayType == ContactsDisplayType.Default || displayType == ContactsDisplayType.Employment)
-                {             
-                    <td>
-                        <p class="fw-normal mb-1">@person.JobTitle</p>
-                    </td>                    
-                    <td>
-                        <p class="fw-normal mb-1">@person.CompanyName</p>
-                    </td>
-                }
-                else if (displayType == ContactsDisplayType.Profile)
+                @foreach(KeyValuePair<string,string>property in ViewBag.SearchProperties)
                 {
-                    <td>
-                        <p class="fw-normal mb-1">@person.Email</p>
-                    </td>
-                    <td>
-                        <p class="fw-normal mb-1">@person.Address</p>
-                    </td>
-                    <td>
-                        <p class="fw-normal mb-1">@person.DateOfBirth?.ToString("MMMM dd, yyyy")</p>
-                    </td>
+                    if(ViewBag.sortProperty == property.Value && ViewBag.sortOrder == "DESC")
+                    {
+                        <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=ASC"> @property.Key @Html.Raw("&darr;")</a></th>
+                    } else
+                    {
+                        <th scope="col"><a href="~/persons/index?searchProperty=@ViewBag.searchProperty&searchString=@ViewBag.searchString&sortProperty=@property.Value&sortOrder=DESC"> @property.Key @Html.Raw("&uarr;")</a></th>
+                    }
                 }
-                else if (displayType == ContactsDisplayType.Contact)
-                {
-                    <td>
-                        <p class="fw-normal mb-1">@person.Email</p>
-                    </td>
-                    <td>
-                        <p class="fw-normal mb-1">@person.ContactNumber1</p>
-                        <p class="fw-normal mb-1">@person.ContactNumber2</p>
-                    </td>
-                }
-                @if(person.Tag != null)
-                {
-                    <td>
-                        <div id="contactTag">
-                            <span class="badge rounded-pill" style="background-color:@person.Tag.TagColor;">@person.Tag.TagName</span>
-                            <i id="removeTagIcon" class="fa-solid fa-eraser" style="color: #e5344e;"><input type="hidden" value="@person.PersonId" /></i>
-                        </div>
-                    </td>
-                } else
-                {
-                    <td></td>
-                }
-                <td>
-                    <a asp-controller="Persons" asp-action="Edit" asp-route-personId="@person.PersonId">View</a>
-                    @*<a href="https://mail.google.com/mail/u/0/#inbox?compose=new&to=\@person.Email" target="_blank"><i class="fa-solid fa-envelope" style="color: #1e7ba9;"></i></a>*@
-                </td>
+                <th scope="col">Action</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach(PersonResponse person in Model){
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if(person.ProfileBlobUrl != null)
+                            {                            
+                                <img src="@person.ProfileBlobUrl" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                            }
+                            else
+                            {                            
+                                <img src="~/images/profile_avatar64.png" alt="" style="width: 45px; height: 45px" class="rounded-circle" />
+                            }
+                            <div class="ms-3">
+                                <p class="fw-bold mb-1">@person.PersonName</p>
+                            </div>
+                        </div>  
+                    </td>
+                    @if (displayType == ContactsDisplayType.Default || displayType == ContactsDisplayType.Employment)
+                    {             
+                        <td>
+                            <p class="fw-normal mb-1">@person.JobTitle</p>
+                        </td>                    
+                        <td>
+                            <p class="fw-normal mb-1">@person.CompanyName</p>
+                        </td>
+                    }
+                    else if (displayType == ContactsDisplayType.Profile)
+                    {
+                        <td>
+                            <p class="fw-normal mb-1">@person.Email</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@person.Address</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@person.DateOfBirth?.ToString("MMMM dd, yyyy")</p>
+                        </td>
+                    }
+                    else if (displayType == ContactsDisplayType.Contact)
+                    {
+                        <td>
+                            <p class="fw-normal mb-1">@person.Email</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">@person.ContactNumber1</p>
+                            <p class="fw-normal mb-1">@person.ContactNumber2</p>
+                        </td>
+                    }
+                    @if(person.Tag != null)
+                    {
+                        <td>
+                            <div id="contactTag">
+                                <span class="badge rounded-pill" style="background-color:@person.Tag.TagColor;">@person.Tag.TagName</span>
+                                <i id="removeTagIcon" class="fa-solid fa-eraser" style="color: #e5344e;"><input type="hidden" value="@person.PersonId" /></i>
+                            </div>
+                        </td>
+                    } else
+                    {
+                        <td></td>
+                    }
+                    <td>
+                        <a asp-controller="Persons" asp-action="Edit" asp-route-personId="@person.PersonId">View</a>
+                        @*<a href="https://mail.google.com/mail/u/0/#inbox?compose=new&to=\@person.Email" target="_blank"><i class="fa-solid fa-envelope" style="color: #1e7ba9;"></i></a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

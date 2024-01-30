@@ -31,20 +31,17 @@ using ContactsManagement.Core.Domain.RepositoryContracts.EventsManager;
 using ContactsManagement.Infrastructure.Repositories.EventsManager;
 using ContactsManagement.Core.ServiceContracts.EventsManager;
 using ContactsManagement.Core.Services.EventsManager;
-using MediaStorageServices.Interfaces;
-using MediaStorageServices.Services.AzureStorageContainer;
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Services.AccountManager;
 using ContactsManagement.Core.Services.ContactsManager.Persons;
 using ContactsManagement.Core.ServiceContracts.EmailServices;
 using ContactsManagement.Core.Services.EmailServices;
 using ContactsManagement.Core.ServiceContracts.Others.V2;
-using ContactsManagement.Core.Services.Others.V2;
-using IImageUploaderService = MediaStorageServices.Services.AzureStorageContainer.v2.ImageUploaderService;
+using IImageUploaderService = MediaStorageServices.Interfaces.v2.IImageUploaderService;
 using ImageUploaderService = MediaStorageServices.Services.AzureStorageContainer.v2.ImageUploaderService;
-using ContactsManagement.Core.ServiceContracts.Others;
-using ContactsManagement.Core.Services.Others;
 using ImageResizeAndUploadService = ContactsManagement.Core.Services.Others.v2.ImageResizeAndUploadService;
+using MediaStorageServices.Interfaces.v1;
+using MediaStorageServices.Services.AzureStorageContainer.v1;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -137,7 +134,6 @@ builder.Services.AddTransient<IImageDeleterService>(provider =>
     string blobContainerName = config["BlobContainerName"].ToString();
     return new ImageDeleterService(storageAccConnectionString, blobContainerName);
 });
-builder.Services.AddTransient<IImageUploadService, ImageResizeAndUploadService>();
 builder.Services.AddTransient<IImageUploaderService>(provider =>
 {
     var config = provider.GetRequiredService<IConfiguration>();
@@ -145,7 +141,7 @@ builder.Services.AddTransient<IImageUploaderService>(provider =>
     string blobContainerName = config["BlobContainerName"].ToString();
     return new ImageUploaderService(storageAccConnectionString, blobContainerName);
 });
-builder.Services.AddTransient<IImageResizer, ImageResizer>();
+builder.Services.AddTransient<IImageUploadService, ImageResizeAndUploadService>();
 
 builder.Services.AddTransient<ICountriesService, CountriesService>();
 builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
@@ -205,36 +201,14 @@ builder.Services.ConfigureApplicationCookie(options =>
    /* So unauthenticated user will be redirected here*/
    options.LoginPath = "/Account/Login"; 
 });
-/*builder.Services
-    .AddAuthentication()
-    .AddGoogle(options =>
-    {
-        *//* Google Authentication *//*
-        options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
-        options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
 
-    });*//*AddGoogleOpenIdConnect(options =>
-    {
-        options.ClientId = builder.Configuration["GOOGLE_API_CLIENT_ID"];
-        options.ClientSecret = builder.Configuration["GOOGLE_API_CLIENT_SECRET"];
-    });*/
 
 // Add services to the container.
-builder.Services.AddControllersWithViews(/*options =>
-{
-    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
-    options.Filters.Add(new ResponseHeaderActionFilter("Global-Key", "In-Program-cs", 2));
-}*/);
+builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor(); 
 var app = builder.Build();
 
-/*TODO     
-     *  Seq account in User Secrets 
-     *  Code Documentation Clean Up
-     *  Why are you afraid of finding bugs? 
- 
-*/
 
 app.UseSerilogRequestLogging("Message Template: Maggot Scientist!"); // <-- adds log message as soon as request response is complete
 

@@ -1,14 +1,7 @@
 ﻿
-using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
-using Azure;
-using MediaStorageServices.Interfaces;
-using MediaStorageServices.Services.AzureStorageContainer;
-using Microsoft.Extensions.Configuration;
-using System.Drawing.Imaging;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using ContactsManagement.Core.ServiceContracts.Others;
+using MediaStorageServices.Interfaces.v1;
 
 namespace ContactsManagement.Core.Services.Others
 {

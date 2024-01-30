@@ -14,17 +14,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using Rotativa.AspNetCore;
 using Rotativa.AspNetCore.Options;
-using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServices;
-using ContactsManagement.Core.DTO.ContactsManager.Contacts;
-using MediaStorageServices.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using ContactsManagement.Core.Domain.IdentityEntities;
-using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
-using ContactsManagement.Core.Services.CompaniesManagement;
 using ContactsManagement.Core.ServiceContracts.Others.V2;
-using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
+using MediaStorageServices.Interfaces.v1;
 
 namespace ContactsManagement.Web.Controllers
 {
@@ -100,19 +92,14 @@ namespace ContactsManagement.Web.Controllers
         {
             if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
             {
-                using (var memoryStream = new MemoryStream())
+                try
                 {
-                    await profileImage.CopyToAsync(memoryStream);
-                    byte[] fileData = memoryStream.ToArray();
-                    try
-                    {
-                        personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(fileData);
-                    }
-                    catch
-                    {
-                        ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
-                    }
+                    personAddRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(profileImage);
                 }
+                catch
+                {
+                    ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
+                }                
             }
 
             if (personAddRequest.CompanyName != null)
@@ -137,31 +124,18 @@ namespace ContactsManagement.Web.Controllers
         {
             if (profileImage != null && profileImage.Length > 0 && profileImage.ContentType.StartsWith("image/"))
             {
-                bool isImageDeleted = false;
                 if (personUpdateRequest.ProfileBlobUrl != null)
-                    isImageDeleted = await _imageDeleterService.DeleteAsync(personUpdateRequest.ProfileBlobUrl);
+                    await _imageDeleterService.DeleteAsync(personUpdateRequest.ProfileBlobUrl);
 
-                if (isImageDeleted)
+                try
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await profileImage.CopyToAsync(memoryStream);
-                        byte[] fileData = memoryStream.ToArray();
-                        try
-                        {
-                            personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(fileData);
-                        }
-                        catch
-                        {
-                            ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
-                        }
-                    }
+                    personUpdateRequest.ProfileBlobUrl = await _imageUploaderService.UploadAsync(profileImage);
                 }
-                else
+                catch
                 {
-                    // TODO: Display error message in view
-                    ViewBag.Error = new List<string>() { "An error occured while updating the image." };
-                }
+                    personUpdateRequest.ProfileBlobUrl = null;
+                    ViewBag.Error = new List<string>() { "An error occured while uploading the image." };
+                }      
             }
                 
             PersonResponse? personResponse = await _personsUpdaterService.UpdatePerson(personUpdateRequest);              

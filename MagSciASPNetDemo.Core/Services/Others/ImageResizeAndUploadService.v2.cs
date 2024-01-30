@@ -10,12 +10,10 @@ namespace ContactsManagement.Core.Services.Others.v2
     public class ImageResizeAndUploadService : IImageUploadService
     {
         private readonly IImageUploaderService _imageUploaderService;
-        private readonly IImageResizer _imageResizeService;
 
-        public ImageResizeAndUploadService(IImageUploaderService imageUploaderService, IImageResizer imageResizeService)
+        public ImageResizeAndUploadService(IImageUploaderService imageUploaderService)
         {
             _imageUploaderService = imageUploaderService;
-            _imageResizeService = imageResizeService;
         }
 
         public async Task<string> UploadAsync(IFormFile imageFile)
@@ -24,9 +22,9 @@ namespace ContactsManagement.Core.Services.Others.v2
             {
                 using (Stream stream = imageFile.OpenReadStream())
                 {
-                    var resizedImage = _imageResizeService.Resize(stream);
-
-                    return await _imageUploaderService.UploadAsync(resizedImage);
+                    var filename = imageFile.FileName;
+                    var contentType = imageFile.ContentType;
+                    return await _imageUploaderService.UploadAsync(stream, filename, contentType);
                 }
 
             }
