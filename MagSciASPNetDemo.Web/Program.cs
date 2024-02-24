@@ -52,10 +52,8 @@ builder.Host.UseSerilog((HostBuilderContext builderContext, IServiceProvider ser
 });
 
 // TODO
-//     ImageUploaderService does not upload
-//     Make persons index web responsive
 
-/* IoC Container */
+// IOC CONTAINER
 
 builder.Services.AddScoped<IPersonsAdderRepository, PersonsAdderRepository>();
 builder.Services.AddScoped<IPersonsGetterRepository, PersonsGetterRepository>();
@@ -146,7 +144,6 @@ builder.Services.AddTransient<IImageUploadService, ImageResizeAndUploadService>(
 builder.Services.AddTransient<ICountriesService, CountriesService>();
 builder.Services.AddTransient<IContactGroupsGetterService, ContactGroupsGetterServiceForDemo>();
 builder.Services.AddTransient<IEmailService,UserEmailService>();
-/*builder.Services.AddScoped<IViewMessagesService, ViewMessagesService>();*/
 
 
 builder.Services.AddScoped<IDemoUserService, DemoUserAccountService>();
@@ -155,15 +152,16 @@ builder.Services.AddScoped<ISignedInUserService, SignedInUserService>();
 // builder.Services.AddTransient<RedirectToIndexExceptionFilter>();  <-- ServiceFilter
 builder.Services.AddTransient<ContactLogsCardViewComponent>();
 
-/* DbContext */
-var connectionString = builder.Configuration["MicrosoftSQLServer"].ToString();
+// DB CONTEXT
+var connectionString = builder.Configuration["AzureSQLDatabase"].ToString();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
     // options.EnableSensitiveDataLogging(); // The seed entity for entity type 'Country' cannot be added because another seed entity with the same key value for {'CountryId'} has already been added.
 });
-/* Logging */
+
+// LOGGING 
 builder.Services.AddLogging(builder =>
 {
     builder.AddFilter("Microsoft.AspNetCore.Authentication", LogLevel.Debug); // Enable authentication logging
@@ -171,12 +169,11 @@ builder.Services.AddLogging(builder =>
 });
 builder.Services.AddHttpLogging(options =>
 {
-    // Displays on console
     options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestBody | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestPropertiesAndHeaders;
 });
 /* Custom Config & Options Pattern */
 
-/* Identity  */
+// IDENTITY
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequireNonAlphanumeric = false;
@@ -203,7 +200,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddHttpContextAccessor(); 
