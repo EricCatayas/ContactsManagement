@@ -13,7 +13,8 @@ using ContactsManagement.Core.ServiceContracts.ContactsManager.ContactGroupsServ
 using ContactsManagement.Core.ServiceContracts.AccountManager;
 using ContactsManagement.Core.Domain.IdentityEntities;
 using ContactsManagement.Core.ServiceContracts.CompaniesManagement;
-using MediaStorageServices.Interfaces;
+using MediaStorageServices.Interfaces.v1;
+using ContactsManagement.Core.ServiceContracts.Others.V2;
 
 namespace xUnitTesting
 {
@@ -27,7 +28,7 @@ namespace xUnitTesting
         private readonly IPersonsGroupIdFilteredGetterService _personsGroupIdFilteredGetterService;
         private readonly IContactGroupsGetterService _contactGroupsGetterService;
         private readonly ICompanyAdderByNameService _companyAdderService;
-        private readonly IImageUploaderService _imageUploaderService;
+        private readonly IImageUploadService _imageUploaderService;
         private readonly IImageDeleterService _imageDeleterService;
         private readonly IDemoUserService _demoUserService;
         private readonly ICountriesService _countriesService;
@@ -40,7 +41,7 @@ namespace xUnitTesting
         private readonly Mock<IPersonsUpdaterService> _personsUpdaterServiceMock;
         private readonly Mock<IContactGroupsGetterService> _contactGroupsServiceMock;
         private readonly Mock<ICompanyAdderByNameService> _companyAdderServiceMock;
-        private readonly Mock<IImageUploaderService> _imageUploaderServiceMock;
+        private readonly Mock<IImageUploadService> _imageUploaderServiceMock;
         private readonly Mock<IImageDeleterService> _imageDeleterServiceMock;
         private readonly Mock<IDemoUserService> _demoUserServiceMock;
         private readonly Mock<ICountriesService> _countriesServiceMock;
@@ -59,7 +60,7 @@ namespace xUnitTesting
             _personsSorterServiceMock = new Mock<IPersonsSorterService>();
             _personsUpdaterServiceMock = new Mock<IPersonsUpdaterService>();
             _contactGroupsServiceMock = new Mock<IContactGroupsGetterService>();
-            _imageUploaderServiceMock = new Mock<IImageUploaderService>();
+            _imageUploaderServiceMock = new Mock<IImageUploadService>();
             _imageDeleterServiceMock = new Mock<IImageDeleterService>();
             _companyAdderServiceMock = new Mock<ICompanyAdderByNameService>();
             _demoUserServiceMock = new Mock<IDemoUserService>();
