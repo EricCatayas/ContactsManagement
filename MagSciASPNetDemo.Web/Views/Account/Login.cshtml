@@ -7,14 +7,14 @@
 	<div class="login-container" id="container">
 		<div class="row justify-content-center align-items-center h-100">
 			<div class="form-container sign-in-container">
-					<form asp-controller="Account" asp-action="Login">
+				<form asp-controller="Account" asp-action="Login">
 						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					<h1>Log in</h1>
 					<input type="hidden" name="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]" />
 					<input asp-for="Email" type="email" placeholder="Email" />
-					<span asp-validation-for="Email" class="text-danger" />
+					<span asp-validation-for="Email" class="text-danger"></span>
 					<input asp-for="Password" type="password" placeholder="Password" />
-					<span asp-validation-for="Password" class="text-danger" />
+					<span asp-validation-for="Password" class="text-danger"></span>
 					<input class="form-check-input" asp-route-rememberMe="@true" type="checkbox" />
 					<label class="form-check-label">Remember Me</label>
 					<br />
